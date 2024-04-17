@@ -2,4 +2,28 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-</configuration>
+
+	<!-- SqlSessionTemplate 관련 설정 -->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+ 	</settings>
+	
+	<!-- 별칭 작성 부분 -->
+	<typeAliases>
+		<typeAlias type="com.example.demo.domain.Users" alias="user"/>
+		<typeAlias type="com.example.demo.domain.Board" alias="board"/>
+		<typeAlias type="com.example.demo.domain.Comments" alias="comments"/>
+		<typeAlias type="com.example.demo.domain.UploadFile" alias="uploadfile"/>
+	</typeAliases>
+	
+	<!-- SQL이 작성되는 mapper 파일 위치 등록 -->
+	<mappers>
+		<mapper resource="/mybatis/mappers/users-mapper.xml"/>
+		<mapper resource="/mybatis/mappers/board-mapper.xml"/>
+		<mapper resource="/mybatis/mappers/comments-mapper.xml"/>
+		<mapper resource="/mybatis/mappers/uploadfile-mapper.xml"/>
+	</mappers>
+
+
+</configuration>	

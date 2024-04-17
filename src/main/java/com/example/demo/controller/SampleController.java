@@ -10,21 +10,38 @@ public class SampleController {
 	
 
 	@GetMapping("/")
-	public ModelAndView sample() {
+	public ModelAndView sample(Model model) {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("sample");
+		mv.addObject("alaldlkfjalksd", "sdafadsfasd");
+		mv.setViewName("membership");
 		return mv;
 	}
 		
 	
-	@GetMapping("/v1")
-	public String sample2() {
-		return "sample";	
+//	@GetMapping("/membership")
+//	public String sample2() {
+//		return "membership";	
+//	}
+	
+	@GetMapping("/errorPage")
+	public String errorPage() {
+		return "errorPage";
 	}
 	
-//	@GetMapping("/v3")
-//	public String sample3(Model model) {
-//		model.addAttribute("hello", "hello world");
-//		return "sample";
-//	}
+	@GetMapping("/mainPage")
+	public String mainPage() {
+		return "main"; 
+	}
+	
+	@GetMapping("/board-detail")
+	public String boardDetail() {
+		return "boardDetail"; 
+	}
+	
+	@GetMapping("/board-modify")
+	public String boardModify() {
+		return "boardModify"; 
+	}
+	
+	
 }
