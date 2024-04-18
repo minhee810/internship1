@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        
+<configuration>
+
+	<!-- SqlSessionTemplate 관련 설정 -->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+ 	</settings>
+	
+	<!-- 별칭 작성 부분 -->
+	<typeAliases>
+		<typeAlias type="com.example.demo.domain.UsersVO" alias="usersVO"/>
+		<typeAlias type="com.example.demo.domain.BoardVO" alias="boardVO"/>
+		<typeAlias type="com.example.demo.domain.CommentsVO" alias="commentsVO"/>
+		<typeAlias type="com.example.demo.domain.UploadFileVO" alias="uploadfileVO"/>
+	</typeAliases>
+
+</configuration>	

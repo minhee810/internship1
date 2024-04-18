@@ -12,17 +12,10 @@ public class SampleController {
 	@GetMapping("/")
 	public ModelAndView sample(Model model) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("alaldlkfjalksd", "sdafadsfasd");
-		mv.setViewName("membership");
+		mv.setViewName("main");
 		return mv;
 	}
 		
-	
-//	@GetMapping("/membership")
-//	public String sample2() {
-//		return "membership";	
-//	}
-	
 	@GetMapping("/errorPage")
 	public String errorPage() {
 		return "errorPage";

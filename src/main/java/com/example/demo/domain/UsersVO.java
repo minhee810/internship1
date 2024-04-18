@@ -1,16 +1,19 @@
 package com.example.demo.domain;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter 
-@Setter
+
 @ToString
-public class Users {
+@Getter
+@Setter
+public class UsersVO {
 
 	private Long userId; 
-	private String username;
+	private String username; // 닉네임 
 	private String email; 
 	private String password;
 	private String phone;
@@ -18,8 +21,8 @@ public class Users {
 	private String detailAddress;
 	private String zipCode;
 	private String note; 
-	private String createdDate;
-	private String modifidDate;
+	private LocalDateTime createdDate;
+	private LocalDateTime modifidDate;
 	private String isDeleted;
 
 }

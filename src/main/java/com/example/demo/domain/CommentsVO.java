@@ -1,5 +1,5 @@
 package com.example.demo.domain;
 
-public class Comments {
+public class CommentsVO {
 
 }

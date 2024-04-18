@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -44,18 +46,20 @@
                 <div class="text-center">
                   <h1 class="h4 text-gray-900 mb-4">회원가입</h1>
                 </div>
-                <form class="user">
+                  <form id="join" class="user" action="${contextPath}/auth/join" method="post" name="formm">
                   <div class="form-group">
            
                     <input
+                      name="username"
                       type="text"
                       class="form-control form-control-user"
-                      placeholder="이름"
+                      placeholder="닉네임"
                     /> 
                   </div>
                   <div class="form-group row">
                     <div class="col-sm-9 mb-3 mb-sm-0">
                       <input
+                      	name="email"
                         type="email"
                         class="form-control form-control-user"
                         placeholder="이메일주소"
@@ -73,6 +77,7 @@
                   <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                       <input
+                      	name="password"
                         type="password"
                         class="form-control form-control-user"
                         placeholder="비밀번호"
@@ -80,6 +85,7 @@
                     </div>
                     <div class="col-sm-6">
                       <input
+                      	
                         type="password"
                         class="form-control form-control-user"
                         placeholder="비밀번호 확인"
@@ -88,7 +94,8 @@
                   </div>
                   <div class="form-group">
                     <input
-                      type="email"
+                      name="phone"
+                      type="tel"
                       class="form-control form-control-user"
                       placeholder="휴대폰번호"
                     />
@@ -96,7 +103,8 @@
                   <div class="form-group row">
                     <div class="col-sm-9 mb-3 mb-sm-0">
                       <input
-                        type="email"
+                      	name="address"
+                        type="text"
                         class="form-control form-control-user"
                         placeholder="주소"
                       />
@@ -112,7 +120,8 @@
                   </div>
                   <div class="form-group">
                     <input
-                      type="email"
+                      name="detailAddress"
+                      type="text"
                       class="form-control form-control-user"
                       placeholder="상세주소"
                     />
@@ -120,30 +129,33 @@
                   <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                       <input
-                        type="password"
+                        name="zipCode"
+                        type="text"
                         class="form-control form-control-user"
                         placeholder="우편번호"
                       />
                     </div>
                     <div class="col-sm-6">
                       <input
-                        type="password"
+                      	name="note"
+                        type="text"
                         class="form-control form-control-user"
                         placeholder="참고사항"
                       />
                     </div>
                   </div>
 
-                  <a
-                    href="login.html"
+                  <button
+                  	type="submit"
                     class="btn btn-primary btn-user btn-block"
                   >
                     Register Account
-                  </a>
+                  </button>
                 </form>
+                
                 <hr />
                 <div class="text-center">
-                  <a class="small" href="login.html"
+                  <a class="small" href="/auth/join"
                     >Already have an account? Login!</a
                   >
                 </div>

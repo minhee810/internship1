@@ -66,6 +66,9 @@
 			<artifactId>jstl</artifactId>
 		</dependency>		
 		
+		<!-- thymeleaf -->
+
+		
 		<!-- tomcat-embed-jasper -->
 		<dependency>	
 			<groupId>org.apache.tomcat.embed</groupId>	
@@ -78,6 +81,16 @@
         	<artifactId>spring-boot-devtools</artifactId>
         	<optional>true</optional>
      	</dependency>
+     	
+     	<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-api</artifactId>
+		</dependency>
+     	
+
+     	
+
+     	
 	</dependencies>
 
 	<build>

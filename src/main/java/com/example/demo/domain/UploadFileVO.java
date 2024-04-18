@@ -1,5 +1,5 @@
 package com.example.demo.domain;
 
-public class Board {
+public class UploadFileVO {
 
 }

@@ -2,12 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-        <mapper namespace="usersMapper">
+        <mapper namespace="com.example.demo.mapper.UserMapper">
         
-        <insert id="join">
-        	INSERT INTO USERS
-        	VALUES (
-        		users_seq.nexval,
+        <!-- usersVO 타입으로 받아오겠다는 명시가 필요함. -->
+        <insert id="join" parameterType="usersVO">
+        
+        <![CDATA[
+        	INSERT INTO USERS(USER_ID, USERNAME, EMAIL, PASSWORD, PHONE, ADDRESS, DETAIL_ADDRESS, ZIP_CODE, NOTE) VALUES 
+        	(
+        		users_seq.nextval,
         		#{username},
         		#{email},
         		#{password},
@@ -15,10 +18,10 @@
         		#{address},
         		#{detailAddress},
         		#{zipCode},
-        		#{note},
-        		#{createdDate},
-        		#{modifiedDate},
-        		#{isDeleted}
+        		#{note}
         	)
+        
+        ]]>
+
         </insert>
         </mapper>
