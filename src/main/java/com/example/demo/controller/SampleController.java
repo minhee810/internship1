@@ -7,7 +7,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SampleController {
-	
 
 	@GetMapping("/")
 	public ModelAndView sample(Model model) {
@@ -15,26 +14,25 @@ public class SampleController {
 		mv.setViewName("main");
 		return mv;
 	}
-		
+
 	@GetMapping("/errorPage")
 	public String errorPage() {
 		return "errorPage";
 	}
-	
+
 	@GetMapping("/mainPage")
 	public String mainPage() {
-		return "main"; 
+		return "main";
 	}
-	
+
 	@GetMapping("/board-detail")
 	public String boardDetail() {
-		return "boardDetail"; 
+		return "boardDetail";
 	}
-	
+
 	@GetMapping("/board-modify")
 	public String boardModify() {
-		return "boardModify"; 
+		return "boardModify";
 	}
-	
-	
+
 }
