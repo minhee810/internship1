@@ -41,33 +41,38 @@
 							<div class="text-center">
 								<h1 class="h4 text-gray-900 mb-4">회원가입</h1>
 							</div>
-							<form id="join" class="user" action="${contextPath}/auth/join"
+							<form id="joinForm" class="user" action="${contextPath}/auth/join"  
 								method="post" name="formm">
 								<div class="form-group">
 
 									<!-- 중복확인 기능 추가 : 사용가능, 불가능 한 닉네임입니다.  -->
 									<input name="username" type="text" id="username"
 										class="form-control form-control-user" placeholder="아이디"
-										required="required" /> <font id="id_feedback" size="2"></font>
+										maxlength="10" /> <font id="id_feedback"
+										size="2"></font>
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-9 mb-3 mb-sm-0">
 										<input name="email" type="email" id="email"
 											class="form-control form-control-user" placeholder="이메일주소" />
+
 									</div>
 									<div class="col-sm-3">
 										<button id="emailCheck" type="button"
-											class="btn btn-primary btn-user btn-block" onclick="fn_emailCheck()" value="N">중복확인</button>
+											class="btn btn-primary btn-user btn-block"
+											onclick="fn_emailCheck()" value="N">중복확인</button>
 									</div>
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
-										<input name="password" type="password"
+										<input name="password" type="password" id="password" 
 											class="form-control form-control-user" placeholder="비밀번호" />
+
 									</div>
 									<div class="col-sm-6">
-										<input type="password" class="form-control form-control-user"
-											placeholder="비밀번호 확인" />
+										<input name="password_confirm" type="password"
+											id="password_confirm" 
+											class="form-control form-control-user" placeholder="비밀번호 확인" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -91,17 +96,15 @@
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
 										<input name="zipCode" type="text"
-											class="form-control form-control-user" placeholder="우편번호" />
+											class="form-control form-control-user" placeholder="우편번호"  />
 									</div>
 									<div class="col-sm-6">
 										<input name="note" type="text"
 											class="form-control form-control-user" placeholder="참고사항" />
 									</div>
 								</div>
-
-								<input type="submit" class="btn btn-primary btn-user btn-block">
-								Register Account
-								</button>
+								<input type="submit" class="btn btn-primary btn-user btn-block"
+								 value="Register Account" />
 							</form>
 
 							<hr />
@@ -118,13 +121,16 @@
 
 	<!-- Bootstrap core JavaScript-->
 	<script src="../resources/static/vendor/jquery/jquery.min.js"></script>
-	<script src="../resources/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="../resources/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Core plugin JavaScript-->
-	<script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+	<script
+		src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="../resources/static/js/sb-admin-2.min.js"></script>
-	<script type="text/javascript" src="../resources/static/js/joinValidation.js"></script>
+	<script type="text/javascript"
+		src="../resources/static/js/joinValidation.js"></script>
 </body>
 </html>

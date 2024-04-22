@@ -87,6 +87,13 @@
 		  <artifactId>slf4j-api</artifactId>
 		</dependency>
      	
+     	
+     	<!-- validation -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+
 
      	
 

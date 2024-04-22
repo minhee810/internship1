@@ -1,24 +1,24 @@
 package com.example.demo.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.domain.UsersVO;
+import com.example.demo.dto.JoinDto;
 import com.example.demo.service.UserServiceImpl;
 
 @RequestMapping("/auth")
@@ -41,15 +41,14 @@ public class UsersController {
 	public String loginPage() {
 		return "auth/login";
 	}
-
+	
+	
 	// 회원가입
 	@PostMapping("/join")
-	public String join(@ModelAttribute UsersVO userVO, HttpServletRequest request, Model model)
+	public String join(@ModelAttribute JoinDto joinDto)
 			throws UnsupportedEncodingException {
-
-		log.debug("userVO {}", userVO);
-
-		if (userServiceImpl.join(userVO) > 0) {
+		
+		if (userServiceImpl.join(joinDto) > 0) {
 			return "redirect:/auth/login";
 		}
 		// 회원가입 실패시 예외처리
@@ -59,20 +58,24 @@ public class UsersController {
 	@PostMapping(value = "/idCheck")
 	@ResponseBody
 	public int idCheck(String username) {
-		
+
 		int result = userServiceImpl.idCheck(username);
 
-		log.debug("username : ", "username");
+		log.info("username ={} ", "username");
+		log.info("result ={}", result);
 		
 		return userServiceImpl.idCheck(username);
 	}
-	
+
 	@PostMapping(value = "/emailCheck")
 	@ResponseBody
 	public int emailCheck(String email) {
+		log.info("email = {}", email);
+		
 		int result = userServiceImpl.emailCheck(email);
+		log.info("result ={}", result);
+		
 		return userServiceImpl.emailCheck(email);
 	}
-	
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.UsersVO;
+import com.example.demo.dto.JoinDto;
 import com.example.demo.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,15 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserMapper userMapper;
-
+	
 	@Override
-	public int join(UsersVO userVO) throws UnsupportedEncodingException {
+	public int join(JoinDto joinDto) throws UnsupportedEncodingException {
 
-		String encPassword = passwordEncoder.encrypt(userVO.getEmail(), userVO.getPassword());
-		userVO.setPassword(encPassword);
+		String encPassword = passwordEncoder.encrypt(joinDto.getEmail(), joinDto.getPassword());
+		joinDto.setPassword(encPassword);
 
 		log.debug(encPassword);
-		return userMapper.join(userVO);
+		return userMapper.join(joinDto);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int emailCheck(String email) {
 		int result = userMapper.emailCheck(email);
-		return 0;
+		return result;
 	}
 
 

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.example.demo.mapper.UserMapper">
 	<!-- usersVO 타입으로 받아오겠다는 명시가 필요함. -->
-	<insert id="join" parameterType="usersVO">
+	<insert id="join" parameterType="joinDto">
 	        
 	        <![CDATA[
 	        	INSERT INTO USERS(USER_ID, USERNAME, EMAIL, PASSWORD, PHONE, ADDRESS, DETAIL_ADDRESS, ZIP_CODE, NOTE) VALUES 
@@ -19,7 +19,7 @@
 	        		#{zipCode},
 	        		#{note}
 	        	)
-	        ]]>ㄷ1
+	        ]]>
 	</insert>
 
 	<!-- 아이디 중복 체크 -->
@@ -33,7 +33,7 @@
 	<!-- 이메일 중복 체크 -->
 	<select id="emailCheck" parameterType="String" resultType="int">
 	<![CDATA[
-		SELECT COUNT(*) FROM USERS WHERE USERNAME=#{email}
+		SELECT COUNT(*) FROM USERS WHERE EMAIL=#{email}
 	]]>
 	</select>
 </mapper>
