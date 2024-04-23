@@ -17,6 +17,8 @@
 		<typeAlias type="com.example.demo.domain.CommentsVO" alias="commentsVO"/>
 		<typeAlias type="com.example.demo.domain.UploadFileVO" alias="uploadfileVO"/>
 		<typeAlias type="com.example.demo.dto.JoinDto" alias="joinDto"/>
+		<typeAlias type="com.example.demo.dto.LoinDto" alias="loginDto"/>
+		
 	</typeAliases>
 
 </configuration>	

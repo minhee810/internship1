@@ -1,7 +1,10 @@
+const passwordReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+const pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
 
 // 아이디 중복확인 + 유효성 검사 
 $('#username').keyup(function() {
-	let username = $('#username').val();
+	let username = $('#username').val().trim();
 
 	$.ajax({
 		url: "/auth/idCheck",
@@ -9,10 +12,10 @@ $('#username').keyup(function() {
 		data: { username: username },
 		dataType: "json",
 		success: function(result) {
-			if (username == '') {
-				alert("아이디를 입력해주세요.");
-			}
-			else if (result == 1) {
+
+			if (!isRequired(username)) {
+				$("#id_feedback").html('');
+			} else if (result == 1) {
 				$("#id_feedback").html('이미 사용중인 아이디입니다.');
 				$("#id_feedback").attr('color', '#dc3545');
 			} else {
@@ -27,19 +30,37 @@ $('#username').keyup(function() {
 });
 
 
+// 특수문자 입력 방지
+function characterCheck(event) {
+	let data = event.target;
+	let regExp = /[^A-Za-z0-9]/g;  // 영문자와 숫자만 가능한 정규식
+	
+	if (regExp.test(data.value)) {
+		data.value = data.value.replace(regExp, "");
+	}
+}
+
+const isRequired = value => value === '' ? false : true;
+
+
+const usernameReg = (username) => {
+	const userPattern = /^[a-zA-Z]*$/;
+	return userPattern.test(username);
+}
+
+
 // 이메일 중복확인 
 function fn_emailCheck() {
 
-	var email = $('#email').val().trim();
-	var pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-
+	let email = $('#email').val().trim();
+	
 	$.ajax({
 		url: "/auth/emailCheck",
 		type: "post",
 		data: { email: email },
 		dataType: "json",
 		success: function(result) {
-			if (email == '') {
+			if (!isRequired(email)) {
 				alert("이메일을 입력해주세요.")
 			} else if (!pattern.test($('#email').val())) {
 				alert("이메일 형식으로 입력해주세요.");
@@ -52,7 +73,6 @@ function fn_emailCheck() {
 				$('#emailCheck').attr("value", "Y");
 				alert("사용가능한 이메일입니다.");
 			}
-
 		},
 		error: function(error) {
 			console.log(error);
@@ -61,136 +81,111 @@ function fn_emailCheck() {
 	});
 };
 
+// 비밀번호 유효성 검사 
+function pwCheck() {
+
+	// var passwordReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+	var password = $('#password').val();
+	var password_confirm = $('#password_confirm').val();
+
+	if (!passwordReg.test(password)) {
+		$('#passwordCheck').text("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.").css('color', 'green');
+	} else if (password == password_confirm) {
+		$('#passwordCheck').text("비밀번호가 일치합니다.").css('color', 'green');
+	} else {
+		$('#passwordCheck').text("비밀번호가 일치하지 않습니다.").css('color', 'red');
+	}
+}
+
+// 휴대전화 유효성 검사 
+$(document).ready(function() {
+	$("#phone").blur(function() {
+		var phoneNumber = $("#phone").val();
+		
+		if (phoneNumber) {
+			var regex = /^(01[0-9]{1}-?[0-9]{4}-?[0-9]{4}|01[0-9]{8})$/;
+
+			if (regex.test(phoneNumber)) {
+			
+			} else {
+				alert("잘못된 형식의 전화번호 입니다.");
+				$("#phone").val("");
+				return false;
+			}
+
+			var phone = phoneNumber;
+			var phone = phone.replace(/[^0-9]/g, '');
 
 
-// 아이디 중복확인 + 유효성 검사 
-$('#joinForm').keyup(function() {
-	$('#username').blur(function() {
-		validateUsername();
-	})
-
-	$('#password').blur(function() {
-		validatePassword();
-	});
-
-	$('#email').blur(function() {
-		validateEmail();
-	});
-
-	$('#phone').blur(function() {
-		validatePhone();
-	});
-
-
-	$('#joinForm').submit(function(event) {
-		if (!validateUsername() || !validatePassword() || !validateEmail() | !validatePhone() | !validateAddress) {
-			event.preventDefault();  // form 제출 방지 
-			alert('모든 필드를 올바르게 입력해주세요.');
+			if (phone.length === 10) {
+				phone = phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
+			} else if (phone.length === 11) {
+				phone = phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
+			}
+			$("#phone").val(phone);
 		}
 	});
-
 });
 
+/**
+ * 폼 데이터 전송 전에 전체 필드 확인
+ */
+function joinForm_check() {
 
+	var username = document.getElementById("username");
+	var password = document.getElementById("password");
+	var password_confirm = document.getElementById("password_confirm");
+	var email = document.getElementById("email");
+	var phone = document.getElementById("phone");
+	var address = document.getElementById("address");
+	var detailAddress = document.getElementById("detailAddress");
+	
+	
 
-
-// 아이디 유효성 검사 
-function validateUsername() {
-	var username = $('#username').val().trim();
-	var usernameReg = /^[a-zA-Z]*$/; // 함수 안에서만 사용하기 때문에 상수로 선언
-
-	if (username == '') {
-		alert("아이디를 입력해주세요.");
+	if (username.value == "") {
+		alert("아이디를 입력하세요");
+		username.focus();
 		return false;
+	};
 
-	} else if (!usernameReg.test(username)) {
-		alert("아이디는 10글자 이하 영어로 작성해야합니다.");
-		$("#username").val('').focus();
+	if (email.value == "") {
+		alert("이메일을 입력하세요");
+		email.focus();
 		return false;
-	} else {
-		return true;
-	}
-}
-
-// 비밀번호 유효성 검사 
-function validatePassword() {
-
-	var pw = $("#password").val().trim();
-	var pw_confirm = $("#password_confirm").val().trim();
-	var passwordReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-
-	if (!passwordReg.test(pw)) {
-		alert("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.");
-		$('#password').val("");
-		$('#password').focus();
+	};
+	if (password.value == "") {
+		alert("비밀번호를 입력하세요");
+		password.focus();
 		return false;
-
-	} else if (pw != pw_confirm) {
-		if (pw_confirm != '') {
-			alert("비밀번호가 일치하지 않습니다.");
-			$('#password_confirm').val('').focus();
-			return false;
-		}
-	}
-}
-
-// 이메일 유효성 검사 
-function validateEmail() {
-	var email = $('#email').val().trim();
-	var emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-
-	// email 공백확인 
-	if (email == "") {
-		alert("이메일을 입력해주세요.");
-		$("#email").focus();
+	};
+	if (password_confirm.value !== password.value) {
+		alert("비밀번호가 일치하지 않습니다.");
+		password_confirm.focus();
 		return false;
+	};
 
-	} else if (!emailReg.test(email)) {
-		console.log(emailCheck);
-		alert("이메일 형식으로 입력해주세요.");
-		$("#email").val("").focus();
+	if (phone.value == "") {
+		alert("휴대폰번호를 입력하세요");
+		phone.focus();
 		return false;
-	}
+	};
+
+	if (address.value == "") {
+		alert("주소를 입력하세요");
+		phone.focus();
+		return false;
+	};
+
+	if (detailAddress.value == "") {
+		alert("상세주소를 입력하세요");
+		phone.focus();
+		return false;
+	};
+
+	document.joinForm.submit();
 
 }
 
 
-// 휴대전화 유효성 검사
-function validatePhone() {
-	var phone = $('#phone').val().trim();
-	var phoneReg = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
 
-	if (phone == '') {
-		alert("휴대전화 번호를 입력해주세요.");
-		$('#phone').focus();
-		return false;
 
-	} else if (phoneReg.test(phone)) {
-		alert("휴대전화 형식이 아닙니다. ");
-		$('#phone').val("").focus();
-		return false;
-	}
-}
-
-// 주소 빈칸 유효성 검사
-function validateAddress() {
-	var address = $('#address').val().trim();
-	var detailAddress = $('#detailAddress').val().trim();
-	var zipCode = $('#zipCode').val().trim();
-
-	if (address == '') {
-		alert("주소를 입력해주세요.");
-		$('#address').focus();
-		return false;
-
-	} else if (detailAddress == '') {
-		alert("상세 주소를 입력해주세요.");
-		$('#detailAddress').focus();
-		return false;
-
-	} else if (zipCode == '') {
-		alert("우편 번호를 입력해주세요.");
-		$('#zipCode').focus();
-		return false;
-	}
-}

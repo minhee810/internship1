@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

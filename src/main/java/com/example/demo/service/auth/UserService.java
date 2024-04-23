@@ -1,8 +1,9 @@
-package com.example.demo.service;
+package com.example.demo.service.auth;
 
 import java.io.UnsupportedEncodingException;
 
 import com.example.demo.dto.JoinDto;
+import com.example.demo.dto.LoginDto;
 
 public interface UserService {
 
@@ -13,4 +14,6 @@ public interface UserService {
 	public int idCheck(String id);
 
 	public int emailCheck(String email);
+	
+	public LoginDto login(String username, String password);
 }

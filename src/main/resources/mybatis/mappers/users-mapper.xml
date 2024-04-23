@@ -28,13 +28,20 @@
 		SELECT COUNT(*) FROM USERS WHERE USERNAME=#{username}
 	]]>
 	</select>
-	
-	
+
+
 	<!-- 이메일 중복 체크 -->
 	<select id="emailCheck" parameterType="String" resultType="int">
 	<![CDATA[
 		SELECT COUNT(*) FROM USERS WHERE EMAIL=#{email}
 	]]>
 	</select>
+
+	<select id="getLoginUser" resultType="loginDto">
+		<![CDATA[
+			SELECT * FROM USERS WHERE USERNAME=#{username}
+		]]>
+	</select>
+
 </mapper>
 

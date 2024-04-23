@@ -25,6 +25,8 @@
 
 <!-- Custom styles for this template-->
 <link href="../resources/static/css/sb-admin-2.min.css" rel="stylesheet" />
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 </head>
 
@@ -41,15 +43,15 @@
 							<div class="text-center">
 								<h1 class="h4 text-gray-900 mb-4">회원가입</h1>
 							</div>
-							<form id="joinForm" class="user" action="${contextPath}/auth/join"  
-								method="post" name="formm">
-								<div class="form-group">
+							<form id="joinForm" class="user"
+								action="${contextPath}/auth/join" method="post" name=joinForm>
 
-									<!-- 중복확인 기능 추가 : 사용가능, 불가능 한 닉네임입니다.  -->
+								<div class="form-group eror">
 									<input name="username" type="text" id="username"
+										onkeyup="characterCheck(event)"
 										class="form-control form-control-user" placeholder="아이디"
-										maxlength="10" /> <font id="id_feedback"
-										size="2"></font>
+										maxlength="10" /> <font id="id_feedback" size="2"></font>
+
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-9 mb-3 mb-sm-0">
@@ -62,49 +64,55 @@
 											class="btn btn-primary btn-user btn-block"
 											onclick="fn_emailCheck()" value="N">중복확인</button>
 									</div>
+
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
-										<input name="password" type="password" id="password" 
-											class="form-control form-control-user" placeholder="비밀번호" />
+										<input name="password" type="password" id="password"
+											oninput="pwCheck()" class="form-control form-control-user"
+											placeholder="비밀번호" />
 
 									</div>
 									<div class="col-sm-6">
 										<input name="password_confirm" type="password"
-											id="password_confirm" 
+											oninput="pwCheck()" id="password_confirm"
 											class="form-control form-control-user" placeholder="비밀번호 확인" />
 									</div>
+									<div>
+										&nbsp&nbsp&nbsp&nbsp&nbsp<span id="passwordCheck"> </span>
+									</div>
+
 								</div>
 								<div class="form-group">
-									<input name="phone" type="tel"
+									<input name="phone" type="tel" id="phone"
 										class="form-control form-control-user" placeholder="휴대폰번호" />
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-9 mb-3 mb-sm-0">
-										<input name="address" type="text"
+										<input name="address" type="text" id="address"
 											class="form-control form-control-user" placeholder="주소" />
 									</div>
 									<div class="col-sm-3">
-										<a href="login.html"
-											class="btn btn-primary btn-user btn-block"> 주소찾기 </a>
+										<input type="button" onclick="exeDaumPostcode()"
+											class="btn btn-primary btn-user btn-block" value="주소찾기" />
 									</div>
 								</div>
 								<div class="form-group">
-									<input name="detailAddress" type="text"
+									<input name="detailAddress" type="text" id="detailAddress"
 										class="form-control form-control-user" placeholder="상세주소" />
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
-										<input name="zipCode" type="text"
-											class="form-control form-control-user" placeholder="우편번호"  />
+										<input name="zipCode" type="text" id="zipCode"
+											class="form-control form-control-user" placeholder="우편번호" />
 									</div>
 									<div class="col-sm-6">
-										<input name="note" type="text"
+										<input name="note" type="text" id="note"
 											class="form-control form-control-user" placeholder="참고사항" />
 									</div>
 								</div>
-								<input type="submit" class="btn btn-primary btn-user btn-block"
-								 value="Register Account" />
+								<button type="button" class="btn btn-primary btn-user btn-block"
+									onclick="joinForm_check()">Register Account</button>
 							</form>
 
 							<hr />
@@ -132,5 +140,8 @@
 	<script src="../resources/static/js/sb-admin-2.min.js"></script>
 	<script type="text/javascript"
 		src="../resources/static/js/joinValidation.js"></script>
+	<script type="text/javascript"
+		src="../resources/static/js/postCode.js"></script>
+
 </body>
 </html>
