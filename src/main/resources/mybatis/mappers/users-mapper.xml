@@ -37,11 +37,14 @@
 	]]>
 	</select>
 
-	<select id="getLoginUser" resultType="loginDto">
+
+	<!-- 로그인 시 사용자 정보 조회  -->
+	<select id="getLoginUser" parameterType="loginDto" resultType="loginDto">
 		<![CDATA[
-			SELECT * FROM USERS WHERE USERNAME=#{username}
+			SELECT * FROM USERS WHERE EMAIL=#{email} AND PASSWORD=#{password}
 		]]>
 	</select>
-
+	
+	
 </mapper>
 

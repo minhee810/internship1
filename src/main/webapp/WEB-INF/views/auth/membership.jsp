@@ -48,7 +48,6 @@
 
 								<div class="form-group eror">
 									<input name="username" type="text" id="username"
-										onkeyup="characterCheck(event)"
 										class="form-control form-control-user" placeholder="아이디"
 										maxlength="10" /> <font id="id_feedback" size="2"></font>
 
@@ -75,7 +74,7 @@
 									</div>
 									<div class="col-sm-6">
 										<input name="password_confirm" type="password"
-											oninput="pwCheck()" id="password_confirm"
+										 id="password_confirm"
 											class="form-control form-control-user" placeholder="비밀번호 확인" />
 									</div>
 									<div>
@@ -111,13 +110,13 @@
 											class="form-control form-control-user" placeholder="참고사항" />
 									</div>
 								</div>
-								<button type="button" class="btn btn-primary btn-user btn-block"
-									onclick="joinForm_check()">Register Account</button>
+								<button type="button" class="btn btn-primary btn-user btn-block" name = "joinBtn" id="joinBtn"
+									>Register Account</button>
 							</form>
 
 							<hr />
 							<div class="text-center">
-								<a class="small" href="/auth/join">Already have an account?
+								<a class="small" href="/auth/login">Already have an account?
 									Login!</a>
 							</div>
 						</div>
