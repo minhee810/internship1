@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -135,9 +136,9 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
+                
                   <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    >닉네임</span
-                  >
+                    >${user.username}</span>
                   <img
                     class="img-profile rounded-circle"
                     src="../resources/static/img/undraw_profile.svg"

@@ -74,8 +74,8 @@
 									</div>
 									<div class="col-sm-6">
 										<input name="password_confirm" type="password"
-										 id="password_confirm"
-											class="form-control form-control-user" placeholder="비밀번호 확인" />
+											id="password_confirm" class="form-control form-control-user"
+											placeholder="비밀번호 확인" />
 									</div>
 									<div>
 										&nbsp&nbsp&nbsp&nbsp&nbsp<span id="passwordCheck"> </span>
@@ -110,8 +110,9 @@
 											class="form-control form-control-user" placeholder="참고사항" />
 									</div>
 								</div>
-								<button type="button" class="btn btn-primary btn-user btn-block" name = "joinBtn" id="joinBtn"
-									>Register Account</button>
+								<button type="button" class="btn btn-primary btn-user btn-block"
+									name="joinBtn" id="joinBtn">Register
+									Account</button>
 							</form>
 
 							<hr />
@@ -139,8 +140,8 @@
 	<script src="../resources/static/js/sb-admin-2.min.js"></script>
 	<script type="text/javascript"
 		src="../resources/static/js/joinValidation.js"></script>
-	<script type="text/javascript"
-		src="../resources/static/js/postCode.js"></script>
+	<script type="text/javascript" src="../resources/static/js/postCode.js"></script>
+	<script type="module" src="../resources/static/js/joinValidation.js"></script>
 
 </body>
 </html>

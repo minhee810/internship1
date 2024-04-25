@@ -5,6 +5,8 @@ const validator = {
 	"phoneRegExp": /^(01[0-9]{1}-?[0-9]{4}-?[0-9]{4}|01[0-9]{8})$/
 }
 
+export { validator }
+
 let usernameCheck = false;
 let emailCheck = false;
 
@@ -133,7 +135,6 @@ function phoneCheck() {
 }
 
 
-// 휴대전화 유효성 검사 
 $(document).ready(function(e) {
 	// 특수문자 입력 방지 
 	$("#username").keyup(characterCheck);
@@ -147,6 +148,9 @@ $(document).ready(function(e) {
 	// 사용자 아이디 유효성, 중복 검사 
 	$("#username").keyup(fn_usernameCheck);
 	
+	// 이메일 체크
+	$('#emailCheck').click(fn_emailCheck);
+
 });
 
 

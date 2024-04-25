@@ -43,20 +43,15 @@
 									<div class="text-center">
 										<h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
 									</div>
-									<form class="user" method="post" action ="${contextPath}/auth/login">
-										
-										
+									<form class="user">
 										<div class="form-group">
 											<input type="email" class="form-control form-control-user" value="${email}" name="email" id="email"
 												aria-describedby="emailHelp"
 												placeholder="Enter Email Address..." />
-										</div>
-										
-										
+										</div>										
 										<div class="form-group">
 											<input type="password" class="form-control form-control-user" name="password" id="password"
 												placeholder="Password" />
-										
 										</div>
 										
 										
@@ -66,8 +61,8 @@
 												<label class="custom-control-label" for="">Remember Me</label>
 											</div>
 										</div>
-										<input type="submit" value="로그인" />
-										<hr />
+										<button type="button" class="btn btn-primary btn-user btn-block" name="loginBtn" id="loginBtn">로그인</button>
+									<hr />
 									</form>
 									<div class="text-center">
 										<a class="small" href="register.html">Create
@@ -93,5 +88,7 @@
 
 	<!-- Custom scripts for all pages-->
 	<script src="../resources/static/js/sb-admin-2.min.js"></script>
+		<script type="module"
+		src="../resources/static/js/login.js"></script>
 </body>
 </html>

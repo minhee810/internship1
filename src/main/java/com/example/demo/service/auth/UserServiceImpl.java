@@ -5,9 +5,9 @@ import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.CustomException;
 import com.example.demo.mapper.UserMapper;
-import com.example.demo.service.utils.EncryptHelper;
-import com.example.demo.service.utils.PasswordEncoder;
+import com.example.demo.service.utils.SaltEncrypt;
 import com.example.demo.web.dto.auth.JoinDto;
 import com.example.demo.web.dto.auth.LoginDto;
 
@@ -19,15 +19,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-	private final EncryptHelper encryptHelper;
+	private final SaltEncrypt saltEncrypt;
 
 	@Autowired
 	UserMapper userMapper;
 
+	/**
+	 * 회원 가입
+	 */
 	@Override
 	public int join(JoinDto joinDto) throws UnsupportedEncodingException {
 
-		String encPassword = encryptHelper.encrypt(joinDto.getPassword());
+		String encPassword = saltEncrypt.encrypt(joinDto.getPassword());
 
 		joinDto.setPassword(encPassword);
 
@@ -36,65 +39,74 @@ public class UserServiceImpl implements UserService {
 		return userMapper.join(joinDto);
 	}
 
+	/**
+	 * 아이디 중복 확인
+	 */
 	@Override
 	public int idCheck(String username) {
 		int result = userMapper.idCheck(username);
-
 		return result;
 	}
 
+	/**
+	 * 이메일 중복 확인
+	 */
 	@Override
 	public int emailCheck(String email) {
 		int result = userMapper.emailCheck(email);
 		return result;
 	}
 
+	/**
+	 * 이메일로 사용자 비밀번호 불러오기 (비밀번호 확인을 위함)
+	 */
+	private String findPassword(String email) {
+
+		String password = userMapper.findPassword(email);
+
+		log.info("** password", password);
+
+		return password;
+	}
+
+	/**
+	 * 이메일로 사용자가 존재하는지 확인
+	 */
+	@Override
+	public int existUser(LoginDto loginDto) {
+		return userMapper.emailCheck(loginDto.getEmail());
+	}
+
+	/**
+	 * 사용자 정보 불러오기
+	 * 1. map 사용해서 리턴하기
+	 * 2. 사용자 정보 
+	 */
 	@Override
 	public LoginDto getLoginUser(LoginDto loginDto) throws Exception {
 		
-		int email = emailCheck(loginDto.getEmail()); 
+		String password = findPassword(loginDto.getEmail());
 		
-		if(email == 1) {
-			checkPassword(loginDto.getPassword(), null)
+		// 이메일 + 비밀번호 맞는지 확인하기 
+		if (!checkPassword(loginDto.getPassword(), password)) {
+			throw new CustomException(-1, "비밀번호가 사용자 정보와 일치하지 않음.");
 		}
-				
 		
-		loginDto.setPassword(encryptHelper.encrypt(loginDto.getPassword()));
+		if(existUser(loginDto) == 1 && !checkPassword(loginDto.getPassword(), password)) {
+			
+		}
+		// 1. 이메일이 있는지 확인
 		
-		log.info("loginDto.getPassword() = {}", loginDto.getPassword());
-		
+		// 비밀번호가 서로 일치하면 사용자의 정보를 가져온다.
 		return userMapper.getLoginUser(loginDto);
 	}
 
-	@Override
-	public LoginDto login(LoginDto loginDto) throws Exception {
-		
-		// db 저장된 사용자의 정보 
-		LoginDto savedUser = getLoginUser(loginDto);
-		
-		// 사용자가 로그인 시 입력한 비밀번호 인코딩 값 
-		String plainPassword = encryptHelper.encrypt(loginDto.getPassword());
-		
-		// 저장되어있는 사용자의 인코딩 된 비밀번호 
-		String hashedPassword = savedUser.getPassword();
-		
-		// 비밀번호 일치 확인 
-		if(checkPassword(plainPassword, hashedPassword)) {
-			
-		}
-		
-		return null;
-	}
-
+	/**
+	 * 비밀번호 확인
+	 */
 	@Override
 	public boolean checkPassword(String plainPassword, String hashedPassword) throws Exception {
-		return encryptHelper.isMatch(plainPassword, hashedPassword);
+		return saltEncrypt.isMatch(plainPassword, hashedPassword);
 	}
-	
-
-
-	// 1. 사용자가 입력한 이메일, 비밀번호 받아와서 db에 있는 정보인지 확인 getLoginUser()
-	// 1-1. 사용자 id 로 회원 정보 조회, 비밀번호 비교 메서드 호출, 가입한 사용자라면 세션에 정보 저장 login()
-	// 1-2. 조회한 정보로 pw 비교 메서드 checkPassword()
 
 }
