@@ -15,12 +15,8 @@ public interface UserMapper {
 
 	public int emailCheck(String email);
 
-	public LoginDto getLoginUser(LoginDto loginDto);
+	public LoginDto getLoginUser(String email);
 
-
-	/*
-	 * 이메일로 비밀번호 찾기 
-	 */
 	public String findPassword(String email);
 	
 }

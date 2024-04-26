@@ -38,7 +38,7 @@
 	</select>
 
 	<!-- 로그인 시 사용자 정보 조회  -->
-	<select id="getLoginUser" parameterType="loginDto" resultType="loginDto">
+	<select id="getLoginUser" parameterType="String" resultType="loginDto">
 		<![CDATA[
 			SELECT * FROM USERS WHERE EMAIL=#{email}
 		]]>

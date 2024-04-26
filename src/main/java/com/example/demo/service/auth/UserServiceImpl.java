@@ -1,11 +1,12 @@
 package com.example.demo.service.auth;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exception.CustomException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.utils.SaltEncrypt;
 import com.example.demo.web.dto.auth.JoinDto;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * 이메일로 사용자 비밀번호 불러오기 (비밀번호 확인을 위함)
+	 * 이메일로 사용자 비밀번호 불러오기 (비밀번호 확인을 위함) -> 추후 사용할 수도 있어 보류 ...
 	 */
 	private String findPassword(String email) {
 
@@ -78,27 +79,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * 사용자 정보 불러오기
-	 * 1. map 사용해서 리턴하기
-	 * 2. 사용자 정보 
+	 * 사용자 정보 불러오기 1. map 사용해서 리턴하기 2. 사용자 정보
 	 */
 	@Override
-	public LoginDto getLoginUser(LoginDto loginDto) throws Exception {
+	public LoginDto getLoginUser(String email) throws Exception {
+		LoginDto savedUser = userMapper.getLoginUser(email);
+		return savedUser;
+	}
+
+	/**
+	 * 로그인 기능
+	 */
+	@Override
+	public Map<String, Object> login(LoginDto loginDto) throws Exception {
+
+		String email = loginDto.getEmail();
+		String password = loginDto.getPassword();
+		// DB 호출
+		LoginDto savedUser = getLoginUser(loginDto.getEmail());
+
+		String savedEmail = savedUser.getEmail();
+		String savedPw = savedUser.getPassword();
+		String savedUsername = savedUser.getUsername();
 		
-		String password = findPassword(loginDto.getEmail());
-		
-		// 이메일 + 비밀번호 맞는지 확인하기 
-		if (!checkPassword(loginDto.getPassword(), password)) {
-			throw new CustomException(-1, "비밀번호가 사용자 정보와 일치하지 않음.");
+		if (savedUser == null || !email.equals(savedEmail) || !checkPassword(password, savedPw)) {
+			return null;
 		}
-		
-		if(existUser(loginDto) == 1 && !checkPassword(loginDto.getPassword(), password)) {
-			
-		}
-		// 1. 이메일이 있는지 확인
-		
-		// 비밀번호가 서로 일치하면 사용자의 정보를 가져온다.
-		return userMapper.getLoginUser(loginDto);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userId", savedUser.getUserId());
+		map.put("username", savedUsername);
+
+		return map;
 	}
 
 	/**

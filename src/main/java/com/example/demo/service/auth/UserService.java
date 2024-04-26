@@ -1,22 +1,25 @@
 package com.example.demo.service.auth;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import com.example.demo.web.dto.auth.JoinDto;
 import com.example.demo.web.dto.auth.LoginDto;
 
 public interface UserService {
 
-	public int join(JoinDto joinDto) throws UnsupportedEncodingException;
+	int join(JoinDto joinDto) throws UnsupportedEncodingException;
 
-	public int idCheck(String id);
+	int idCheck(String id);
 
-	public int emailCheck(String email);
+	int emailCheck(String email);
 
-	public LoginDto getLoginUser(LoginDto loginDto) throws Exception;
-	
-	public boolean checkPassword(String plainPassword, String hashedPassword) throws Exception;
-	
-	public int existUser(LoginDto loginDto);
-	
+	boolean checkPassword(String plainPassword, String hashedPassword) throws Exception;
+
+	int existUser(LoginDto loginDto);
+
+	LoginDto getLoginUser(String email) throws Exception;
+
+	Map<String, Object> login(LoginDto loginDto) throws Exception;
+
 }

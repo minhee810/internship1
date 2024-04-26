@@ -1,11 +1,35 @@
 const validator = {
-	"usernameRegExp": /^[^a-zA-Z]*$/,
+	"usernameRegExp": /^[a-zA-Z0-9]+$/, // 영문, 숫자만 가능 
 	"passwordRegExp": /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
-	"emailRegExp": /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
+	"emailRegExp": /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 	"phoneRegExp": /^(01[0-9]{1}-?[0-9]{4}-?[0-9]{4}|01[0-9]{8})$/
 }
 
-export { validator }
+window.validator = validator;
+
+/**
+ * 전체 이벤트 
+ */
+$(document).ready(function(e) {
+
+	// 사용자 아이디 작성 시, 영어만 허용 
+	$("#username").keyup(usernameCharacterCheck);
+
+	// 사용자 아이디 유효성, 중복 검사 
+	$("#username").change(fn_usernameCheck);
+
+	// 휴대전화 유효성 검사 
+	$("#phone").blur(phoneCheck);
+
+	// 비밀번호 유효성, 중복 검사
+	$("#password, #password_confirm").keyup(pwCheck);
+
+	// 이메일 체크
+	$('#emailCheck').click(fn_emailCheck);
+
+});
+
+
 
 let usernameCheck = false;
 let emailCheck = false;
@@ -45,19 +69,39 @@ function fn_usernameCheck() {
 
 // keyup - 키보드 입력 곰사 -> 지우는것
 // change - focus 검사
-// 특수문자 입력 방지
-function characterCheck(event) {
-	let data = event.target;
-	let regExp = /^[^A-Za-z0-9]/g;  // 영문자와 숫자만 가능한 정규식
+// 사용자 이름 작성 시 영어만 허용
+function usernameCharacterCheck(event) {
+	let data = event.target.value;
+	let keyword = /[^\w\d\s]/gi;
 
-	console.log(validator["usernameRegExp"]);
-	if (validator["usernameRegExp"].test(data.value)) { //
-		data.value = data.value.replace(regExp, "");
+	console.log("data", data);
+	let result = validator["usernameRegExp"].test(data);
+	
+	// 영문 숫자만 가능 
+	// 따라서 영문, 숫자인지 확인한 결과 FALSE 면 지우기 
+	if (result) {
+		console.log("validator.emailRegExp : ", validator.emailRegExp);
+		console.log("네! ")
+		console.log("result : ",result); 
+	} else {
+		console.log("result : ", result);
+		data = data.replace(keyword, "");
+		console.log(data);
 	}
 }
 
 const isRequired = value => value === '' ? false : true;
 
+
+function emailCharacterCheck(event) {
+	let data = event.target.value;
+
+	if (!validator["emailRegExp"].test(data)) {
+		console.log(data);
+		data = data.replace();
+
+	}
+}
 
 
 // 이메일 중복확인 
@@ -134,24 +178,6 @@ function phoneCheck() {
 	}
 }
 
-
-$(document).ready(function(e) {
-	// 특수문자 입력 방지 
-	$("#username").keyup(characterCheck);
-
-	// 휴대전화 유효성 검사 
-	$("#phone").blur(phoneCheck);
-
-	// 비밀번호 유효성, 중복 검사
-	$("#password, #password_confirm").keyup(pwCheck);
-
-	// 사용자 아이디 유효성, 중복 검사 
-	$("#username").keyup(fn_usernameCheck);
-	
-	// 이메일 체크
-	$('#emailCheck').click(fn_emailCheck);
-
-});
 
 
 
