@@ -42,7 +42,7 @@
                                     </div>
                                     <form class="user">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                            <input type="text" class="form-control form-control-user" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user" name="password" id="password" placeholder="Password" />
@@ -57,8 +57,7 @@
                                         <hr />
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="auth/join">Create
-                                            an Account!</a>
+                                        <a class="small" href="auth/join">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>
@@ -77,8 +76,9 @@
     <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="../resources/static/js/auth/sb-admin-2.min.js"></script>
-    <script type="module" src="../resources/static/js/auth/login.js"></script>
+    <script src="../resources/static/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="../resources/static/js/auth/login.js"></script>
+    <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
 </body>
 
 </html>

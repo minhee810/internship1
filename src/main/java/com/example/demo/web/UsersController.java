@@ -3,7 +3,6 @@ package com.example.demo.web;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.exception.CustomException;
 import com.example.demo.service.auth.UserServiceImpl;
 import com.example.demo.web.dto.ResponseDto;
 import com.example.demo.web.dto.auth.JoinDto;
@@ -77,33 +77,28 @@ public class UsersController {
 	 * 
 	 **/
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletRequest request) throws Exception {
+	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpSession session) throws Exception {
 
-		Map<String, Object> sessionInfo = userServiceImpl.login(loginDto);
-
-		if (sessionInfo == null) {
-			return new ResponseEntity<>(new ResponseDto<>(-1, "로그인 실패", null), HttpStatus.OK);
-		}
-
-		HttpSession session = request.getSession();
-
-		session.setAttribute(SessionConst.LOGIN_USER, sessionInfo);
+		Map<String, Object> userInfo = userServiceImpl.login(loginDto);
 		
-		log.info("sessionInfo = {} ", sessionInfo.get("username"));
-		
-		return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", sessionInfo), HttpStatus.OK);
+		/*
+		 * if (userInfo == null) { throw new CustomException(); } else {
+		 * 
+		 * }
+		 */
+			session.setAttribute(SessionConst.LOGIN_USER, userInfo);
+
+			log.info("userInfo = {} ", userInfo.get("username"));
+
+			return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", userInfo), HttpStatus.OK);
 
 	}
 
 	@PostMapping("/logout")
-	public String logout(HttpServletRequest request) throws Exception {
+	public String logout(HttpSession session) throws Exception {
 
-		// 세션 삭제
-		HttpSession session = request.getSession(false);
+		session.invalidate();
 
-		if (session != null) {
-			session.invalidate();
-		}
 		return "redirect:/board/main";
 
 	}

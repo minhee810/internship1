@@ -3,10 +3,12 @@ package com.example.demo.service.auth;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.CustomException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.utils.SaltEncrypt;
 import com.example.demo.web.dto.auth.JoinDto;
@@ -83,8 +85,18 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public LoginDto getLoginUser(String email) throws Exception {
-		LoginDto savedUser = userMapper.getLoginUser(email);
-		return savedUser;
+		try {
+			LoginDto savedUser = userMapper.getLoginUser(email);
+			if (savedUser == null) {
+				throw new Exception("saved null입니다");
+			}
+			return savedUser;
+
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return null;
+		}
+
 	}
 
 	/**
@@ -95,22 +107,27 @@ public class UserServiceImpl implements UserService {
 
 		String email = loginDto.getEmail();
 		String password = loginDto.getPassword();
-		// DB 호출
+		Map<String, Object> map = new HashMap<String, Object>();
+
 		LoginDto savedUser = getLoginUser(loginDto.getEmail());
 
-		String savedEmail = savedUser.getEmail();
-		String savedPw = savedUser.getPassword();
-		String savedUsername = savedUser.getUsername();
-		
-		if (savedUser == null || !email.equals(savedEmail) || !checkPassword(password, savedPw)) {
-			return null;
+		// 저장되어있는 이메일인지 확인 저장되어있지 않다면 return false;
+		if (savedUser == null) {
+			throw new CustomException(-1, "존재하지 않는 사용자입니다.");
+
 		}
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		String savedUsername = savedUser.getUsername();
+
+		if (!email.equals(savedUser.getEmail()) || !checkPassword(password, savedUser.getPassword())) {
+
+			throw new CustomException(-1, "비밀번호 혹은 이메일이 틀렸습니다.");
+		}
 
 		map.put("userId", savedUser.getUserId());
 		map.put("username", savedUsername);
 
+		// DB 호출
 		return map;
 	}
 

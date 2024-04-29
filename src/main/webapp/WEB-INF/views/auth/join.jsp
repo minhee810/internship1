@@ -41,13 +41,13 @@
                             <form id="joinForm" class="user" action="${contextPath}/auth/join" method="post" name=joinForm>
 
                                 <div class="form-group eror">
-                                    <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" maxlength="10" />
+                                    <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" />
                                     <font id="id_feedback" size="2"></font>
 
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input name="email" type="email" id="email" class="form-control form-control-user" placeholder="이메일주소" />
+                                        <input name="email" type="text" id="email" class="form-control form-control-user" placeholder="이메일주소" />
 
                                     </div>
                                     <div class="col-sm-3">
@@ -111,14 +111,15 @@
     <script src="../resources/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script> -->
 
     <!-- Custom scripts for all pages-->
     <script src="../resources/static/js/sb-admin-2.min.js"></script>
-    <script type="text/javascript" src="../resources/static/js/auth/join.js"></script>
+  <!-- <script type="text/javascript" src="../resources/static/js/auth/join.js"></script> -->
+   
     <script type="text/javascript" src="../resources/static/js/postCode.js"></script>
-    <script type="module" src="../resources/static/js/auth/join.js"></script>
-
+    <script type="text/javascript" src="../resources/static/js/auth/join.js"></script>
+    <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
 </body>
 
 </html>

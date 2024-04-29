@@ -1,22 +1,24 @@
 package com.example.demo.exception.handler;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.demo.exception.ErrorResponse;
+import com.example.demo.exception.CustomException;
+import com.example.demo.web.dto.ResponseDto;
 
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
+@RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-	@ResponseStatus
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ErrorResponse illegalExHandle(IllegalArgumentException e) {
-		log.error("exceptionHadle = {}", e);
-		return new ErrorResponse("BAD", e.getMessage());
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<?> userNotFoundException(CustomException e) {
+		
+		log.error(e.getMessage());
+		
+		return new ResponseEntity<>(new ResponseDto(-1, e.getMessage(), null), HttpStatus.OK);
 	}
-	
 }

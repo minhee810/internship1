@@ -1,19 +1,18 @@
-const validator = {
-	"usernameRegExp": /^[a-zA-Z0-9]+$/, // 영문, 숫자만 가능 
-	"passwordRegExp": /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
-	"emailRegExp": /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-	"phoneRegExp": /^(01[0-9]{1}-?[0-9]{4}-?[0-9]{4}|01[0-9]{8})$/
-}
 
-window.validator = validator;
+
 
 /**
  * 전체 이벤트 
  */
-$(document).ready(function(e) {
+$(document).ready(function() {
 
 	// 사용자 아이디 작성 시, 영어만 허용 
-	$("#username").keyup(usernameCharacterCheck);
+	$("#username").on('keyup',fn_usernameChar);
+/*		event.stopImmediatePropagation()
+		event.stopPropagation()
+		event.preventDefault()
+		fn_usernameChar(event)*/
+
 
 	// 사용자 아이디 유효성, 중복 검사 
 	$("#username").change(fn_usernameCheck);
@@ -21,11 +20,16 @@ $(document).ready(function(e) {
 	// 휴대전화 유효성 검사 
 	$("#phone").blur(phoneCheck);
 
-	// 비밀번호 유효성, 중복 검사
-	$("#password, #password_confirm").keyup(pwCheck);
+	// 비밀번호 입력 확인 
+	$("#password_confirm").blur(pwCheck);
 
-	// 이메일 체크
-	$('#emailCheck').click(fn_emailCheck);
+	// 이메일 입력값 체크
+	$('#email').on('keyup', fn_emailChar);
+	
+	$('#phone').on('keyup change', fn_phoneChar);
+	
+	// 이메일 중복 버튼 클릭시 중복 검사
+	$('#emailCheck').on('click', fn_emailCheck);
 
 });
 
@@ -33,6 +37,7 @@ $(document).ready(function(e) {
 
 let usernameCheck = false;
 let emailCheck = false;
+
 
 // 아이디 중복확인 + 유효성 검사 
 function fn_usernameCheck() {
@@ -66,40 +71,50 @@ function fn_usernameCheck() {
 
 }
 
+function fn_phoneChar() {
+	let data = $('#phone').val().trim();
+	let keyword = /^[^0-9]*$/;
 
-// keyup - 키보드 입력 곰사 -> 지우는것
-// change - focus 검사
-// 사용자 이름 작성 시 영어만 허용
-function usernameCharacterCheck(event) {
-	let data = event.target.value;
-	let keyword = /[^\w\d\s]/gi;
-
-	console.log("data", data);
-	let result = validator["usernameRegExp"].test(data);
-	
-	// 영문 숫자만 가능 
-	// 따라서 영문, 숫자인지 확인한 결과 FALSE 면 지우기 
-	if (result) {
-		console.log("validator.emailRegExp : ", validator.emailRegExp);
-		console.log("네! ")
-		console.log("result : ",result); 
-	} else {
-		console.log("result : ", result);
-		data = data.replace(keyword, "");
-		console.log(data);
+	if (!validator.phoneRegExp.test(data)) {
+		data = data.replace(keyword, '');
+		$('#phone').val(data);
 	}
+
 }
 
-const isRequired = value => value === '' ? false : true;
+// 아이디 유효성 검사
+function fn_usernameChar(e) {
+	let data = $('#username').val().trim();
+	let keyword = /[^\w\d\s]/gi;
+	console.log("replace 전 data : ", data);
+	
+	if (checkKor(data) || checkSpace(data) || checkSpecial(data)) {
+		data = data.replace(keyword, '');
 
+		console.log("replace 이후 data : ", data);
 
-function emailCharacterCheck(event) {
-	let data = event.target.value;
+		$('#username').val(data);
+	}
+	return false;
+}
 
-	if (!validator["emailRegExp"].test(data)) {
-		console.log(data);
-		data = data.replace();
+function fn_emailChar() {
+	let data = $('#email').val().trim();
+	let nonEmailKeyword = /[^\w\d\s@.]/gi;
 
+	emailCheck = false;
+	
+	// 한글 공백 검사 
+	if (checkKor(data) || checkSpace(data)) {  // 한글이나 공백이 있을 경우 다음 문장 실행 
+		data = data.replace(nonEmailKeyword, "");
+		$('#email').val(data);
+	}
+
+	// 이메일 형식 대로 검사 
+	if (!checkEmail(data)) {  // 이메일 형식이 아닌 경우 다음 문장 실행
+		data = data.replace(nonEmailKeyword, "");
+		console.log("replace 이후의 : ", data);
+		$('#email').val(data);
 	}
 }
 
@@ -115,13 +130,17 @@ function fn_emailCheck() {
 		data: { email: email },
 		dataType: "json",
 		success: function(result) {
+
+			fn_emailCheck = false;
+
 			if (!isRequired(email)) {
 				alert("이메일을 입력해주세요.");
 
-			} else if (!validator["emailRegExp"].test($('#email').val())) {
+			} else if (!validator.emailRegExp.test(email)) {
 				alert("이메일 형식으로 입력해주세요.");
 				$("#email").val("");
 				$("#email").focus();
+				return false;
 
 			} else if (result == 1) {
 				alert("이미 가입된 이메일입니다.");
@@ -133,6 +152,7 @@ function fn_emailCheck() {
 				alert("사용가능한 이메일입니다.");
 				emailCheck = true;
 			}
+
 		},
 		error: function(error) {
 			console.log(error);
@@ -141,17 +161,25 @@ function fn_emailCheck() {
 	});
 };
 
-// 비밀번호 유효성 검사 
+
+
+// 비밀번호 입력 확인
 function pwCheck() {
 	let password = $('#password').val();
 	let password_confirm = $('#password_confirm').val();
 
-	if (!validator["passwordRegExp"].test(password)) {
-		$('#passwordCheck').text("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.").css('color', 'green');
-	} else if (password == password_confirm) {
+	if (!pwValid(password) || !pwValid(password_confirm)) {
+		$('#passwordCheck').text("비밀번호는 8 ~ 15자 영문, 특수문자를 사용하세요.").css('color', 'red');
+		return false;
+	}
+
+	if (password == password_confirm) {
 		$('#passwordCheck').text("비밀번호가 일치합니다.").css('color', 'green');
-	} else {
+		return true;
+
+	} else if (password != password_confirm) {
 		$('#passwordCheck').text("비밀번호가 일치하지 않습니다.").css('color', 'red');
+		return false;
 	}
 }
 
@@ -159,7 +187,7 @@ function phoneCheck() {
 	var phoneNumber = $("#phone").val();
 
 	if (phoneNumber) {
-		if (validator["phoneRegExp"].test(phoneNumber)) {
+		if (validator.phoneRegExp.test(phoneNumber)) {
 
 		} else {
 			alert("전화번호 형식이 올바르지 않습니다.");
@@ -179,12 +207,10 @@ function phoneCheck() {
 }
 
 
-
-
 /**
  * 폼 데이터 전송 전에 전체 필드 확인
  */
-$('#joinBtn').click(function() {
+$('#joinBtn').on('click change', function() {
 
 	var username = $("#username").val();
 	var password = $("#password").val();
@@ -202,7 +228,7 @@ $('#joinBtn').click(function() {
 	};
 
 	// 아이디 유효성 검사 
-	if (validator.usernameRegExp.test(username)) {
+	if (fn_usernameChar(username)) {
 		alert("아이디는 영문 10글자 이내입니다.");
 		username.focus();
 		return false;
@@ -228,7 +254,7 @@ $('#joinBtn').click(function() {
 	}
 
 	// 이메일 유효성 검사 
-	if (validator["emailRegExp"].test(email)) {
+	if (validator.emailRegExp.test(email)) {
 		alert("이메일 형식으로 입력해주세요.");
 		return false;
 	}
@@ -248,13 +274,13 @@ $('#joinBtn').click(function() {
 	};
 
 	// 비밀번호 유효성 검사 
-	if (!validator["passwordRegExp"].test(password)) {
+	if (!validator.passwordRegExp.test(password)) {
 		alert("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.");
 		return false;
 	}
 
 	// 비밀번호 확인 유효성 검사 
-	if (!validator["passwordRegExp"].test(password_confirm)) {
+	if (!validator.passwordRegExp.test(password_confirm)) {
 		alert("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.");
 		return false;
 	}
@@ -267,7 +293,7 @@ $('#joinBtn').click(function() {
 	};
 
 	// 휴대전화 번호 유효성 검사 
-	if (validator["phoneRegExp"].test(phone)) {
+	if (validator.phoneRegExp.test(phone)) {
 		alert("전화번호 형식이 올바르지 않습니다.");
 		return false;
 	}
@@ -285,8 +311,18 @@ $('#joinBtn').click(function() {
 		return false;
 	};
 
-	alert("회원 가입을 진행 하시겠습니까?")
-	document.joinForm.submit();
+	// alert("회원 가입을 진행 하시겠습니까?")
+
+	if (confirm("회원가입을 진행하시겠습니까?") == true) {
+		alert("회원가입이 완료되었습니다.");
+		document.joinForm.submit();
+
+	} else {
+		return false;
+	}
+
+
+
 })
 
 
