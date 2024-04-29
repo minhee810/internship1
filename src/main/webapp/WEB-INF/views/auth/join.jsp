@@ -41,7 +41,7 @@
                             <form id="joinForm" class="user" action="${contextPath}/auth/join" method="post" name=joinForm>
 
                                 <div class="form-group eror">
-                                    <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" />
+                                    <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" maxlength="10"/>
                                     <font id="id_feedback" size="2"></font>
 
                                 </div>
@@ -51,17 +51,17 @@
 
                                     </div>
                                     <div class="col-sm-3">
-                                        <button id="emailCheck" type="button" class="btn btn-primary btn-user btn-block" onclick="fn_emailCheck()" value="N">중복확인</button>
+                                        <button id="emailCheck" type="button" class="btn btn-primary btn-user btn-block" value="N">중복확인</button>
                                     </div>
 
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="password" type="password" id="password" oninput="pwCheck()" class="form-control form-control-user" placeholder="비밀번호" />
+                                        <input name="password" type="password" id="password" oninput="pwCheck()" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호" />
 
                                     </div>
                                     <div class="col-sm-6">
-                                        <input name="password_confirm" type="password" id="password_confirm" class="form-control form-control-user" placeholder="비밀번호 확인" />
+                                        <input name="password_confirm" type="password" id="password_confirm" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호 확인" />
                                     </div>
                                     <div>
                                         &nbsp&nbsp&nbsp&nbsp&nbsp<span id="passwordCheck"> </span>

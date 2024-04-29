@@ -45,7 +45,7 @@
                                             <input type="text" class="form-control form-control-user" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" name="password" id="password" placeholder="Password" />
+                                            <input type="password" class="form-control form-control-user" name="password" id="password" autocomplete="off" placeholder="Password" />
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -57,7 +57,7 @@
                                         <hr />
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="auth/join">Create an Account!</a>
+                                        <a class="small" href="${contextPath}/auth/join">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>

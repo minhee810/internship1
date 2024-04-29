@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page session = "true" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +33,7 @@
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="${contextPath}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -167,7 +169,8 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <a href="write.html"><button type="button" class="btn btn-primary btn float-right">
+                                <a href="write.html">
+                                	<button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
                                         게시글 작성
                                     </button></a>
                             </div>
