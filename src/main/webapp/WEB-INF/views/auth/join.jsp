@@ -2,11 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -90,14 +88,11 @@
                                         <input name="note" type="text" id="note" class="form-control form-control-user" placeholder="참고사항" />
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-primary btn-user btn-block" name="joinBtn" id="joinBtn">Register
-                                    Account</button>
+                                <button type="button" class="btn btn-primary btn-user btn-block" name="joinBtn" id="joinBtn">Register Account</button>
                             </form>
-
                             <hr />
                             <div class="text-center">
-                                <a class="small" href="/auth/login">Already have an account?
-                                    Login!</a>
+                                <a class="small" href="/auth/login">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>

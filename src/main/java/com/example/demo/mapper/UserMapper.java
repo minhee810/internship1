@@ -18,5 +18,7 @@ public interface UserMapper {
 	public LoginDto getLoginUser(String email);
 
 	public String findPassword(String email);
+
+	public int getListCount();
 	
 }

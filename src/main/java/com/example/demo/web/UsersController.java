@@ -80,12 +80,7 @@ public class UsersController {
 	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpSession session) throws Exception {
 
 		Map<String, Object> userInfo = userServiceImpl.login(loginDto);
-		
-		/*
-		 * if (userInfo == null) { throw new CustomException(); } else {
-		 * 
-		 * }
-		 */
+
 			session.setAttribute(SessionConst.LOGIN_USER, userInfo);
 
 			log.info("userInfo = {} ", userInfo.get("username"));
@@ -99,7 +94,7 @@ public class UsersController {
 
 		session.invalidate();
 
-		return "redirect:/board/main";
+		return "redirect:/board/boardMain";
 
 	}
 }

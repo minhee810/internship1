@@ -18,6 +18,7 @@
 		<typeAlias type="com.example.demo.vo.UploadFileVO" alias="uploadfileVO"/>
 		<typeAlias type="com.example.demo.web.dto.auth.JoinDto" alias="joinDto"/>
 		<typeAlias type="com.example.demo.web.dto.auth.LoginDto" alias="loginDto"/>
+		<typeAlias type="com.example.demo.web.dto.board.BoardListDto" alias="boardListDto"/>
 		
 	</typeAliases>
 

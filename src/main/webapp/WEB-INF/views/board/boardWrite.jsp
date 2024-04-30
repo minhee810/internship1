@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page session = "true" %>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
+    
 <!DOCTYPE html>
 <html lang="en">
 
@@ -123,28 +125,28 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4 h-75">
                         <div class="card-body">
+                        
+                        
                             <!-- Basic Card Example -->
-                            <form action="#" method="post" class="h-100">
+                            <form action="${contextPath}/board/write" method="post" class="h-100">
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
                                         <div class="col-sm-11 float-left">
-                                            <input type="text" id="a1" class="form-control" placeholder="제목" value="test 제목" />
+                                            <input type="text" id="title" name="title" class="form-control" placeholder="제목" />
                                         </div>
-                                        <a href="tables.html">
-                                            <button type="button" class="btn btn-primary btn float-right ml-1">
-                                                수정완료
-                                            </button></a>
+                                            <button type="submit" id="insertBtn" name="insertBtn" class="btn btn-primary btn float-right ml-1">
+                                                작성완료
+                                            </button>
                                     </div>
                                     <div class="card-body h-100">
-                                        <textarea id="a3" cols="30" class="form-control h-100" placeholder="내용
-                        " style="resize: none">
-The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS! Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS!</textarea>
+                                        <textarea id="content" name="content" cols="30" class="form-control h-100" placeholder="내용" style="resize: none"></textarea>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
+                
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
@@ -199,14 +201,14 @@ The styling for this basic card example is created by using default Bootstrap ut
     <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="../resources/static/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
     <script src="../resources/static/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../resources/static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="../resources/static/js/demo/datatables-demo.js"></script>
+    <script src="../resources/static/demo/datatables-demo.js"></script>
 </body>
 
 </html>

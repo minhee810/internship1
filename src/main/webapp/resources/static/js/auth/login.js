@@ -62,10 +62,13 @@ function login() {
 				alert("이메일 혹은 비밀번호가 실패하였습니다.");
 			}
 		},
-
+		// ** 사용자가 존재하지 않는 경우 어떻게 처리할지 고민해보기! 
 		error: function(error) {
-			console.log(error);
-			alert("서버 요청에 실패했습니다.");
+			let res = error.responseJSON;
+			console.log(res);
+			let msg = res.msg
+
+			alert(msg);
 		}
 	})
 }
@@ -86,6 +89,6 @@ $('#loginBtn').click(function() {
 		$('#password').focus();
 		return false;
 	}
-	
+
 	login();
 })

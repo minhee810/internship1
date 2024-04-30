@@ -71,7 +71,6 @@ function fn_usernameCheck() {
 			alert("서버 요청에 실패했습니다.");
 		}
 	})
-
 }
 
 function fn_phoneChar() {

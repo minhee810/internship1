@@ -17,8 +17,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<?> userNotFoundException(CustomException e) {
 		
-		log.error(e.getMessage());
+		log.error(e.getMsg());
 		
-		return new ResponseEntity<>(new ResponseDto(-1, e.getMessage(), null), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseDto(-1, e.getMsg(), null), HttpStatus.BAD_REQUEST);
 	}
 }

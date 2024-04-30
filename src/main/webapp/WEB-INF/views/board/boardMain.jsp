@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-
+	
     <title>Tables</title>
 
     <!-- Custom fonts for this template -->
@@ -141,10 +141,11 @@
                     <h1 class="h3 mb-2 text-gray-800">게시판</h1>
 
                     <!-- DataTales Example -->
+                  
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="" width="100%" cellspacing="0">
+                                <table class="table table-bordered" id="boardList" width="100%" cellspacing="0">
                                     <colgroup>
                                         <col width="20%" />
                                         <col width="40%" />
@@ -153,6 +154,7 @@
                                     </colgroup>
 
                                     <thead>
+                                    
                                         <tr>
                                             <th>닉네임</th>
                                             <th>제목</th>
@@ -161,15 +163,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>홍길동</td>
-                                            <td><a href="detail.html">System Architect</a></td>
-                                            <td>2011-04-25</td>
-                                            <td>0개</td>
-                                        </tr>
+	                                    <c:forEach var="list" items="${boardList}" >
+	                                    	<tr>
+	                                            <td></td>
+	                                            <td><a href="detail.html">${list.title}</a></td>
+	                                            <td>${list.createdDate}</td>
+	                                            <td>${list.commentCnt}개</td>
+	                                        </tr>
+	                                   	 </c:forEach>
+                                        
                                     </tbody>
                                 </table>
-                                <a href="write.html">
+                                <a href="${contextPath}/board/write">
                                 	<button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
                                         게시글 작성
                                     </button></a>
@@ -239,6 +244,7 @@
 
     <!-- Page level custom scripts -->
     <script src="../resources/static/js/demo/datatables-demo.js"></script>
+    <script type="text/javascript" src="../resources/static/js/board/boardMain.js"></script>
 </body>
 
 </html>

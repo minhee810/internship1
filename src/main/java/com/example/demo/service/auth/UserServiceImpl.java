@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			LoginDto savedUser = userMapper.getLoginUser(email);
 			if (savedUser == null) {
-				throw new Exception("saved null입니다");
+				throw new CustomException(-1, "saved null입니다");
 			}
 			return savedUser;
 
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
 		// 저장되어있는 이메일인지 확인 저장되어있지 않다면 return false;
 		if (savedUser == null) {
-			throw new CustomException(-1, "존재하지 않는 사용자입니다.");
+			throw new CustomException(-1, "이메일 혹은 비밀번호가 실패했습니다.");
 
 		}
 
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
 		if (!email.equals(savedUser.getEmail()) || !checkPassword(password, savedUser.getPassword())) {
 
-			throw new CustomException(-1, "비밀번호 혹은 이메일이 틀렸습니다.");
+			throw new CustomException(-1, "이메일 혹은 비밀번호가 실패했습니다.");
 		}
 
 		map.put("userId", savedUser.getUserId());
