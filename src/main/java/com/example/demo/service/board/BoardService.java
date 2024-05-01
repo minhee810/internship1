@@ -11,4 +11,6 @@ public interface BoardService {
 	public List<BoardVO> getBoardList();
 
 	int insertBoard(BoardListDto board) throws Exception;
+	
+	List<BoardVO> getDetail(Long boardId);
 }

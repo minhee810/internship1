@@ -4,7 +4,7 @@
 <%@ page session = "true" %>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-    
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,48 +32,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">게시판</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0" />
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="membership.html">membership</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item active">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block" />
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-        </ul>
+        <%@ include file="../layout/sidebar.jsp" %>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -81,40 +40,7 @@
             <!-- Main Content -->
             <div id="content">
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <form class="form-inline">
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">닉네임</span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg" />
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
+                <%@ include file="../layout/header.jsp" %>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -125,8 +51,8 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4 h-75">
                         <div class="card-body">
-                        
-                        
+
+
                             <!-- Basic Card Example -->
                             <form action="${contextPath}/board/write" method="post" class="h-100">
                                 <div class="card shadow mb-4 h-100">
@@ -134,9 +60,9 @@
                                         <div class="col-sm-11 float-left">
                                             <input type="text" id="title" name="title" class="form-control" placeholder="제목" />
                                         </div>
-                                            <button type="submit" id="insertBtn" name="insertBtn" class="btn btn-primary btn float-right ml-1">
-                                                작성완료
-                                            </button>
+                                        <button type="submit" id="insertBtn" name="insertBtn" class="btn btn-primary btn float-right ml-1">
+                                            작성완료
+                                        </button>
                                     </div>
                                     <div class="card-body h-100">
                                         <textarea id="content" name="content" cols="30" class="form-control h-100" placeholder="내용" style="resize: none"></textarea>
@@ -146,19 +72,13 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>풋터</span>
-                    </div>
-                </div>
-            </footer>
+            <%@ include file="../layout/footer.jsp" %>
             <!-- End of Footer -->
         </div>
         <!-- End of Content Wrapper -->

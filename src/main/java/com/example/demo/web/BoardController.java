@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.service.board.BoardServiceImpl;
@@ -61,22 +62,40 @@ public class BoardController {
 	@PostMapping("/board/write")
 	public String insertBoard(@ModelAttribute BoardListDto dto, Model model, HttpSession session) throws Exception {
 
-		log.info("session에는 어떤 정보가 들어있나용 : ", session.getAttribute("loginUser"));
+		log.info("session userId = {} ", session.getAttribute(SessionConst.USER_ID));
+
+		log.info("session username = {} ", session.getAttribute(SessionConst.USERNAME));
+
 		log.info("dto = {}", dto);
-		
-		BoardListDto board = BoardListDto.builder()
-				.title(dto.getTitle())
-				.content(dto.getContent())
-				.uploadFileUrl(dto.getUploadFileUrl())
-				.commentCnt(dto.getCommentCnt())
-				.userId(dto.getUserId())
+
+		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
+		String username = (String) session.getAttribute(SessionConst.USERNAME);
+
+		log.info("userId = {} ", userId);
+		log.info("username = {} ", username);
+
+		// 작성자로 user 의 id 를 넣어야할지, username 을 넣어야 할지 ?
+
+		BoardListDto board = BoardListDto.builder().title(dto.getTitle()).content(dto.getContent()).uploadFileUrl("url")
+				.commentCnt(0).userId(userId) // 로그인한 사용자의 이름 저장
 				.build();
-		
+
 		log.info("board = {}", board);
-		
+
 		boardServiceImpl.insertBoard(board);
 
-		return "redirect:/board/boardMain";
+		return "redirect:/";
+	}
+
+	@GetMapping("/board/detail/{boardId}")
+	public String getDetail(@PathVariable Long boardId, Model model) {
+		
+		List<BoardVO> detail = boardServiceImpl.getDetail(boardId);
+		
+		model.addAttribute("detail", detail);
+		log.info("boardController --> detail = {} ", detail);
+		
+		return "/board/boardDetail";
 	}
 
 }

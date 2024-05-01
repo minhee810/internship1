@@ -20,8 +20,6 @@ public class BoardListDto {
 
 	private String title;
 	private String content;
-	private LocalDateTime createdDate;
-	private LocalDateTime modifidDate;
 	private String uploadFileUrl;
 	private int commentCnt;
 	

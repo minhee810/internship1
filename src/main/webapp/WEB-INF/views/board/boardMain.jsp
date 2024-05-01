@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session = "true" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-	
+
     <title>Tables</title>
 
     <!-- Custom fonts for this template -->
@@ -28,111 +32,16 @@
 </head>
 
 <body id="page-top">
+
     <!-- Page Wrapper -->
     <div id="wrapper">
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="${contextPath}">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">게시판</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0" />
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="membership.html">membership</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item active">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block" />
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-        </ul>
-        <!-- End of Sidebar -->
+        <%@ include file="../layout/sidebar.jsp" %>
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
             <div id="content">
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <form class="form-inline">
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-
-                                    <c:choose>
-                                        <c:when test="${!empty loginUser}">
-                                            ${loginUser.username}
-                                        </c:when>
-                                        <c:otherwise>
-                                            guest
-                                        </c:otherwise>
-                                    </c:choose>
-
-                                </span>
-                                <img class="img-profile rounded-circle" src="../resources/static/img/undraw_profile.svg" />
-                            </a>
-
-                            <c:choose>
-                                <c:when test="${!empty loginUser}">
-                                    <!-- Dropdown - User Information -->
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                        <a class="dropdown-item" href="#">
-                                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            Profile
-                                        </a>
-
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="${contextPath}/auth/logout" data-toggle="modal" data-target="#logoutModal">
-                                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            Logout
-                                        </a>
-                                    </div>
-                                </c:when>
-                            </c:choose>
-
-
-                        </li>
-                    </ul>
-                </nav>
+                <%@ include file="../layout/header.jsp" %>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -141,7 +50,7 @@
                     <h1 class="h3 mb-2 text-gray-800">게시판</h1>
 
                     <!-- DataTales Example -->
-                  
+
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
@@ -154,7 +63,7 @@
                                     </colgroup>
 
                                     <thead>
-                                    
+
                                         <tr>
                                             <th>닉네임</th>
                                             <th>제목</th>
@@ -163,21 +72,25 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-	                                    <c:forEach var="list" items="${boardList}" >
-	                                    	<tr>
-	                                            <td></td>
-	                                            <td><a href="detail.html">${list.title}</a></td>
-	                                            <td>${list.createdDate}</td>
-	                                            <td>${list.commentCnt}개</td>
-	                                        </tr>
-	                                   	 </c:forEach>
-                                        
+                                        <c:forEach var="list" items="${boardList}">
+                                            <tr>
+                                                <td>${list.username}</td>
+                                                <td><a href="${contextPath}/board/detail/${list.boardId}">${list.title}</a></td>
+                                                <td>
+                                                    <fmt:parseDate value="${list.createdDate}" pattern="yyyy-MM-dd" var="parsedDateTime" type="both" />
+                                                    <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateTime}" />
+                                                </td>
+                                                <td>${list.commentCnt}개</td>
+                                            </tr>
+                                        </c:forEach>
+
                                     </tbody>
                                 </table>
                                 <a href="${contextPath}/board/write">
-                                	<button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
+                                    <button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
                                         게시글 작성
                                     </button></a>
+
                             </div>
                         </div>
                     </div>
@@ -187,13 +100,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
+            <%@ include file="../layout/footer.jsp" %>
             <!-- End of Footer -->
         </div>
         <!-- End of Content Wrapper -->

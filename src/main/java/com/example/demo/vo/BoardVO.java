@@ -25,6 +25,9 @@ public class BoardVO {
 
 	// blur 처리하기
 	private String isDeleted;
+	private Long userId;
+	
+	private String username;
 
 	@Builder
 	public BoardVO(String title, String content, String uploadFileUrl, int commentCnt) {

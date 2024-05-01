@@ -27,32 +27,39 @@
 	<!-- 로그인 시 사용자 정보 조회 -->
 	<select id="getBoardList" resultType="boardVO">
 		<![CDATA[
-			SELECT *
-			FROM BOARD 
-			WHERE IS_DELETED = 0
+			SELECT B.BOARD_ID, B.TITLE, B.CREATED_DATE, B.COMMENT_CNT, U.USERNAME
+			FROM BOARD B
+			INNER JOIN USERS U ON B.WRITER = U.USER_ID 
+			WHERE B.IS_DELETED = 0
 		]]>
 	</select>
 
 	<!-- 게시판 글 생성 -->
-	<insert id="insertBoard" parameterType="boardListDto">
-	<![CDATA[
-		INSERT INTO BOARD VALUES (
-			BOARD_SEQ.NEXTVAL, 
-			#{title}, 
-			#{content}, 
-			now(), 
-			now(), 
-			'url', 
-			#{commentCnt},  
-			(SELECT USER_ID 
-			FROM USERS
-			WHERE USERNAME = #{userId}));
-	]]>
-	
+	<insert id="insertBoard" parameterType="boardListDto" >
+		<![CDATA[
+			INSERT INTO BOARD (BOARD_ID, TITLE, CONTENT, CREATED_DATE, MODIFIED_DATE, UPLOAD_FILE_URL, COMMENT_CNT, WRITER)
+			VALUES (
+				board_seq.nextval,
+				#{title}, 
+				#{content, jdbcType=CLOB}, 
+				sysdate,
+				sysdate,
+				#{uploadFileUrl}, 
+				#{commentCnt},  
+				(SELECT USER_ID 
+				FROM USERS
+				WHERE USER_ID = #{userId}))
+		]]>
+
 	</insert>
-
-
-
+	
+	<select id="getDetail" resultType="boardVO">
+		<![CDATA[
+			SELECT * 
+			FROM BOARD
+			WHERE BOARD_ID = #{boardId}
+		]]>
+	</select>
 
 </mapper>
 

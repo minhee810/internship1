@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService {
 
 		String email = loginDto.getEmail();
 		String password = loginDto.getPassword();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		LoginDto savedUser = getLoginUser(loginDto.getEmail());

@@ -22,12 +22,23 @@ public class BoardServiceImpl implements BoardService {
 	 public List<BoardVO> getBoardList() {
 		log.info("boardMapper.getBoardList() = {} " ,boardMapper.getBoardList());
 		
+		// localDateTime --> date
 		return boardMapper.getBoardList();
+		
+		
 	}
 	
 	@Override
-	public int insertBoard(BoardListDto board) throws Exception {
+	public int insertBoard(BoardListDto board) throws Exception {	
 		return boardMapper.insertBoard(board);
 	}
+
+	
+	@Override
+	public List<BoardVO> getDetail(Long boardId) {
+		log.info("boardServiceImpl -> getDetail() = {} ", boardMapper.getDetail(boardId));
+		return boardMapper.getDetail(boardId);
+	}
+	
 
 }

@@ -81,11 +81,12 @@ public class UsersController {
 
 		Map<String, Object> userInfo = userServiceImpl.login(loginDto);
 
-			session.setAttribute(SessionConst.LOGIN_USER, userInfo);
+		session.setAttribute(SessionConst.USER_ID, userInfo.get("userId"));
+		session.setAttribute(SessionConst.USERNAME, userInfo.get("username"));
 
-			log.info("userInfo = {} ", userInfo.get("username"));
+		log.info("userInfo = {} ", userInfo.get("username"));
 
-			return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", userInfo), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", userInfo), HttpStatus.OK);
 
 	}
 

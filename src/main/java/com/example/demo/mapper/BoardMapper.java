@@ -13,4 +13,6 @@ public interface BoardMapper {
 	public List<BoardVO> getBoardList();
 
 	public int insertBoard(BoardListDto board);
+	
+	public List<BoardVO> getDetail(Long boardId);
 }
