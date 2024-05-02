@@ -318,12 +318,10 @@ $('#joinBtn').on('click change', function() {
 		phone.focus();
 		return false;
 	};
-	
-console.log("phone : " , phone);
-
 
 	if (confirm("회원가입을 진행하시겠습니까?") == true) {
 		document.joinForm.submit();
+		
 		alert("회원가입이 완료되었습니다.");
 	} else {
 		return false;

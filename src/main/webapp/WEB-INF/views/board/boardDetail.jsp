@@ -48,32 +48,36 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4 h-75">
                         <div class="card-body">
+                        
                             <!-- Basic Card Example -->
                             <div class="card shadow mb-4 h-100">
-                                <div class="card-header py-3">
                                 <c:forEach var="detail" items="${detail}">
+                                <div id="boardId" hidden="true">${detail.boardId}</div>
+                                <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary btn float-left">
                                         ${detail.title}
                                     </h6>
-                                    <a href="modify.html">
+                                    <a href="${contextPath}/board/modify/${boardId}">
                                         <button type="button" class="btn btn-primary btn float-right ml-1">
                                             수정
                                         </button>
                                     </a>
-                                    <button type="button" class="btn btn-danger btn float-right">
+                                    
+                                    <button type="button" class="btn btn-danger btn float-right" id="deleteBtn" name="deleteBtn">
                                         삭제
                                     </button>
-                                    </c:forEach>
+                           
                                 </div>
                                 <div class="card-body navbar-nav-scroll" style="height: 290px !important">
             					${detail.content}
                                 </div>
+                                </c:forEach>
+                                
                                 <div class="card-body fileUpLoad">
                                     <label class="fileUpLoadBtn">파일</label>
                                     <div id="fileName" class="fileName">
 
                                         <a href="#" data-savename="1711943118813_listener.ora">listener.ora</a>
-
 
                                     </div>
                                 </div>
@@ -311,6 +315,8 @@
 
     <!-- Page level custom scripts -->
     <script src="${contextPath}/resources/static/js/demo/datatables-demo.js"></script>
+    
+    <script src="${contextPath}/resources/static/js/board/boardDetail.js"></script>
 </body>
 
 </html>

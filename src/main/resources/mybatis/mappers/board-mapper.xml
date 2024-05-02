@@ -60,6 +60,46 @@
 			WHERE BOARD_ID = #{boardId}
 		]]>
 	</select>
-
+	
+	
+	<update id="modifyBoard" parameterType="boardVO">
+		<![CDATA[
+			UPDATE BOARD
+			SET 
+				TITLE = #{title},
+				CONTENT = #{content}
+			WHERE BOARD_ID = #{boardId}
+		]]>
+	</update>
+	
+	<update id="deleteBoard" parameterType="Long">
+		UPDATE BOARD  
+		SET 
+			IS_DELETED = 1 
+		WHERE BOARD_ID = #{boardId}
+	</update>
+	
+	
+	<!-- 첨부파일 업로드 -->
+	<insert id="insertFile" parameterType="fileVO">
+		INSERT INTO UPLOADFILE(
+		    UPLOADFILE_ID,
+		    BOARD_ID,
+		    ORG_FILE_NAME,
+		    SAVE_FILE_NAME,
+		    SAVE_PATH,
+		    FILE_SIZE
+		) VALUES(
+		    UPLOADFILE_SEQ.nextval,
+		    #{boardId},
+		    #{orgFileName},
+		    #{saveFileName},
+		    #{savePath},
+		    #{fileSize}
+		)
+	</insert>
+	
+	<!-- file list 조회  -->
+	<select id="findAllByIds" parameter
 </mapper>
 

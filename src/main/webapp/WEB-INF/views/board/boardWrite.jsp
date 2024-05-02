@@ -54,18 +54,38 @@
 
 
                             <!-- Basic Card Example -->
-                            <form action="${contextPath}/board/write" method="post" class="h-100">
+                            <form id="writeForm" name="writeForm" action="${contextPath}/board/write" method="post" class="h-100" enctype="multipart/form-data">
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
                                         <div class="col-sm-11 float-left">
-                                            <input type="text" id="title" name="title" class="form-control" placeholder="제목" />
+                                            <input type="text" id="title" name="title" class="form-control" placeholder="제목" maxlength="30" />
                                         </div>
                                         <button type="submit" id="insertBtn" name="insertBtn" class="btn btn-primary btn float-right ml-1">
                                             작성완료
                                         </button>
                                     </div>
                                     <div class="card-body h-100">
-                                        <textarea id="content" name="content" cols="30" class="form-control h-100" placeholder="내용" style="resize: none"></textarea>
+                                        <textarea id="content" name="content" cols="30" class="form-control h-100" placeholder="내용" style="resize: none" maxlength="100000"></textarea>
+                                    </div>
+                                    <!-- file upload -->
+                                    <div>
+                                        <div class="multiple-upload">
+                                        	<p>파일 업로드</p>
+                                        	<input type="file" id="files" name="files" multiple>
+										</div>
+									                <div class="file_drag" id="file_drag">
+                  <div id="plz_drag">파일을 마우스로 끌어 오세요</div>
+                  <div class="file_list_header" style="display: none;">
+                    <div class="file_list_header_task">
+                      <button type="button" id="removeAll_button"><span class="blind">X</span></button>
+                    </div>
+                    <div class="file_list_header_title"><span class="text">파일명</span></div>
+                    <div class="file_list_header_volume"><span class="text">총용량 </span><span id="fileSize">0</span></div>
+                  </div>
+
+                  <ul id="fileList"></ul>
+                </div>	
+										
                                     </div>
                                 </div>
                             </form>
@@ -121,14 +141,15 @@
     <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="../resources/static/sb-admin-2.min.js"></script>
+    <script src="../resources/static/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
     <script src="../resources/static/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="../resources/static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="../resources/static/demo/datatables-demo.js"></script>
+    <script src="../resources/static/js/demo/datatables-demo.js"></script>
+    <script src="../resources/static/js/board/boardWrite.js"></script>
 </body>
 
 </html>

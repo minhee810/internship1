@@ -2,6 +2,8 @@ package com.example.demo.vo;
 
 import java.time.LocalDateTime;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,9 +27,19 @@ public class BoardVO {
 
 	// blur 처리하기
 	private String isDeleted;
-	private Long userId;
 	
+	private Long userId;
 	private String username;
+
+	private MultipartFile[] files;
+	
+	@Builder
+	public BoardVO(String title, String content, LocalDateTime modifidDate) {
+		super();
+		this.title = title;
+		this.content = content;
+		this.modifidDate = modifidDate;
+	}
 
 	@Builder
 	public BoardVO(String title, String content, String uploadFileUrl, int commentCnt) {
