@@ -14,7 +14,7 @@ public interface BoardService {
 
 	int insertBoard(BoardListDto board) throws Exception;
 	
-	List<BoardVO> getDetail(Long boardId);
+	BoardVO getDetail(Long boardId);
 	
 	public int modifyBoard(BoardVO board);
 	

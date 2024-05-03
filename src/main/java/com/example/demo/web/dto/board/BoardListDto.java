@@ -17,12 +17,9 @@ import lombok.ToString;
 public class BoardListDto {
 	
 	private Long boardId;
-
 	private String title;
 	private String content;
-	
 	private MultipartFile file; 
-	
 	private String uploadFileUrl;
 	private int commentCnt;
 	

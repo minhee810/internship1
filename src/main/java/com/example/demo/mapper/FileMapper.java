@@ -13,7 +13,7 @@ public interface FileMapper {
 	 * @param boardId
 	 * @return
 	 */
-	List<UploadFileVO> findAllByBoardId(Long boardId);
+	UploadFileVO findAllByBoardId(Long boardId);
 
 	/**
 	 * 파일 리스트 조회 

@@ -1,7 +1,5 @@
 package com.example.demo.interceptor;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,9 +16,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 		
 		// 1. 세션에서 회원 정보 조회
 		HttpSession session = request.getSession();
-		session.getAttribute(SessionConst.LOGIN_USER);
+		session.getAttribute(SessionConst.USER_ID);
 
-		if (session.getAttribute(SessionConst.LOGIN_USER) == null) {
+		if (session.getAttribute(SessionConst.USER_ID) == null) {
 			response.sendRedirect("/auth/login");
 			return false;
 		}

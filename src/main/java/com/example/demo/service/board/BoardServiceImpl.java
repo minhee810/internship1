@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.mapper.BoardMapper;
+import com.example.demo.service.file.FileManager;
 import com.example.demo.vo.BoardVO;
 import com.example.demo.vo.UploadFileVO;
 import com.example.demo.web.dto.board.BoardListDto;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-	
 	private final FileManager fileManager;
 
 	private final BoardMapper boardMapper;
@@ -30,62 +30,62 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<BoardVO> getBoardList() {
-		log.info("boardMapper.getBoardList() = {} ", boardMapper.getBoardList());
-
-		// localDateTime --> date
 		return boardMapper.getBoardList();
-
 	}
 
 	@Override
 	public int insertBoard(BoardListDto dto) throws Exception {
 
 		log.info("serviceImpl dto = {}", dto);
-		
+
 		BoardListDto board = BoardListDto.builder()
 				.title(dto.getTitle())
 				.content(dto.getContent())
 				.files(dto.getFiles())
 				.uploadFileUrl(dto.getUploadFileUrl())
 				.commentCnt(dto.getCommentCnt())
-				.userId(dto.getUserId()) // 로그인한																					// 이름 저장
+				.userId(dto.getUserId()) // 로그인한 // 이름 저장
 				.build();
-
-		log.info("serviceImple -> board = {}", board);
 		
+		// board 정보를 db 에 insert 
 		int result = boardMapper.insertBoard(board);
 
-		File file = new File(path);
+		String boardFolderPath = createFolder(path, board.getBoardId());
 
+		File file = new File(boardFolderPath);
+
+		// 경로가 없을 경우 파일을 생성
 		if (!file.exists()) {
-			boolean check = file.mkdirs();
+			file.mkdirs();
 		}
 
 		for (MultipartFile f : board.getFiles()) {
+
 			if (!f.isEmpty()) {
+
 				log.info("file => {}", f.getOriginalFilename());
+				
 				// HDD SAVE
-				String fileName = fileManager.saveFile(f, path);
+				String fileName = fileManager.saveFile(f, boardFolderPath);
 
 				// DB SAVE
 				UploadFileVO uploadFileVO = UploadFileVO.builder()
 						.orgFileName(f.getOriginalFilename())
 						.saveFileName(fileName)
-						.savePath(path + f)
+						.savePath(boardFolderPath)
 						.fileSize(f.getSize())
-						.boardId(dto.getBoardId())
+						.boardId(board.getBoardId())
 						.build();
-				log.info("** fileSize = {}", uploadFileVO.getFileSize() );
-				
+
+				// file 정보를 db 에 insert
 				boardMapper.insertFile(uploadFileVO);
 			}
 		}
-
 		return result;
 	}
 
 	@Override
-	public List<BoardVO> getDetail(Long boardId) {
+	public BoardVO getDetail(Long boardId) {
 		log.info("boardServiceImpl -> getDetail() = {} ", boardMapper.getDetail(boardId));
 		return boardMapper.getDetail(boardId);
 	}
@@ -113,4 +113,15 @@ public class BoardServiceImpl implements BoardService {
 		return result;
 	}
 
+	private String createFolder(String basePath, Long boardId) {
+		String folderPath = basePath + "/" + boardId;
+		File folder = new File(folderPath);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+		return folderPath;
+	}
+
+	
+	
 }

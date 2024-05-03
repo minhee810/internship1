@@ -52,7 +52,7 @@
                     <div class="card shadow mb-4 h-75">
                         <div class="card-body">
                             <!-- Basic Card Example -->
-                                  <c:forEach var="detail" items="${detail}">
+                        	
                             <form action="${contextPath}/board/modify/${detail.boardId}" method="post" class="h-100">
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
@@ -62,15 +62,28 @@
                                         <a href="">
                                             <button type="submit" class="btn btn-primary btn float-right ml-1" >
                                                 수정완료
-                                            </button></a>
+                                            </button>
+                                        </a>
                                     </div>
                                     <div class="card-body h-100">
-                                        <textarea id="content" name="content" cols="30" class="form-control h-100" placeholder="내용" 
-                                        style="resize: none">${detail.content}</textarea>
+                                        <textarea id="content" name="content" cols="30" class="form-control h-100" 
+                                        placeholder="내용" style="resize: none">${detail.content} </textarea>
+                                         <!-- file upload -->
+<%--                                        	<c:forEach var ="files" items="${files}">
+	                                        <div class="multiple-upload" >
+	                                            <div class="custom-file"> 
+		                                             <input id=files type="file" name="files" onchange="showFileName()" multiple="multiple"/> 
+		                                        	 <label for="customFile" id="fileName">파일선택</label> 
+		                                        		${files.orgFileName}
+		                                        	 <span>${files.fileSize}kb</span>
+		                                        	 <a href='#this' name='file-delete'>삭제</a>
+	                                            </div>
+	                                        </div>
+	                                    </c:forEach>         --%>                            	       
                         			</div>
                                 </div>
                             </form>
-                        			</c:forEach>
+                    
                         </div>
                     </div>
                 </div>

@@ -2,19 +2,24 @@ package com.example.demo.service.file;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.mapper.FileMapper;
 import com.example.demo.vo.UploadFileVO;
 
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
+@Service
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService{
 
 	private final FileMapper fileMapper;
 	
 	@Override
-	public List<UploadFileVO> findAllFileByBoardId(Long boardId) {
-		
+	public UploadFileVO findAllFileByBoardId(Long boardId) {
+		UploadFileVO files = fileMapper.findAllByBoardId(boardId);
+		log.info("files = {}", files);
 		return fileMapper.findAllByBoardId(boardId);
 	}
 

@@ -33,23 +33,28 @@
 			WHERE B.IS_DELETED = 0
 		]]>
 	</select>
+	
 
+		
+		
 	<!-- 게시판 글 생성 -->
-	<insert id="insertBoard" parameterType="boardListDto" >
+	<insert id="insertBoard" parameterType="boardListDto" useGeneratedKeys="true">
+		    
 		<![CDATA[
-			INSERT INTO BOARD (BOARD_ID, TITLE, CONTENT, CREATED_DATE, MODIFIED_DATE, UPLOAD_FILE_URL, COMMENT_CNT, WRITER)
+			INSERT INTO BOARD (BOARD_ID, TITLE, CONTENT, UPLOAD_FILE_URL, COMMENT_CNT, WRITER)
 			VALUES (
 				board_seq.nextval,
 				#{title}, 
 				#{content, jdbcType=CLOB}, 
-				sysdate,
-				sysdate,
 				#{uploadFileUrl}, 
 				#{commentCnt},  
 				(SELECT USER_ID 
 				FROM USERS
 				WHERE USER_ID = #{userId}))
 		]]>
+			<selectKey keyProperty="boardId" resultType="long" order="AFTER">
+		        SELECT MAX(BOARD_ID) FROM BOARD
+		    </selectKey>
 
 	</insert>
 	
@@ -73,33 +78,31 @@
 	</update>
 	
 	<update id="deleteBoard" parameterType="Long">
-		UPDATE BOARD  
-		SET 
-			IS_DELETED = 1 
-		WHERE BOARD_ID = #{boardId}
+			UPDATE BOARD  
+			SET 
+				IS_DELETED = 1 
+			WHERE BOARD_ID = #{boardId}
 	</update>
 	
 	
 	<!-- 첨부파일 업로드 -->
 	<insert id="insertFile" parameterType="fileVO">
-		INSERT INTO UPLOADFILE(
-		    UPLOADFILE_ID,
-		    BOARD_ID,
-		    ORG_FILE_NAME,
-		    SAVE_FILE_NAME,
-		    SAVE_PATH,
-		    FILE_SIZE
-		) VALUES(
-		    UPLOADFILE_SEQ.nextval,
-		    #{boardId},
-		    #{orgFileName},
-		    #{saveFileName},
-		    #{savePath},
-		    #{fileSize}
-		)
+			INSERT INTO UPLOADFILE(
+			    UPLOADFILE_ID,
+			    BOARD_ID,
+			    ORG_FILE_NAME,
+			    SAVE_FILE_NAME,
+			    SAVE_PATH,
+			    FILE_SIZE
+			) VALUES(
+			    UPLOADFILE_SEQ.nextval,
+			    #{boardId},
+			    #{orgFileName},
+			    #{saveFileName},
+			    #{savePath},
+			    #{fileSize}
+			)
 	</insert>
 	
-	<!-- file list 조회  -->
-	<select id="findAllByIds" parameter
 </mapper>
 
