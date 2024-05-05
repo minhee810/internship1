@@ -8,8 +8,8 @@ import com.example.demo.interceptor.LoginCheckInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	private final LoginCheckInterceptor loginCheckInterceptor;
@@ -23,8 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				// excludePathPatterns()를 이용해서 로그인 페이지, 로그아웃 페이지 URI는 인터셉터 실행에서 제외
 
 				// 필터링 할 URL 패턴
-				.addPathPatterns()
-				.excludePathPatterns("/auth/login", "/auth/join", "/", "/resources/**", "/board/detail/**"); // filter 제외 대
+				.addPathPatterns("")
+				.excludePathPatterns("/auth/login", "/auth/join", "/resources/**"); // filter 제외 대
 	}
 
 }

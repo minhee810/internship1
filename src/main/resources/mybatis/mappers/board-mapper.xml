@@ -55,7 +55,7 @@
 	
 	<select id="getDetail" resultType="boardVO">
 		<![CDATA[
-			SELECT * 
+			SELECT *
 			FROM BOARD
 			WHERE BOARD_ID = #{boardId}
 		]]>

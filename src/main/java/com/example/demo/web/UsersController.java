@@ -83,6 +83,7 @@ public class UsersController {
 			session.removeAttribute(SessionConst.USER_ID);
 			session.removeAttribute(SessionConst.USERNAME);
 		}
+		
 		Map<String, Object> userInfo = userServiceImpl.login(loginDto);
 
 		session.setAttribute(SessionConst.USER_ID, userInfo.get("userId"));

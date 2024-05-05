@@ -57,15 +57,20 @@
                                     <h6 class="m-0 font-weight-bold text-primary btn float-left">
                                         ${detail.title}
                                     </h6>
-                                    <a href="${contextPath}/board/modify/${boardId}">
-                                        <button type="button" class="btn btn-primary btn float-right ml-1">
-                                            수정
-                                        </button>
-                                    </a>
                                     
-                                    <button type="button" class="btn btn-danger btn float-right" id="deleteBtn" name="deleteBtn">
-                                        삭제
-                                    </button>
+                                    <c:choose>
+				                        <c:when test="${loginUser == detail.writer}">
+					                        <a href="${contextPath}/board/modify/${boardId}">
+		                                        <button type="button" class="btn btn-primary btn float-right ml-1">
+		                                            수정
+		                                        </button>
+                                    		</a>
+			                                    <button type="button" class="btn btn-danger btn float-right" id="deleteBtn" name="deleteBtn">
+			                                        삭제
+			                                    </button>
+				                        </c:when>
+				                    </c:choose>
+                               
                            
                                 </div>
                                 <div class="card-body navbar-nav-scroll" style="height: 290px !important">

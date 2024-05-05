@@ -24,13 +24,9 @@ public class BoardVO {
 	private LocalDateTime modifidDate;
 	private String uploadFileUrl;
 	private int commentCnt;
-
-	// blur 처리하기
 	private String isDeleted;
-	
-	private Long userId;
+	private Long writer;
 	private String username;
-
 	private MultipartFile[] files;
 	
 	@Builder
