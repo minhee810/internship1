@@ -69,17 +69,18 @@
                                         <textarea id="content" name="content" cols="30" class="form-control h-100" 
                                         placeholder="내용" style="resize: none">${detail.content} </textarea>
                                          <!-- file upload -->
-<%--                                        	<c:forEach var ="files" items="${files}">
+	                                      	<c:forEach var ="files" items="${files}">
 	                                        <div class="multiple-upload" >
 	                                            <div class="custom-file"> 
 		                                             <input id=files type="file" name="files" onchange="showFileName()" multiple="multiple"/> 
+		                                        	 
 		                                        	 <label for="customFile" id="fileName">파일선택</label> 
 		                                        		${files.orgFileName}
 		                                        	 <span>${files.fileSize}kb</span>
 		                                        	 <a href='#this' name='file-delete'>삭제</a>
 	                                            </div>
 	                                        </div>
-	                                    </c:forEach>         --%>                            	       
+	                                    </c:forEach>                                    	       
                         			</div>
                                 </div>
                             </form>

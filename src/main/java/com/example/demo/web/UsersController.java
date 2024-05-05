@@ -49,9 +49,7 @@ public class UsersController {
 	public String join(@ModelAttribute JoinDto joinDto) throws UnsupportedEncodingException {
 
 		if (userServiceImpl.join(joinDto) > 0) {
-
 			log.info("joinDto = {} ", joinDto);
-
 			return "redirect:/auth/login";
 		}
 		// 회원가입 실패시 예외처리
@@ -79,6 +77,12 @@ public class UsersController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpSession session) throws Exception {
 
+		Long id = (Long) session.getAttribute(SessionConst.USER_ID);
+		if(session.getAttribute(SessionConst.USER_ID) != null){
+			log.info("id= {}", id); 
+			session.removeAttribute(SessionConst.USER_ID);
+			session.removeAttribute(SessionConst.USERNAME);
+		}
 		Map<String, Object> userInfo = userServiceImpl.login(loginDto);
 
 		session.setAttribute(SessionConst.USER_ID, userInfo.get("userId"));
@@ -90,12 +94,12 @@ public class UsersController {
 
 	}
 
-	@PostMapping("/logout")
+	@GetMapping("/logout")
 	public String logout(HttpSession session) throws Exception {
 
 		session.invalidate();
 
-		return "redirect:/board/boardMain";
+		return "redirect:/";
 
 	}
 }

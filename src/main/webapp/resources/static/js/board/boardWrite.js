@@ -16,6 +16,7 @@ function maxlengthCheck() {
 
 $(document).ready(function() {
 	$('#insertBtn').click(function(event) {
+		
 		event.preventDefault();
 
 		var title = $('#title').val();
@@ -38,9 +39,6 @@ $(document).ready(function() {
 		var form = $('#writeForm')[0];
 		var data = new FormData(form);
 		
-/*		data.append('customField', '추가필드');
-		$('#insertBtn').prop('disabled', true);*/
-		
 		$.ajax({
 			type: 'POST',
 			enctype: 'multipart/form-data',
@@ -55,8 +53,8 @@ $(document).ready(function() {
 				alert("저장되었습니다.");
 				console.log('SUCCESS : ', data);
 			},
-			error: function(e) {
-				console.log('ERROR : ', e);
+			error: function(error) {
+				console.log('ERROR : ', error);
 				alert("저장에 실패하였습니다.")
 			}
 		});

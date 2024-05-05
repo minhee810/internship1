@@ -51,7 +51,7 @@
                         
                             <!-- Basic Card Example -->
                             <div class="card shadow mb-4 h-100">
-                                <c:forEach var="detail" items="${detail}">
+                    
                                 <div id="boardId" hidden="true">${detail.boardId}</div>
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary btn float-left">
@@ -71,14 +71,21 @@
                                 <div class="card-body navbar-nav-scroll" style="height: 290px !important">
             					${detail.content}
                                 </div>
-                                </c:forEach>
+                          
                                 
                                 <div class="card-body fileUpLoad">
                                     <label class="fileUpLoadBtn">파일</label>
                                     <div id="fileName" class="fileName">
-
-                                        <a href="#" data-savename="1711943118813_listener.ora">listener.ora</a>
-
+                                         <!-- file upload -->
+	                                      	<c:forEach var ="files" items="${files}">
+	                                        <div class="multiple-upload" style="display: flex; justify-content: space-between;"> 
+	                                            <div class="custom-file"> 
+	                                        		<font color="blue" size="2" style="float: right;">
+		                                        		${files.orgFileName} <font size="1" color="black">(${files.fileSize} kb)</font>
+		                                       	</font>
+	                                            </div>
+	                                        </div>
+	                                    </c:forEach> 
                                     </div>
                                 </div>
                                 <div class="card-footer">

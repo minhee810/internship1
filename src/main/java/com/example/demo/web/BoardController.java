@@ -73,6 +73,14 @@ public class BoardController {
 
 		BoardVO detail = boardServiceImpl.getDetail(boardId);
 		model.addAttribute("detail", detail);
+		
+
+		List<UploadFileVO> files = fileServiceImpl.findAllFileByBoardId(boardId);
+		for(UploadFileVO file : files) {
+			log.info("files = {}", file);
+		}
+		
+		model.addAttribute("files", files);
 		return "/board/boardDetail";
 	}
 
@@ -84,8 +92,10 @@ public class BoardController {
 		model.addAttribute("detail", detail);
 
 		List<UploadFileVO> files = fileServiceImpl.findAllFileByBoardId(boardId);
-		log.info("files = {}", files);
-
+		for(UploadFileVO file : files) {
+			log.info("files = {}", file);
+		}
+		
 		model.addAttribute("files", files);
 
 		return "/board/boardModify";
@@ -93,14 +103,14 @@ public class BoardController {
 
 	@PostMapping("/board/modify/{boardId}")
 	public String modifyBoard(@PathVariable Long boardId, HttpServletRequest request, Model model) {
-		log.info("<<<<<<<======modifyBoard ====>>>>>>> ;ldjs;klfsd");
+		log.info("=====[modifyBoard]=====");
 		BoardVO board = new BoardVO();
-
 		board.setBoardId(boardId);
 		board.setTitle(request.getParameter("title"));
 		board.setContent(request.getParameter("content"));
-
 		boardServiceImpl.modifyBoard(board);
+		
+		request.getParameter("files");
 
 		return "redirect:/board/detail/" + boardId;
 	}

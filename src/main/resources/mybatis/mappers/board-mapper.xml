@@ -33,20 +33,15 @@
 			WHERE B.IS_DELETED = 0
 		]]>
 	</select>
-	
-
-		
-		
 	<!-- 게시판 글 생성 -->
 	<insert id="insertBoard" parameterType="boardListDto" useGeneratedKeys="true">
 		    
 		<![CDATA[
-			INSERT INTO BOARD (BOARD_ID, TITLE, CONTENT, UPLOAD_FILE_URL, COMMENT_CNT, WRITER)
+			INSERT INTO BOARD (BOARD_ID, TITLE, CONTENT, COMMENT_CNT, WRITER)
 			VALUES (
 				board_seq.nextval,
 				#{title}, 
 				#{content, jdbcType=CLOB}, 
-				#{uploadFileUrl}, 
 				#{commentCnt},  
 				(SELECT USER_ID 
 				FROM USERS

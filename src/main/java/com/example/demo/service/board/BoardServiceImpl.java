@@ -42,7 +42,6 @@ public class BoardServiceImpl implements BoardService {
 				.title(dto.getTitle())
 				.content(dto.getContent())
 				.files(dto.getFiles())
-				.uploadFileUrl(dto.getUploadFileUrl())
 				.commentCnt(dto.getCommentCnt())
 				.userId(dto.getUserId()) // 로그인한 // 이름 저장
 				.build();
