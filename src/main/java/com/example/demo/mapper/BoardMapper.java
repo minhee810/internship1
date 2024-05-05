@@ -22,6 +22,4 @@ public interface BoardMapper {
 
 	public int deleteBoard(Long boardId);
 	
-	// 첨부파일 업로드
-	public int insertFile(UploadFileVO fileVO) throws Exception;
 }

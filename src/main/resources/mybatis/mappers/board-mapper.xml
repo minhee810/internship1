@@ -24,13 +24,14 @@
 		구분, pk 컬럼에는 result 아닌 id 사용 -->
 
 
-	<!-- 로그인 시 사용자 정보 조회 -->
+	<!-- 메인 페이지 글 목록 조회 -->
 	<select id="getBoardList" resultType="boardVO">
 		<![CDATA[
 			SELECT B.BOARD_ID, B.TITLE, B.CREATED_DATE, B.COMMENT_CNT, U.USERNAME
 			FROM BOARD B
 			INNER JOIN USERS U ON B.WRITER = U.USER_ID 
 			WHERE B.IS_DELETED = 0
+			ORDER BY CREATED_DATE DESC
 		]]>
 	</select>
 	<!-- 게시판 글 생성 -->
@@ -80,24 +81,7 @@
 	</update>
 	
 	
-	<!-- 첨부파일 업로드 -->
-	<insert id="insertFile" parameterType="fileVO">
-			INSERT INTO UPLOADFILE(
-			    UPLOADFILE_ID,
-			    BOARD_ID,
-			    ORG_FILE_NAME,
-			    SAVE_FILE_NAME,
-			    SAVE_PATH,
-			    FILE_SIZE
-			) VALUES(
-			    UPLOADFILE_SEQ.nextval,
-			    #{boardId},
-			    #{orgFileName},
-			    #{saveFileName},
-			    #{savePath},
-			    #{fileSize}
-			)
-	</insert>
+
 	
 </mapper>
 

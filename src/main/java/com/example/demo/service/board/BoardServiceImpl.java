@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.mapper.BoardMapper;
+import com.example.demo.mapper.FileMapper;
 import com.example.demo.service.file.FileManager;
 import com.example.demo.vo.BoardVO;
 import com.example.demo.vo.UploadFileVO;
@@ -21,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
+	private final FileMapper fileMapper;
+	
 	private final FileManager fileManager;
 
 	private final BoardMapper boardMapper;
@@ -49,7 +52,7 @@ public class BoardServiceImpl implements BoardService {
 		// board 정보를 db 에 insert 
 		int result = boardMapper.insertBoard(board);
 
-		String boardFolderPath = createFolder(path, board.getBoardId());
+		String boardFolderPath = fileManager.createFolder(path, board.getBoardId());
 
 		File file = new File(boardFolderPath);
 
@@ -77,7 +80,7 @@ public class BoardServiceImpl implements BoardService {
 						.build();
 
 				// file 정보를 db 에 insert
-				boardMapper.insertFile(uploadFileVO);
+				fileMapper.insertFile(uploadFileVO);
 			}
 		}
 		return result;
@@ -105,21 +108,14 @@ public class BoardServiceImpl implements BoardService {
 		return result;
 	}
 
-	@Override
-	public int insertFile(UploadFileVO fileVO) throws Exception {
+//	@Override
+//	public int insertFile(UploadFileVO fileVO) throws Exception {
+//
+//		int result = fileMapper.insertFile(fileVO);
+//		return result;
+//	}
 
-		int result = boardMapper.insertFile(fileVO);
-		return result;
-	}
 
-	private String createFolder(String basePath, Long boardId) {
-		String folderPath = basePath + "/" + boardId;
-		File folder = new File(folderPath);
-		if (!folder.exists()) {
-			folder.mkdirs();
-		}
-		return folderPath;
-	}
 
 	
 	

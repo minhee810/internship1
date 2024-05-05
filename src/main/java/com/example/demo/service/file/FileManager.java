@@ -30,4 +30,14 @@ public class FileManager {
 		return buffer.toString();
 
 	}
+
+	// 파일 업로드 시 새로운 폴더 생성
+	public String createFolder(String basePath, Long boardId) {
+		String folderPath = basePath + "/" + boardId;
+		File folder = new File(folderPath);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+		return folderPath;
+	}
 }

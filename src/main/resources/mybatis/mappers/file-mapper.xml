@@ -16,6 +16,26 @@
 			]]>
 	</select>
 	
+		<!-- 첨부파일 업로드 -->
+	<insert id="insertFile" parameterType="fileVO">
+			INSERT INTO UPLOADFILE(
+			    UPLOADFILE_ID,
+			    BOARD_ID,
+			    ORG_FILE_NAME,
+			    SAVE_FILE_NAME,
+			    SAVE_PATH,
+			    FILE_SIZE
+			) VALUES(
+			    UPLOADFILE_SEQ.nextval,
+			    #{boardId},
+			    #{orgFileName},
+			    #{saveFileName},
+			    #{savePath},
+			    #{fileSize}
+			)
+	</insert>
+	
+	
 	<!-- 파일 리스트 조회  -->
 
 	<!-- 파일 리스트 삭제  --> 

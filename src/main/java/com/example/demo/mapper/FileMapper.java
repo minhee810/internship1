@@ -8,6 +8,11 @@ import com.example.demo.vo.UploadFileVO;
 
 @Mapper
 public interface FileMapper {
+	
+
+	// 첨부파일 업로드
+	int insertFile(UploadFileVO fileVO) throws Exception;
+	
 	/**
 	 * 하나의 게시글에 해당하는 파일 리스트 조회 
 	 * @param boardId
