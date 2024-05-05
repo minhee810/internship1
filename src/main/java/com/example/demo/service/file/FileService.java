@@ -8,7 +8,7 @@ import com.example.demo.vo.UploadFileVO;
 public interface FileService {
 	
 
-	UploadFileVO findAllFileByBoardId(Long boardId);
+	List<UploadFileVO> findAllFileByBoardId(Long boardId);
 
 
 	List<UploadFileVO> findAllByIds(List<Long> ids);

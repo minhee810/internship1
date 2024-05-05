@@ -83,7 +83,7 @@ public class BoardController {
 		
 		model.addAttribute("detail", detail);
 
-		UploadFileVO files = fileServiceImpl.findAllFileByBoardId(boardId);
+		List<UploadFileVO> files = fileServiceImpl.findAllFileByBoardId(boardId);
 		log.info("files = {}", files);
 
 		model.addAttribute("files", files);

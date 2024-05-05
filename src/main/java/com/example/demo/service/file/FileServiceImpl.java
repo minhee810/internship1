@@ -17,8 +17,8 @@ public class FileServiceImpl implements FileService{
 	private final FileMapper fileMapper;
 	
 	@Override
-	public UploadFileVO findAllFileByBoardId(Long boardId) {
-		UploadFileVO files = fileMapper.findAllByBoardId(boardId);
+	public List<UploadFileVO> findAllFileByBoardId(Long boardId) {
+		List<UploadFileVO> files = fileMapper.findAllByBoardId(boardId);
 		log.info("files = {}", files);
 		return fileMapper.findAllByBoardId(boardId);
 	}
