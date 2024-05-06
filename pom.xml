@@ -110,7 +110,12 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-
+		
+		<!-- pageable-->
+		<dependency>
+		      <groupId>org.springframework.data</groupId>
+		      <artifactId>spring-data-commons</artifactId>
+		</dependency>
 
 	</dependencies>
 
