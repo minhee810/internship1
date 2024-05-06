@@ -53,7 +53,11 @@
                         <div class="card-body">
                             <!-- Basic Card Example -->
                         	
-                            <form action="${contextPath}/board/modify/${detail.boardId}" method="post" class="h-100">
+    <script>
+    	var fileUrl = "<c:url value='/board/files/${detail.boardId}' />";
+	</script>
+                            <form action="${contextPath}/board/modify/${detail.boardId}" method="post" class="h-100" enctype="multipart/form-data">
+
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
                                         <div class="col-sm-11 float-left">
@@ -69,18 +73,13 @@
                                         <textarea id="content" name="content" cols="30" class="form-control h-100" 
                                         placeholder="내용" style="resize: none">${detail.content} </textarea>
                                          <!-- file upload -->
-	                                      	<c:forEach var ="files" items="${files}">
+	                                      
 	                                        <div class="multiple-upload" >
-	                                            <div class="custom-file"> 
-		                                             <input id=files type="file" name="files" onchange="showFileName()" multiple="multiple"/> 
-		                                        	 
-		                                        	 <label for="customFile" id="fileName">파일선택</label> 
-		                                        		${files.orgFileName}
-		                                        	 <span>${files.fileSize}kb</span>
-		                                        	 <a href='#this' name='file-delete'>삭제</a>
-	                                            </div>
+	                                            <!-- new code -->
+												<input type="file" name="files" multiple="multiple" onchange="test(this.files)">
+												<div id="file-list"></div> 
 	                                        </div>
-	                                    </c:forEach>                                    	       
+	                                                                   	       
                         			</div>
                                 </div>
                             </form>
@@ -144,6 +143,8 @@
 
     <!-- Page level custom scripts -->
     <script src="${contextPath}/resources/static/js/demo/datatables-demo.js"></script>
+    <script src="${contextPath}/resources/static/js/board/boardWrite.js"></script>
+    <script src="${contextPath}/resources/static/js/board/boardModify.js"></script>
 </body>
 
 </html>

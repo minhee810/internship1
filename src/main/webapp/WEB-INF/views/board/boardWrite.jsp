@@ -68,17 +68,19 @@
                                         <textarea id="content" name="content" cols="30" class="form-control h-100" placeholder="내용" style="resize: none" maxlength="100000"></textarea>
                                     <!-- file upload -->
                                         <div class="multiple-upload" >
-                                           <!--  <input type="file" id="files" name="files" multiple="multiple">  -->
+                                           <!--  <input type="file" id="files" name="files" multiple="multiple">  
                                             <div class="custom-file"> 
                                             <input id=files type="file" name="files" onchange="showFileName()" multiple="multiple"/> 
-                                            <label for="customFile" id="fileName">파일선택</label> 
+                                            <label for="customFile" id="fileName">파일선택</label> -->
+                                            
+                                            	<!-- test -->
+	                                            <input type="file" name="files" multiple="multiple" onchange="test(this.files)">
+												<div id="file-list">
+												</div>
                                             
                                             </div>
                                         </div>
                                     </div>
-                                    </div>
-                                    <div>
-                                </div>
                             </form>
                         </div>
                     </div>

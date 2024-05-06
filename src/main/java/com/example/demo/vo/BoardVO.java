@@ -28,25 +28,22 @@ public class BoardVO {
 	private Long writer;
 	private String username;
 	private MultipartFile[] files;
-	
+
 	@Builder
-	public BoardVO(String title, String content, LocalDateTime modifidDate) {
+	public BoardVO(String title, String content, LocalDateTime modifidDate, MultipartFile[] files) {
 		super();
 		this.title = title;
 		this.content = content;
 		this.modifidDate = modifidDate;
+		this.files = files;
 	}
 
 	@Builder
-	public BoardVO(String title, String content, String uploadFileUrl, int commentCnt) {
+	public BoardVO(String title, String content, int commentCnt) {
 		super();
 		this.title = title;
 		this.content = content;
-		this.uploadFileUrl = uploadFileUrl;
 		this.commentCnt = commentCnt;
 	}
 
-	
-	
-	
 }

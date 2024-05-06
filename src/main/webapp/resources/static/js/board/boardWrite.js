@@ -12,11 +12,9 @@ function maxlengthCheck() {
 	}
 }
 
-
-
 $(document).ready(function() {
 	$('#insertBtn').click(function(event) {
-		
+
 		event.preventDefault();
 
 		var title = $('#title').val();
@@ -38,7 +36,7 @@ $(document).ready(function() {
 
 		var form = $('#writeForm')[0];
 		var data = new FormData(form);
-		
+
 		$.ajax({
 			type: 'POST',
 			enctype: 'multipart/form-data',
@@ -62,51 +60,41 @@ $(document).ready(function() {
 	});
 });
 
-function showFileName() {
-	var input = document.getElementById('files');
-	var label = document.getElementById('fileName');
-	label.textContent = "";
 
-	for (var i = 0; i < input.files.length; i++) {
-		var fileName = input.files[i].name;
-		var fileItem = document.createElement('div');
-		fileItem.innerHTML = fileName + " <span style='color:red' onclick='removeFile(this)'> x </span>";	
-		label.appendChild(fileItem); 
-		}
-}
 
-// 파일 삭제 함수
-function removeFile(button) {
-	var fileName = button.parentElement.textContent.trim();
-	button.parentElement.remove();
+// file 목록 수정
+let selectedFiles = [];
 
-	var input = document.getElementById('files');
+function test(files) {
 	
-	for (var i = 0; i < input.files.length; i++) {
-		if (input.files[i].name === fileName) {
-			input.files.splice(i, 1);
-			break;
-		}
+	console.log(files);
+	const fileList = document.getElementById('file-list');
+	
+	for (let i = 0; i < files.length; i++) {
+		selectedFiles.push(files[i]);
+		const item = document.createElement('div');
+		const fileName = document.createTextNode(files[i].name);
+		const deleteButton = document.createElement('button');
+		
+		deleteButton.addEventListener('click', (event) => {
+			item.remove();
+			event.preventDefault();
+			deleteFile(files[i]);
+		});
+		deleteButton.innerText = "X";
+		item.appendChild(fileName);
+		item.appendChild(deleteButton);
+		fileList.appendChild(item);
 	}
-
 }
 
-    $(document).ready(function() {
-        $("a[name='file-delete']").on("click", function(e) {
-            e.preventDefault();
-            deleteFile($(this));
-        });
-    })
- 
-    function addFile() {
-        var str = "<div class='file-input'><input type='file' name='file'><a href='#this' name='file-delete'>삭제</a></div>";
-        $("#file-list").append(str);
-        $("a[name='file-delete']").on("click", function(e) {
-            e.preventDefault();
-            deleteFile($(this));
-        });
-    }
- 
-    function deleteFile(obj) {
-        obj.parent().remove();
-    }
+function deleteFile(deleteFile) {
+	const inputFile = document.querySelector('input[name="files"]');
+	const dataTransfer = new DataTransfer();
+	// file을 filter를 통해 제외하여 변경 
+	selectedFiles = selectedFiles.filter(file => file !== deleteFile);
+	selectedFiles.forEach(file => {
+		dataTransfer.items.add(file);
+	})
+	inputFile.files = dataTransfer.files;
+}

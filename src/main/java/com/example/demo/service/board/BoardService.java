@@ -14,9 +14,15 @@ public interface BoardService {
 	
 	BoardVO getDetail(Long boardId);
 	
-	public int modifyBoard(BoardVO board);
-	
-	public int deleteBoard(Long boardId);
+	int deleteBoard(Long boardId);
+
+	/**
+	 * 게시글 수정 기능
+	 * @param deletedFilesId 
+	 * @param boardId 
+	 */
+	int modifyBoard(Long boardId, BoardListDto dto, List<Long> deletedFilesId) throws Exception;
+
 	
 	// 첨부파일 업로드
 //	public int insertFile(UploadFileVO fileVO) throws Exception;

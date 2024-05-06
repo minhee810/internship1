@@ -18,6 +18,7 @@
 	
 		<!-- 첨부파일 업로드 -->
 	<insert id="insertFile" parameterType="fileVO">
+	<![CDATA[
 			INSERT INTO UPLOADFILE(
 			    UPLOADFILE_ID,
 			    BOARD_ID,
@@ -33,10 +34,42 @@
 			    #{savePath},
 			    #{fileSize}
 			)
+			]]>
 	</insert>
 	
 	
 	<!-- 파일 리스트 조회  -->
 
 	<!-- 파일 리스트 삭제  --> 
+	<delete id="deleteFile" parameterType="Long">
+			<![CDATA[
+				DELETE FROM UPLOADFILE
+				WHERE BOARD_ID = #{boardId}; 
+			]]>
+	</delete>
+	
+	
+	<!-- 파일 삭제 -->
+    <delete id="deleteAllByIds" parameterType="list" >
+        UPDATE UPLOADFILE
+        SET
+             IS_DELETED = 1
+        WHERE
+            UPLOADFILE_ID IN
+            <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+            </foreach>
+    </delete>
+    
+    
+    <select id="selectFileNameByIds" parameterType="long" resultMap="fileNameResultMap">
+    	SELECT SAVE_FILE_NAME
+    	FROM UPLOADFILE
+    	WHERE UPLOADFILE_ID = #{uploadFileId}
+    </select>
+    
+    <resultMap id="fileNameResultMap" type="java.lang.String" >
+    <result property="saveFileName" column="SAVE_FILE_NAME"/>
+</resultMap>
+
 </mapper>

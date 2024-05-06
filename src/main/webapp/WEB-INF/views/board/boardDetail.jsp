@@ -84,9 +84,12 @@
                                          <!-- file upload -->
 	                                      	<c:forEach var ="files" items="${files}">
 	                                        <div class="multiple-upload" style="display: flex; justify-content: space-between;"> 
+	                                            
+	                                           
 	                                            <div class="custom-file"> 
 												    <a href="<c:url value='/fileDownload/${detail.boardId}/${files.saveFileName}/${files.orgFileName}' /> ">${files.orgFileName} 파일 다운로드 (${files.fileSize} kb)</a><br>
-	                                            </div>
+	                                            </div> 
+
 	                                        </div>
 	                                    </c:forEach> 
                                     </div>
