@@ -23,7 +23,6 @@ public interface BoardService {
 	 */
 	int modifyBoard(Long boardId, BoardListDto dto, List<Long> deletedFilesId) throws Exception;
 
-	
 	// 첨부파일 업로드
 //	public int insertFile(UploadFileVO fileVO) throws Exception;
 

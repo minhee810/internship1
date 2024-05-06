@@ -1,18 +1,18 @@
 package com.example.demo.service.board;
 
-import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.mapper.BoardMapper;
 import com.example.demo.mapper.FileMapper;
 import com.example.demo.service.file.FileManager;
 import com.example.demo.service.file.FileServiceImpl;
 import com.example.demo.vo.BoardVO;
-import com.example.demo.vo.UploadFileVO;
 import com.example.demo.web.dto.board.BoardListDto;
 
 import lombok.RequiredArgsConstructor;
@@ -33,12 +33,20 @@ public class BoardServiceImpl implements BoardService {
 	@Value("${file.path}")
 	private String path;
 
+	/**
+	 * 게시글 목록 조회
+	 */
 	@Override
+	@Transactional
 	public List<BoardVO> getBoardList() {
 		return boardMapper.getBoardList();
 	}
 
+	/**
+	 * 게시글 저장
+	 */
 	@Override
+	@Transactional
 	public int insertBoard(BoardListDto dto) throws Exception {
 
 		log.info("serviceImpl dto = {}", dto);
@@ -58,50 +66,16 @@ public class BoardServiceImpl implements BoardService {
 		
 		String boardFolderPath = fileManager.createFolder(path, board.getBoardId());
 
-		saveFiles(board, boardFolderPath);
+		fileManager.saveFiles(board, boardFolderPath);
 		
 		return result;
 	}
 
-	private void saveFiles(BoardListDto board, String boardFolderPath) throws Exception {
-		File file = new File(boardFolderPath);
- 
-		log.info("board = {}", board);
-		
-		// 경로가 없을 경우 파일을 생성
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		for (MultipartFile f : board.getFiles()) {
-
-			if (!f.isEmpty()) {
-
-				log.info("file => {}", f.getOriginalFilename());
-				
-				// HDD SAVE
-				String fileName = fileManager.saveFile(f, boardFolderPath);
- 
-				// DB SAVE
-				UploadFileVO uploadFileVO = UploadFileVO.builder()
-						.orgFileName(f.getOriginalFilename())
-						.saveFileName(fileName)
-						.savePath(boardFolderPath)
-						.fileSize(f.getSize())
-						.boardId(board.getBoardId())
-						.build();
-
-				log.info("uploadFileVO = {}", uploadFileVO);
-				
-				// file 정보를 db 에 insert
-				int result = fileMapper.insertFile(uploadFileVO);
-				log.info("result = {}",result);
-			}
-		}
-		
-	}
-
+	/**
+	 * 게시글 상세보기
+	 */
 	@Override
+	@Transactional
 	public BoardVO getDetail(Long boardId) {
 		log.info("boardServiceImpl -> getDetail() = {} ", boardMapper.getDetail(boardId));
 		return boardMapper.getDetail(boardId);
@@ -113,6 +87,7 @@ public class BoardServiceImpl implements BoardService {
 	 * @param boardId 
 	 */
 	@Override
+	@Transactional
 	public int modifyBoard(Long boardId, BoardListDto dto, List<Long> deletedFilesId) throws Exception {
 		log.info("[boardId] = {}", boardId);
 		
@@ -135,16 +110,45 @@ public class BoardServiceImpl implements BoardService {
 		String boardFolderPath = fileManager.createFolder(path, boardId);
 		
 		// 다시 파일 저장 
-		saveFiles(dto, boardFolderPath);
+		fileManager.saveFiles(dto, boardFolderPath);
 		
 		return boardResult;
 	}
 
+	/**
+	 * 게시글 삭제 메서드
+	 * @throws UnsupportedEncodingException 
+	 */
 	@Override
-	public int deleteBoard(Long boardId) {
-		log.info("ServiceImpl -> boardId = {}", boardId);
+	@Transactional
+	public int deleteBoard(Long boardId)  {
+		
+		// 1. 게시글 삭제 (blur 처리) 
 		int result = boardMapper.deleteBoard(boardId);
+		List<Long> id = new ArrayList<>();
+		id.add(boardId);
+		
+		
+		// 2. 파일 삭제 (blur 처리) : null 값 처리를 위해 service 로직 호출
+		fileServiceImpl.deleteAllByIds(id);
+				
+		// 3. 파일 서버 폴더에서 물리 삭제 
+		
+		// 3-1. 삭제할 파일의 id구하기
+		List<Long> fileId = fileMapper.getFileIdByBoardId(boardId);
+				
+		// 3-2. deleteFile() 메서드 호출하기
+		try {
+			Boolean delResult = fileServiceImpl.deleteFile(boardId, fileId);
+			
+			log.info("delResult  ={} ", delResult);
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
 		log.info("deleteBoard service result ={}", result);
+	
 		return result;
 	}
 

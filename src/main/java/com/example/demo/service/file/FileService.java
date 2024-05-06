@@ -7,14 +7,11 @@ import com.example.demo.vo.UploadFileVO;
 
 public interface FileService {
 
-	List<UploadFileVO> findAllFileByBoardId(Long boardId);
+	public List<UploadFileVO> findAllFileByBoardId(Long boardId);
 
-	void deleteAllByIds(List<Long> ids);
+	public void deleteAllByIds(List<Long> ids);
 
+	public boolean deleteFile(Long boardId, List<Long> deletedFilesId) throws UnsupportedEncodingException;
 
-	/**
-	 * 파일 삭제
-	 */
-	boolean deleteFile(Long boardId, List<Long> deletedFilesId) throws UnsupportedEncodingException;
-
+	public List<Long> getFileIdByBoardId(Long boardId);
 }

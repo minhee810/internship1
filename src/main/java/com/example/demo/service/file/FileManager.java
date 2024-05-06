@@ -6,9 +6,19 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.mapper.FileMapper;
+import com.example.demo.vo.UploadFileVO;
+import com.example.demo.web.dto.board.BoardListDto;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class FileManager {
 
+	private final FileMapper fileMapper;
+	
 	public String saveFile(MultipartFile multipartFile, String path) throws Exception {
 
 		// 1. 중복되지 않는 파일명 생성
@@ -41,5 +51,42 @@ public class FileManager {
 		return folderPath;
 	}
 	
+	public void saveFiles(BoardListDto board, String boardFolderPath) throws Exception {
+		File file = new File(boardFolderPath);
+ 
+		log.info("board = {}", board);
+		
+		// 경로가 없을 경우 파일을 생성
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		for (MultipartFile f : board.getFiles()) {
+
+			if (!f.isEmpty()) {
+
+				log.info("file => {}", f.getOriginalFilename());
+				
+				// HDD SAVE
+				String fileName = saveFile(f, boardFolderPath);
+ 
+				// DB SAVE
+				UploadFileVO uploadFileVO = UploadFileVO.builder()
+						.orgFileName(f.getOriginalFilename())
+						.saveFileName(fileName)
+						.savePath(boardFolderPath)
+						.fileSize(f.getSize())
+						.boardId(board.getBoardId())
+						.build();
+
+				log.info("uploadFileVO = {}", uploadFileVO);
+				
+				// file 정보를 db 에 insert
+				int result = fileMapper.insertFile(uploadFileVO);
+				log.info("result = {}",result);
+			}
+		}
+		
+	}
 	
 }

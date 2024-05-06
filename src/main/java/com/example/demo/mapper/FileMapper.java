@@ -14,7 +14,7 @@ public interface FileMapper {
 	int insertFile(UploadFileVO fileVO) throws Exception;
 	
 	
-	int deleteFile(List<Long> boardId);
+	int deleteFile(Long boardId);
 	
 	/**
 	 * 하나의 게시글에 해당하는 파일 리스트 조회 
@@ -32,6 +32,10 @@ public interface FileMapper {
 	
 
 	String selectFileNameByIds(Long ids);
+
+	// boardId로 fileId 
+	List<Long> getFileIdByBoardId(Long boardId);
 }
+
 
 

@@ -34,6 +34,7 @@
 			ORDER BY CREATED_DATE DESC
 		]]>
 	</select>
+	
 	<!-- 게시판 글 생성 -->
 	<insert id="insertBoard" parameterType="boardListDto" useGeneratedKeys="true">
 		    

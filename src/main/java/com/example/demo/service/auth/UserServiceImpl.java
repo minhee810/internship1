@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.CustomException;
 import com.example.demo.mapper.UserMapper;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
 	 * 회원 가입
 	 */
 	@Override
+	@Transactional
 	public int join(JoinDto joinDto) throws UnsupportedEncodingException {
 
 		String encPassword = saltEncrypt.encrypt(joinDto.getPassword());
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
 	 * 아이디 중복 확인
 	 */
 	@Override
+	@Transactional
 	public int idCheck(String username) {
 		int result = userMapper.idCheck(username);
 		return result;
@@ -55,6 +58,7 @@ public class UserServiceImpl implements UserService {
 	 * 이메일 중복 확인
 	 */
 	@Override
+	@Transactional
 	public int emailCheck(String email) {
 		int result = userMapper.emailCheck(email);
 		return result;
@@ -63,6 +67,7 @@ public class UserServiceImpl implements UserService {
 	/**
 	 * 이메일로 사용자 비밀번호 불러오기 (비밀번호 확인을 위함) -> 추후 사용할 수도 있어 보류 ...
 	 */
+	@Transactional
 	private String findPassword(String email) {
 
 		String password = userMapper.findPassword(email);
@@ -76,6 +81,7 @@ public class UserServiceImpl implements UserService {
 	 * 이메일로 사용자가 존재하는지 확인
 	 */
 	@Override
+	@Transactional
 	public int existUser(LoginDto loginDto) {
 		return userMapper.emailCheck(loginDto.getEmail());
 	}
@@ -84,6 +90,7 @@ public class UserServiceImpl implements UserService {
 	 * 사용자 정보 불러오기 1. map 사용해서 리턴하기 2. 사용자 정보
 	 */
 	@Override
+	@Transactional
 	public LoginDto getLoginUser(String email) throws Exception {
 		try {
 			LoginDto savedUser = userMapper.getLoginUser(email);
@@ -103,6 +110,7 @@ public class UserServiceImpl implements UserService {
 	 * 로그인 기능
 	 */
 	@Override
+	@Transactional
 	public Map<String, Object> login(LoginDto loginDto) throws Exception {
 
 		String email = loginDto.getEmail();
@@ -136,6 +144,7 @@ public class UserServiceImpl implements UserService {
 	 * 비밀번호 확인
 	 */
 	@Override
+	@Transactional
 	public boolean checkPassword(String plainPassword, String hashedPassword) throws Exception {
 		return saltEncrypt.isMatch(plainPassword, hashedPassword);
 	}
