@@ -24,7 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 				// 필터링 할 URL 패턴
 				.addPathPatterns("")
-				.excludePathPatterns("/auth/login", "/auth/join", "/resources/**"); // filter 제외 대
+				.excludePathPatterns("/auth/login", "/auth/join", "/","/resources/**"); // filter 제외 대
 	}
 
 }

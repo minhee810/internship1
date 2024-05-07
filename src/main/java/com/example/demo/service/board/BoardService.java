@@ -2,13 +2,16 @@ package com.example.demo.service.board;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.demo.vo.BoardVO;
 import com.example.demo.web.dto.board.BoardListDto;
 
 public interface BoardService {
 
 	/* 게시글 목록 조회 */
-	public List<BoardVO> getBoardList();
+	public Page<BoardVO> getBoardList(Pageable pageable);
 
 	int insertBoard(BoardListDto board) throws Exception;
 	

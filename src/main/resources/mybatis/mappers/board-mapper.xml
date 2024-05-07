@@ -24,7 +24,7 @@
 		구분, pk 컬럼에는 result 아닌 id 사용 -->
 
 
-	<!-- 메인 페이지 글 목록 조회 -->
+	<!-- 메인 페이지 글 목록 조회 
 	<select id="getBoardList" resultType="boardVO">
 		<![CDATA[
 			SELECT B.BOARD_ID, B.TITLE, B.CREATED_DATE, B.COMMENT_CNT, U.USERNAME
@@ -33,6 +33,31 @@
 			WHERE B.IS_DELETED = 0
 			ORDER BY CREATED_DATE DESC
 		]]>
+	</select>-->
+	
+		<!-- 메인 페이지 글 목록 조회 -->
+	<select id="getBoardList" parameterType="requestList" resultType="boardVO">
+		<![CDATA[
+				SELECT *
+				FROM (
+				    SELECT B.BOARD_ID, 
+				           B.TITLE, 
+				           B.CREATED_DATE, 
+				           B.COMMENT_CNT, 
+				           U.USERNAME,
+				           ROWNUM AS RN
+				    FROM BOARD B
+				    INNER JOIN USERS U ON B.WRITER = U.USER_ID 
+				    WHERE B.IS_DELETED = 0
+				    ORDER BY CREATED_DATE DESC
+				)
+				WHERE RN > #{pageable.offset} AND ROWNUM <= #{pageable.pageSize}
+			]]>
+	</select>
+	
+	<select id="getListBoardCount" parameterType="boardVO" resultType="int">
+			SELECT COUNT(*) AS CNT 
+			FROM BOARD
 	</select>
 	
 	<!-- 게시판 글 생성 -->
@@ -80,7 +105,6 @@
 				IS_DELETED = 1 
 			WHERE BOARD_ID = #{boardId}
 	</update>
-	
 	
 
 	

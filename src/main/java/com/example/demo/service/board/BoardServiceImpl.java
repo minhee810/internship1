@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +15,7 @@ import com.example.demo.mapper.BoardMapper;
 import com.example.demo.mapper.FileMapper;
 import com.example.demo.service.file.FileManager;
 import com.example.demo.service.file.FileServiceImpl;
+import com.example.demo.service.utils.RequestList;
 import com.example.demo.vo.BoardVO;
 import com.example.demo.web.dto.board.BoardListDto;
 
@@ -38,8 +42,20 @@ public class BoardServiceImpl implements BoardService {
 	 */
 	@Override
 	@Transactional
-	public List<BoardVO> getBoardList() {
-		return boardMapper.getBoardList();
+	public Page<BoardVO> getBoardList(Pageable pageable) {
+		
+		// builder 패컨으로 data, pageable 파라미터에 데이터 주입
+		RequestList<?> requestList = RequestList.builder()
+				.data(null)
+				.pageable(pageable)
+				.build();
+		
+		List<BoardVO> content = boardMapper.getBoardList(requestList);
+		int total = boardMapper.getListBoardCount();
+		log.info("데이터 총 개수 total = {}", total);
+		log.info("content = {}", content);
+		log.info("pageable = {}", pageable);
+		return new PageImpl<BoardVO>(content, pageable, total);
 	}
 
 	/**

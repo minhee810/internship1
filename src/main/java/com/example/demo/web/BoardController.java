@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -43,15 +44,53 @@ public class BoardController {
 	 * @param model
 	 * @return
 	 */
+
+//	@GetMapping("/")
+//	public String getBoardList(Model model, @PageableDefault(size = 10) Pageable page) { // 게시글 목록 조회 Page<BoardVO>
+////		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
+////		log.info("boardList = {}", boardList);
+////		model.addAttribute("boardList", boardList);
+//		return "/board/boardMain";
+//	}
+
+//	@GetMapping("/")
+//	public String mainPage(@PageableDefault(size = 10, page = 0) Pageable page, Model model) {
+//		// 게시글 목록 조회
+//		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
+//		log.info("page = {}", page);
+//
+//		log.info("boardList = {}", boardList);
+//
+//		model.addAttribute("boardList", boardList);
+//		
+//		return "/board/boardMain";
+//	}
+
+
+	// get 방식으로 페이지 번호를 넘겨준다. 
+	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기 
 	@GetMapping("/")
-	public String getBoardList(Model model) {
+	public String getBoardList(@PageableDefault(size = 10, page = 0) Pageable page, Model model) {
 		// 게시글 목록 조회
-		List<BoardVO> boardList = boardServiceImpl.getBoardList();
+		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
+		int pageNumber = boardList.getPageable().getPageNumber(); // 현재 페이지 
+		int totalPages = boardList.getTotalPages(); // 총 페이지 개수 
+		int pageBlock = 10;
+		int startBlockPage = ((pageNumber)/pageBlock) * pageBlock +1; // 현재 페이지가 7이라면 1*5
+		
+		int endBlockPage = startBlockPage + pageBlock -1;
+		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage; 
+		
+		log.info("page = {}", page);
 
 		log.info("boardList = {}", boardList);
 
 		model.addAttribute("boardList", boardList);
 
+		model.addAttribute("startBlockPage", startBlockPage);
+		model.addAttribute("endBlockPage", endBlockPage);
+//		return new ResponseEntity<>(new ResponseDto<>(1, "조회 성공", boardList), HttpStatus.OK);
+		
 		return "/board/boardMain";
 	}
 
@@ -144,19 +183,17 @@ public class BoardController {
 	 * @throws Exception
 	 */
 	@PostMapping("/board/modify/{boardId}")
-	public String modifyBoard(@PathVariable Long boardId, 
-								@ModelAttribute("dto") BoardListDto dto,
-								@RequestParam(required = false) List<Long> deletedFilesId, 
-								HttpServletRequest request, Model model,
-								Errors erros) throws Exception {
+	public String modifyBoard(@PathVariable Long boardId, @ModelAttribute("dto") BoardListDto dto,
+			@RequestParam(required = false) List<Long> deletedFilesId, HttpServletRequest request, Model model,
+			Errors erros) throws Exception {
 
 		log.info("=====[modifyBoard]=====");
 
 		if (erros.hasErrors()) {
 			return "/board/modify/" + boardId;
 		}
-		
-		log.info("[modifyboard] service 호출 전 "); 
+
+		log.info("[modifyboard] service 호출 전 ");
 		boardServiceImpl.modifyBoard(boardId, dto, deletedFilesId);
 
 		return "redirect:/board/detail/" + boardId;

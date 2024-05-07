@@ -26,6 +26,7 @@
 
     <!-- Custom styles for this page -->
     <link href="../resources/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link type="text/css" href="../resources/static/css/style.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -47,8 +48,9 @@
                     <h1 class="h3 mb-2 text-gray-800">게시판</h1>
 
                     <!-- DataTales Example -->
-
                     <div class="card shadow mb-4">
+                        <!-- ✅ 페이지 요소 추가 -->
+                        <input type="hidden" name="page" id="page" value="0" />
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="boardList" width="100%" cellspacing="0">
@@ -68,19 +70,18 @@
                                             <th>댓글</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <c:forEach var="list" items="${boardList}">
-                                            <tr>
-                                                <td>${list.username}</td>
-                                                <td><a href="${contextPath}/board/detail/${list.boardId}">${list.title}</a></td>
-                                                <td>
-                                                    <fmt:parseDate value="${list.createdDate}" pattern="yyyy-MM-dd" var="parsedDateTime" type="both" />
-                                                    <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateTime}" />
-                                                </td>
-                                                <td>${list.commentCnt}개</td>
-                                            </tr>
-                                        </c:forEach>
-
+                                    <tbody id="fieldListBody">
+                                        <c:forEach var="list" items="${boardList.content}">
+										<tr>
+                                            <td>${list.username}</td>
+                                            <td><a href="${contextPath}/board/detail/${list.boardId}">${list.title}</a></td>
+                                            <td>
+                                                <fmt:parseDate value="${list.createdDate}" pattern="yyyy-MM-dd" var="parsedDateTime" type="both" />
+                                                <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateTime}" />
+                                            </td>
+                                            <td>${list.commentCnt}개</td>
+                                        </tr>
+                                      </c:forEach> 
                                     </tbody>
                                 </table>
                                 <a href="${contextPath}/board/write">
@@ -89,66 +90,111 @@
                                     </button></a>
 
                             </div>
-                        </div>
+                       
+                        <!-- ✅ 페이징 표시되는 부분 추가 -->
+						<div class="text-xs-center">
+							<ul class="pagination justify-content-center">
+						<!-- 이전 -->
+ 						<c:choose>
+							<c:when test="${boardList.first}"></c:when>
+							<c:otherwise>
+								<li class="page-item"><a class="page-link" href="/?page=0">처음</a></li>
+								<li class="page-item"><a class="page-link" href="/?page=${boardList.number-1}">&larr;</a></li>
+							</c:otherwise>
+						</c:choose>
+			
+						<!--  paging -->
+							<c:forEach begin="${startBlockPage}" end="${endBlockPage}" var="i">
+								<c:choose>
+									<c:when test="${boardList.pageable.pageNumber+1 == i}">
+										<li class="page-item active">
+											<a class="page-link" href="/?page=${i-1}">${i}</a>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="page-item">
+											<a class="page-link" href="/?page=${i-1}">${i}</a>
+										</li>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							
+						<!-- 다음 -->
+						<c:choose>
+							<c:when test="${boardList.last}"></c:when>
+							<c:otherwise>
+								<li class="page-item "><a class="page-link" href="/?page=${boardList.number+1}">&rarr;</a></li>
+								<li class="page-item "><a class="page-link" href="/?page=${boardList.totalPages-1}">마지막</a></li>
+							</c:otherwise>
+						</c:choose>
+							</ul>
+						</div>
+							<!-- 페이징 영역 끝 -->
+				 </div>
+	</div>
+	<!-- 페이징 영역 끝 -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <%@ include file="../layout/footer.jsp" %>
+                <!-- End of Footer -->
+            </div>
+            <!-- End of Content Wrapper -->
+        </div>
+        <!-- End of Page Wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Select "Logout" below if you are ready to end your current session.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <a class="btn btn-primary" href="login.html">Logout</a>
                     </div>
                 </div>
-                <!-- /.container-fluid -->
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <%@ include file="../layout/footer.jsp" %>
-            <!-- End of Footer -->
-        </div>
-        <!-- End of Content Wrapper -->
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Select "Logout" below if you are ready to end your current session.
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">
-                        Cancel
-                    </button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="../resources/static/vendor/jquery/jquery.min.js"></script>
-    <script src="../resources/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap core JavaScript-->
+        <script src="../resources/static/vendor/jquery/jquery.min.js"></script>
+        <script src="../resources/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="../resources/static/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="../resources/static/js/sb-admin-2.min.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="../resources/static/js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="../resources/static/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../resources/static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- Page level plugins -->
+        <script src="../resources/static/vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="../resources/static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="../resources/static/js/demo/datatables-demo.js"></script>
-    <script type="text/javascript" src="../resources/static/js/board/boardMain.js"></script>
+        <!-- Page level custom scripts -->
+        <script src="../resources/static/js/demo/datatables-demo.js"></script>
+        <script type="text/javascript" src="../resources/static/js/board/boardMain.js"></script>
+
+        <script type="text/javascript" src="../resources/static/js/com-page.js"></script>
+        
+        
 </body>
 
 </html>
