@@ -4,6 +4,7 @@
 
 
 $(document).ready(function() {
+	getCommentList();
 	$('#deleteBtn').click(fn_boardDelete);
 
 })
@@ -37,5 +38,28 @@ function fn_boardDelete() {
 		});
 	}
 
+}
+
+function getCommentList() {
+	console.log("getCommentList");
+	
+	let boardId = $('#boardId').text();
+	
+	$.ajax({
+		type: "get",
+		url: `/comment/` + boardId,
+		dataType: "json",
+		contentType: "application/json; charset-utf-8",
+		success: function(list) {
+			console.log("댓글 불러오기 성공", list);
+
+		},
+		error: function(error) {
+			console.log("댓글 불러오기를 실패하였습니다. ", error);
+		}
+	});
 
 }
+
+
+

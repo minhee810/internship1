@@ -96,7 +96,8 @@
                                 </div>
                                 <div class="card-footer">
                                     <form action="#" id="replyForm" name="replyForm">
-                                        <input type="hidden" name="boardNo" value="1">
+                                        <input type="hidden" id="boardId" name="boardId" value="${detail.boardId}">
+                                       
                                         <input type="hidden" name="parentCommentNo" value="0">
                                         <input type="hidden" name="commentNo" value="0">
                                         <ul id="commentDiv" style="max-height: 500px; overflow-y: scroll;overflow-x: hidden;">
@@ -125,7 +126,7 @@
                                                     </div>
                                                     <div class="comment">
 
-                                                        <p>test</p>
+                                                        <p id="commentContent"></p>
 
 
                                                     </div>
