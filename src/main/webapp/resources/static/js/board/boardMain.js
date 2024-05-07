@@ -78,7 +78,7 @@ function resetList() {
 // 동적으로 테이블 생성
 function resultTable(response) {
 	document.querySelector("#fieldListBody").innerHTML = "";
-
+	
 	if (response.size > 0) {
 		const content = response.content;
 		
@@ -87,7 +87,6 @@ function resultTable(response) {
 			let element = document.querySelector("#fieldListBody");
  // <td><p>${PAGE.pageRowNumber(response.number, response.size, i, response.totalElements)}</p></td>
 			let result = content[i];
-			let fmtDate = result.createDate
 			let template = `
 				   
 					<td><p>${result.username}</p></td>

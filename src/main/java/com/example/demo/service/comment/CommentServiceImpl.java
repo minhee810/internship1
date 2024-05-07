@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.vo.CommentsVO;
 
+import jdk.internal.org.jline.utils.Log;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -23,8 +25,9 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public CommentsVO saveComment(CommentsVO commentVO) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("commentServiceImpl");
+		CommentsVO savedComment = commentMapper.saveComment(commentVO);
+		return savedComment;
 	}
 
 	@Override
