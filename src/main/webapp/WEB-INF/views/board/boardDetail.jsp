@@ -96,10 +96,12 @@
                                 </div>
                                 <div class="card-footer">
                                     <form action="#" id="replyForm" name="replyForm">
-                                        <input type="hidden" id="boardId" name="boardId" value="${detail.boardId}">
-                                       
+                                                              
+                                    <!--     <input type="hidden" id="boardId" name="boardId" value="${detail.boardId}">
                                         <input type="hidden" name="parentCommentNo" value="0">
                                         <input type="hidden" name="commentNo" value="0">
+                                        
+               
                                         <ul id="commentDiv" style="max-height: 500px; overflow-y: scroll;overflow-x: hidden;">
 
                                             <li data-no="1" data-name="test" data-date="2024-04-01 12:45:23" data-parent="0">
@@ -111,16 +113,12 @@
                                                             <div class="commentDate">2024-04-01 12:45:23</div>
 
                                                         </div>
-														
+												
                                                         <div class="commentHead2">
-
                                                             <div class="commentReply">답글</div>
-
                                                             <div class="commentModify">수정</div>
                                                             <div class="commentRemove">삭제</div>
-
                                                             <div class="commentCancle" style="display:none;">취소</div>
-															
                                                         </div>
 
                                                     </div>
@@ -256,15 +254,15 @@
                                                 <hr class="sidebar-divider d-none d-md-block">
                                             </li>
 
-                                        </ul>
-                                    </form>
+                                        </ul> -->
+                                        
+                                    </form> 
 
-                                    <form action="#" class="flex" id="commentForm" name="commentForm">
-                                        <input type="hidden" name="boardNo" value="1">
-                                        <textarea id="a3" cols="30" row="5" name="commentContent" class="form-control flex" style="width: 90%" placeholder="내용
-                         "></textarea>
-                                        <a href="#" class="commentAdd flex" style="width: 9%">
-                                            <button type="button" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
+                                    <form action="" class="flex" id="commentForm" name="commentForm">
+                                        <input type="hidden" name="boardId" value="${detail.boardId}">
+                                        <textarea id="commentContent" cols="30" row="5" name="commentContent" class="form-control flex" style="width: 90%" placeholder="내용"></textarea>
+                                        <a class="commentAdd flex" style="width: 9%">
+                                            <button type="button" id="commentSaveBtn" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
                                         </a>
                                     </form>
 

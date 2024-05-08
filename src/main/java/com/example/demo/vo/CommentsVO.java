@@ -14,13 +14,34 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentsVO {
-	private Long commentId;
-	private String content;
-	private LocalDateTime createdDate;
-	private LocalDateTime modifiedDate;
-	private Long parentId;
-	private int depth;
-	private String isDeleted;
-	private int orderNumber; 
-	private Long writer; 
+	private Long commentId; // 댓글 번호
+ 	private String commentContent; // 댓글 내용 
+	private LocalDateTime createdDate; // 댓글 생성일 
+	private LocalDateTime modifiedDate; // 댓글 수정일 
+	private Long parentId; // 부모 댓글의 아이디 
+	private int depth; // 깊이 = 레벨 
+	private String isDeleted; // 삭제 여부 
+	private int orderNumber;  // 전체 댓글의 순서
+	private Long writer;  // 댓글 작성자 
+	
+	// 추가 필드 
+	private Long boardId;
+	private String username;
+	private Boolean principal;  // 작성자와 로그인 사용자의 일치 정보
+	
+	
+	public CommentsVO(Long commentId, String commentContent, LocalDateTime createdDate, LocalDateTime modifiedDate,
+			Long parentId, int depth, String isDeleted, int orderNumber, Long writer) {
+		super();
+		this.commentId = commentId;
+		this.commentContent = commentContent;
+		this.createdDate = createdDate;
+		this.modifiedDate = modifiedDate;
+		this.parentId = parentId;
+		this.depth = depth;
+		this.isDeleted = isDeleted;
+		this.orderNumber = orderNumber;
+		this.writer = writer;
+	}
+	
 }

@@ -4,10 +4,27 @@
 
 <mapper namespace="com.example.demo.mapper.CommentMapper">
 
-		<!-- 댓글 불러오기 -->
+		<!-- 계층형 쿼리문으로 댓글 불러오기 -->
 		<select id="getCommentList" parameterType="long" resultType="commentsVO">
 			<![CDATA[
-				SELECT * FROM COMMENTS WHERE BOARD_ID = #{boardId}
+				SELECT LEVEL,
+				    COMMENT_ID, 
+				    PARENT_ID,
+				    LPAD(' ', 4 *(LEVEL -1)) || COMMENT_CONTENT COMMENT_CONTENT,
+					CREATED_DATE,
+					WRITER,
+					USERNAME
+				FROM   (SELECT C.* , U.USERNAME
+				       FROM COMMENTS C 
+				       JOIN USERS U 
+				       ON U.USER_ID = C.WRITER
+				       WHERE C.BOARD_ID  = #{boardId}
+				       AND C.IS_DELETED = 0
+				       )
+				WHERE BOARD_ID = #{boardId}
+				START WITH PARENT_ID = 0
+				CONNECT BY PRIOR COMMENT_ID = PARENT_ID
+				ORDER SIBLINGS BY COMMENT_ID DESC
 			]]>	
 			
 		</select>
@@ -15,13 +32,17 @@
 		<insert id="saveComment" parameterType="commentsVO">
 			<![CDATA[
 			INSERT INTO COMMENTS
-			VALUES (COMMENTS_SEQ.NEXTVAL, #{content}, sysdate, sysdate, #{parentId}, #{depth}, #{isDeleted}, #{orderNumber}, #{writer}, #{boardId})
+			VALUES (COMMENTS_SEQ.NEXTVAL, #{commentContent}, sysdate, sysdate, #{parentId}, #{depth}, #{isDeleted}, #{orderNumber}, #{writer}, #{boardId})
 			]]>
 		</insert>
 		
 		<!-- 댓글 삭제하기 -->
 		<update id="deleteComment" parameterType="long">
 			<![CDATA[
+			 	UPDATE COMMENTS  
+				SET 
+				IS_DELETED = 1 
+			WHERE COMMENT_ID = #{commentId}
 			]]>
 		</update>
 		
