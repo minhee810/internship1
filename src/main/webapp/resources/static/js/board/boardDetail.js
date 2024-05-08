@@ -95,7 +95,6 @@ function createTable(list) {
 			template += `<div class="commentHead2">`;
 			template += `<a href="#" class="commentReply">답글</a>`;
 
-
 			template += `<a onclick ='commentUpdateForm(${result.commentId})' class="commentModify">수정</a>`;
 
 			template += `<a onclick ='commentDelete(` + result.commentId + `)' class="commentRemove">삭제</a>`;
