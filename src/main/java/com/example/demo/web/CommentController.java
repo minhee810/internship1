@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,13 +36,17 @@ public class CommentController {
 	 * @return
 	 */
 	@GetMapping("/comment")
-	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId) {
+	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId, Model model) {
 		log.info("getCommentList()");
 
 		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
 		log.info("commentList = {}", commentList);
+		
+		model.addAttribute("commentList", commentList);
+		
 		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 불러오기 성공", commentList), HttpStatus.OK);
 	}
+	
 
 	/**
 	 * 댓글 작성하기

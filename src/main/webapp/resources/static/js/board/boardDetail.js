@@ -4,6 +4,7 @@
 
 
 $(document).ready(function() {
+	dataSet();
 	getCommentList();
 	$('#deleteBtn').click(fn_boardDelete);
 	$('#commentSaveBtn').click(commentSubmit);
@@ -38,7 +39,6 @@ function fn_boardDelete() {
 			}
 		});
 	}
-
 }
 
 function getCommentList() {
@@ -55,8 +55,8 @@ function getCommentList() {
 		contentType: "application/json; charset-utf-8",
 		success: function(list) {
 			console.log("댓글 불러오기 성공", list);
-
-			createTable(list);
+			// location.href="/board/boardMain";
+			// createTable(list);
 
 		},
 		error: function(error) {
@@ -142,6 +142,7 @@ function padTwoDigits(num) {
 	return num.toString().padStart(2, "0");
 }
 
+
 function getFormattedDate(org) {
 	const date = new Date(org);
 
@@ -169,31 +170,27 @@ function commentUpdateForm() {
 
 function commentUpdate(id) {
 
-	{
+	$.ajax({
+		type: "PUT",
+		url: "/comment/" + commentId,
+		data: JSON.stringify({
+			"commentId": commentId,
+			"content": comment,
+		}),
+		contentType: "application/json; charset=utf-8",
+		success: function(data) {
+			alert(data);
+			getComment();
+			$('.' + id + 'ucommentContentCheck').text('');
+		},
+		error: function(status) {
+			$(status.responseJSON).each(function() {
+				$('.' + id + 'ucommentContentCheck').text(this.message);
+			})
+		}
+	});
 
-		$.ajax({
-			type: "PUT",
-			url: "/comment/" + commentId,
-			data: JSON.stringify({
-				"commentId": commentId,
-				"content": comment,
-			}),
-			contentType: "application/json; charset=utf-8",
-			success: function(data) {
-				alert(data);
-				getComment();
-				$('.' + id + 'ucommentContentCheck').text('');
-			},
-			error: function(status) {
-				$(status.responseJSON).each(function() {
-					$('.' + id + 'ucommentContentCheck').text(this.message);
-				})
-			}
-		});
-	}
 }
-
-
 
 function commentDelete(commentId) {
 	console.log(" delete commentId === > ", commentId);
@@ -220,10 +217,13 @@ function commentDelete(commentId) {
 
 function commentSubmit() {
 	console.log("commentSubmit 호출");
+	
+	var boardId = $('input[name="boardId"').val();
+	var commentContent = $('#commentContent').val();
+	
 
-	let data = $('#commentForm').serialize();
-
-	console.log("data : ", data);
+	console.log("commentContent : ", commentContent);
+	console.log("boardId : ", boardId);
 
 	$.ajax({
 		type: "post",
@@ -243,5 +243,31 @@ function commentSubmit() {
 	})
 }
 
+// 대댓글 버튼 클릭 시
+$('.commentReply').click(function() {
 
 
+	// 이후에 필요한 작업 수행
+	// 예를 들어, 댓글에 대한 답글을 작성하거나 수정/삭제 기능을 구현하는 등의 동작을 추가할 수 있습니다.
+
+});
+
+function dataSet() {
+
+	$('.commentData').each(function() {
+		// 댓글의 데이터 가져오기
+		var commentId = $(this).data('no');
+		var username = $(this).data('name');
+		var createdDate = $(this).data('date');
+		var parentId = $(this).data('parent');
+		var commentContent = $(this).find('#commentContent').text(); // 댓글 내용
+
+		console.log("Comment ID:", commentId);
+		console.log("Username:", username);
+		console.log("Created Date:", createdDate);
+		console.log("Parent ID:", parentId);
+		console.log("Comment Content:", commentContent);
+
+
+	})
+}

@@ -9,6 +9,7 @@
 			<![CDATA[
 				SELECT LEVEL,
 				    COMMENT_ID, 
+				   	DEPTH,
 				    PARENT_ID,
 				    LPAD(' ', 4 *(LEVEL -1)) || COMMENT_CONTENT COMMENT_CONTENT,
 					CREATED_DATE,
@@ -32,7 +33,7 @@
 		<insert id="saveComment" parameterType="commentsVO">
 			<![CDATA[
 			INSERT INTO COMMENTS
-			VALUES (COMMENTS_SEQ.NEXTVAL, #{commentContent}, sysdate, sysdate, #{parentId}, #{depth}, #{isDeleted}, #{orderNumber}, #{writer}, #{boardId})
+			VALUES (COMMENTS_SEQ.NEXTVAL, #{commentContent}, #{parentId}, #{depth}, #{orderNumber}, #{writer}, #{boardId})
 			]]>
 		</insert>
 		

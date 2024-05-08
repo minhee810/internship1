@@ -1,5 +1,6 @@
 package com.example.demo.web;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.exception.CustomException;
 import com.example.demo.service.board.BoardServiceImpl;
+import com.example.demo.service.comment.CommentServiceImpl;
 import com.example.demo.service.file.FileServiceImpl;
 import com.example.demo.vo.BoardVO;
+import com.example.demo.vo.CommentsVO;
 import com.example.demo.vo.UploadFileVO;
 import com.example.demo.web.dto.ResponseDto;
 import com.example.demo.web.dto.board.BoardListDto;
@@ -37,6 +40,7 @@ public class BoardController {
 
 	private final BoardServiceImpl boardServiceImpl;
 	private final FileServiceImpl fileServiceImpl;
+	private final CommentServiceImpl commentServiceImpl;
 
 	/**
 	 * 게시글 목록 조회
@@ -66,21 +70,20 @@ public class BoardController {
 //		return "/board/boardMain";
 //	}
 
-
-	// get 방식으로 페이지 번호를 넘겨준다. 
-	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기 
+	// get 방식으로 페이지 번호를 넘겨준다.
+	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
 	@GetMapping("/")
 	public String getBoardList(@PageableDefault(size = 10, page = 0) Pageable page, Model model) {
 		// 게시글 목록 조회
 		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
-		int pageNumber = boardList.getPageable().getPageNumber(); // 현재 페이지 
-		int totalPages = boardList.getTotalPages(); // 총 페이지 개수 
+		int pageNumber = boardList.getPageable().getPageNumber(); // 현재 페이지
+		int totalPages = boardList.getTotalPages(); // 총 페이지 개수
 		int pageBlock = 10;
-		int startBlockPage = ((pageNumber)/pageBlock) * pageBlock +1; // 현재 페이지가 7이라면 1*5
-		
-		int endBlockPage = startBlockPage + pageBlock -1;
-		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage; 
-		
+		int startBlockPage = ((pageNumber) / pageBlock) * pageBlock + 1; // 현재 페이지가 7이라면 1*5
+
+		int endBlockPage = startBlockPage + pageBlock - 1;
+		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage;
+
 		log.info("page = {}", page);
 
 		log.info("boardList = {}", boardList);
@@ -90,7 +93,7 @@ public class BoardController {
 		model.addAttribute("startBlockPage", startBlockPage);
 		model.addAttribute("endBlockPage", endBlockPage);
 //		return new ResponseEntity<>(new ResponseDto<>(1, "조회 성공", boardList), HttpStatus.OK);
-		
+
 		return "/board/boardMain";
 	}
 
@@ -148,6 +151,10 @@ public class BoardController {
 			log.info("files = {}", file);
 		}
 
+		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
+		log.info("commentList = {}", commentList);
+
+		model.addAttribute("commentList", commentList);
 		model.addAttribute("files", files);
 		return "/board/boardDetail";
 	}

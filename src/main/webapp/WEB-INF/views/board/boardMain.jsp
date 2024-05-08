@@ -88,10 +88,9 @@
                                     <button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
                                         게시글 작성
                                     </button></a>
-
                             </div>
                        
-                        <!-- ✅ 페이징 표시되는 부분 추가 -->
+                        <!--  페이징 표시되는 부분 추가 -->
 						<div class="text-xs-center">
 							<ul class="pagination justify-content-center">
 						<!-- 이전 -->
