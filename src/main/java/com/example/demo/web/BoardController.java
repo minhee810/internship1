@@ -1,6 +1,5 @@
 package com.example.demo.web;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,34 +41,7 @@ public class BoardController {
 	private final FileServiceImpl fileServiceImpl;
 	private final CommentServiceImpl commentServiceImpl;
 
-	/**
-	 * 게시글 목록 조회
-	 * 
-	 * @param model
-	 * @return
-	 */
-
-//	@GetMapping("/")
-//	public String getBoardList(Model model, @PageableDefault(size = 10) Pageable page) { // 게시글 목록 조회 Page<BoardVO>
-////		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
-////		log.info("boardList = {}", boardList);
-////		model.addAttribute("boardList", boardList);
-//		return "/board/boardMain";
-//	}
-
-//	@GetMapping("/")
-//	public String mainPage(@PageableDefault(size = 10, page = 0) Pageable page, Model model) {
-//		// 게시글 목록 조회
-//		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
-//		log.info("page = {}", page);
-//
-//		log.info("boardList = {}", boardList);
-//
-//		model.addAttribute("boardList", boardList);
-//		
-//		return "/board/boardMain";
-//	}
-
+	// 게시글 목록 조회
 	// get 방식으로 페이지 번호를 넘겨준다.
 	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
 	@GetMapping("/")
@@ -89,7 +61,6 @@ public class BoardController {
 		log.info("boardList = {}", boardList);
 
 		model.addAttribute("boardList", boardList);
-
 		model.addAttribute("startBlockPage", startBlockPage);
 		model.addAttribute("endBlockPage", endBlockPage);
 //		return new ResponseEntity<>(new ResponseDto<>(1, "조회 성공", boardList), HttpStatus.OK);
@@ -108,15 +79,7 @@ public class BoardController {
 		return "/board/boardWrite";
 	}
 
-	/**
-	 * 게시글 저장
-	 * 
-	 * @param dto
-	 * @param model
-	 * @param session
-	 * @return
-	 * @throws Exception
-	 */
+	// 게시글 저장
 	@PostMapping("/board/write")
 	public String insertBoard(BoardListDto dto, Model model, HttpSession session) throws Exception {
 
@@ -133,13 +96,7 @@ public class BoardController {
 		return "redirect:/";
 	}
 
-	/**
-	 * 게시글 상세보기
-	 * 
-	 * @param boardId
-	 * @param model
-	 * @return
-	 */
+	// 게시글 상세보기
 	@GetMapping("/board/detail/{boardId}")
 	public String getDetail(@PathVariable Long boardId, Model model) {
 
@@ -159,13 +116,7 @@ public class BoardController {
 		return "/board/boardDetail";
 	}
 
-	/**
-	 * 게시글 수정 페이지 이동
-	 * 
-	 * @param boardId
-	 * @param model
-	 * @return
-	 */
+	// 게시글 수정 페이지 이동
 	@GetMapping("/board/modify/{boardId}")
 	public String modifyPage(@PathVariable Long boardId, Model model) {
 
@@ -180,15 +131,7 @@ public class BoardController {
 		return "/board/boardModify";
 	}
 
-	/**
-	 * 게시글 수정 기능
-	 * 
-	 * @param boardId
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
+	// 게시글 수정 기능
 	@PostMapping("/board/modify/{boardId}")
 	public String modifyBoard(@PathVariable Long boardId, @ModelAttribute("dto") BoardListDto dto,
 			@RequestParam(required = false) List<Long> deletedFilesId, HttpServletRequest request, Model model,
@@ -206,12 +149,7 @@ public class BoardController {
 		return "redirect:/board/detail/" + boardId;
 	}
 
-	/**
-	 * 게시글 삭제
-	 * 
-	 * @param boardId
-	 * @return
-	 */
+	// 게시글 삭제
 	@PostMapping("/board/delete/{boardId}")
 	public ResponseEntity<?> deleteBoard(@PathVariable Long boardId) {
 		log.info("boardId = {}", boardId);

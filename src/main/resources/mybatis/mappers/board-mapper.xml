@@ -22,18 +22,6 @@
 
 	<!-- 1대 다 : collection (한명의 유저가 작성한 글 목록) 1대 1 : association 일반 컬럼과 pk 컬럼 
 		구분, pk 컬럼에는 result 아닌 id 사용 -->
-
-
-	<!-- 메인 페이지 글 목록 조회 
-	<select id="getBoardList" resultType="boardVO">
-		<![CDATA[
-			SELECT B.BOARD_ID, B.TITLE, B.CREATED_DATE, B.COMMENT_CNT, U.USERNAME
-			FROM BOARD B
-			INNER JOIN USERS U ON B.WRITER = U.USER_ID 
-			WHERE B.IS_DELETED = 0
-			ORDER BY CREATED_DATE DESC
-		]]>
-	</select>-->
 	
 		<!-- 메인 페이지 글 목록 조회 -->
 	<select id="getBoardList" parameterType="requestList" resultType="boardVO">
@@ -107,6 +95,11 @@
 	</update>
 	
 
+	  <update id="updateCommentCnt" parameterType="map">
+	        UPDATE BOARD
+	        SET COMMENT_CNT = COMMENT_CNT + #{count}
+	        WHERE BOARD_ID = #{boardId}
+	    </update>
 	
 </mapper>
 

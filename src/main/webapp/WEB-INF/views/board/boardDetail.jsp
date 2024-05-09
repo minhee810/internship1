@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session = "true" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
@@ -54,7 +54,7 @@
                             <div class="card shadow mb-4 h-100">
                     
                                 <div id="boardId" hidden="true">${detail.boardId}</div>
-                                <div class="card-header py-3">
+                                <div class="card-header py-3" data-boardId="${detail.boardId}">
                                     <h6 class="m-0 font-weight-bold text-primary btn float-left">
                                         ${detail.title}
                                     </h6>
@@ -101,36 +101,34 @@
                                 		<input type="hidden" id="boardId" name="boardId" value="${detail.boardId}">
                                         <input type="hidden" name="parentCommentNo" value="0">
                                         <input type="hidden" name="commentNo" value="0">
-                                        
-               
                                         <ul id="commentDiv" style="max-height: 500px; overflow-y: scroll;overflow-x: hidden;">
 										
 										<c:forEach var = "commentList" items="${commentList}">
-											<li class="commentData" data-no="${commentList.commentId}" data-name="${commentList.username}" data-date="${commentList.createdDate}" data-parent="${commentList.parentId}"
-											 data-userId ="${commentList.writer}">
+											<li class="commentData" data-boardId="${detail.boardId}" data-writer="${commentList.writer}" data-no="${commentList.commentId}" data-name="${commentList.username}" data-date="${commentList.createdDate}" data-parent="${commentList.parentId}"
+											 data-userId ="${commentList.writer}" data-depth="${commentList.depth}">
 								
 	                                                <div class="commentDiv" style="padding-left: ${commentList.depth *20}px;">
 	                                                    <div class="commentHead">
 	                                                        <div class="commentHead1">
-	                                                            <div class="commentName">${commentList.username}</div>
-	                                                           
-	                                                          뎁스 : ${commentList.depth}
-	                                                            <div class="commentDate">
-		                                                            <fmt:parseDate value="${commentList.createdDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
-	                                                				<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parsedDateTime}" />   
-                                                				</div>                                                
+	                                                            <div class="commentName">@ ${commentList.username}</div>
+	                                                          
+	                                                            <div class="commentDate">${commentList.createdDate}
+		                                                         <%--    <fmt:parseDate value="${commentList.createdDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+	                                                				<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parsedDateTime}" />
+	                                                		 --%>	</div> 	
+                                                				                                          
 	                                                        </div>
 	                                                        <div class="commentHead2">
 													<c:choose>
 								                        <c:when test="${!empty loginUsername}">
-	                                                            <div class="commentReply">답글</div>
+	                                                            <div class="commentReply" onclick="${contextPath}/comment/update/${detail.boardId}/${commentList.commentId}">답글</div>
 								                        </c:when>
 								                    </c:choose>
 												
 													<c:choose>
 														<c:when test="${commentList.username eq loginUsername}">
-																<div class="commentModify">수정</div>
-	                                                            <div class="commentRemove">삭제</div>
+																<div class="commentModify" onclick="commentUpdate(${commentList.commentId})">수정</div>
+	                                                            <div class="commentRemove" onclick ="commentDelete(${commentList.commentId})">삭제</div>
 	                                                            <div class="commentCancle" style="display:none;">취소</div>
 														</c:when>
 													</c:choose>
@@ -144,133 +142,23 @@
 	                                            </li>
 										</c:forEach>
                                         </ul>
-                                            <!-- 
-
-                                            <li data-no="3" data-name="test" data-date="2024-04-01 12:45:30" data-parent="1">
-                                                <div class="commentDiv" style="padding-left: 3rem;">
-                                                    <div class="commentHead">
-                                                        <div class="commentHead1">
-
-                                                            <div class="commentName">test</div>
-                                                            <div class="commentDate">2024-04-01 12:45:30</div>
-
-                                                        </div>
-
-                                                        <div class="commentHead2">
-
-                                                            <div class="commentReply">답글</div>
-
-                                                            <div class="commentModify">수정</div>
-                                                            <div class="commentRemove">삭제</div>
-
-                                                            <div class="commentCancle" style="display:none;">취소</div>
-
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="comment">
-
-                                                        <p>@test test</p>
-
-
-                                                    </div>
-                                                </div>
-                                                <hr class="sidebar-divider d-none d-md-block">
-                                            </li>
-
-                                            <li data-no="5" data-name="test2" data-date="2024-04-01 12:46:53" data-parent="1">
-                                                <div class="commentDiv" style="padding-left: 3rem;">
-                                                    <div class="commentHead">
-                                                        <div class="commentHead1">
-
-                                                            <div class="commentName">test2</div>
-                                                            <div class="commentDate">2024-04-01 12:46:53</div>
-
-                                                        </div>
-
-                                                        <div class="commentHead2">
-
-                                                            <div class="commentReply">답글</div>
-
-                                                            <div class="commentCancle" style="display:none;">취소</div>
-
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="comment">
-
-                                                        <p>@test dddd</p>
-
-
-                                                    </div>
-                                                </div>
-                                                <hr class="sidebar-divider d-none d-md-block">
-                                            </li>
-
-                                            <li data-no="2" data-name="test" data-date="2024-04-01 12:45:26" data-parent="0">
-                                                <div class="commentDiv" style="padding-left: 2rem;">
-                                                    <div class="commentHead">
-                                                        <div class="commentHead1">
-
-                                                            <div class="commentName">test</div>
-                                                            <div class="commentDate">2024-04-01 12:45:26</div>
-
-                                                        </div>
-
-                                                        <div class="commentHead2">
-
-                                                            <div class="commentReply">답글</div>
-
-                                                            <div class="commentModify">수정</div>
-                                                            <div class="commentRemove">삭제</div>
-
-                                                            <div class="commentCancle" style="display:none;">취소</div>
-
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="comment">
-
-                                                        <p>test</p>
-
-
-                                                    </div>
-                                                </div>
-                                                <hr class="sidebar-divider d-none d-md-block">
-                                            </li>
-
-                                            <li data-no="4" data-name="test2" data-date="2024-04-01 12:46:49" data-parent="0">
-                                                <div class="commentDiv" style="padding-left: 2rem;">
-                                                    <div class="commentHead">
-                                                        <div class="commentHead1">
-
-                                                            <div class="commentName">test2</div>
-                                                            <div class="commentDate">2024-04-01 12:46:49</div>
-
-                                                        </div>
-
-                                                        <div class="commentHead2">
-
-                                                            <div class="commentReply">답글</div>
-
-                                                            <div class="commentCancle" style="display:none;">취소</div>
-
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="comment">
-
-                                                        <p>testddd</p>
-
-
-                                                    </div>
-                                                </div>
-                                                <hr class="sidebar-divider d-none d-md-block">
-                                            </li>
-
-                                        </ul> -->
                                         
-                                    </form> 
+	                                                                
+                                    </form>  <!-- 대댓글 등록 폼 1 -->
+	                                        <div id="replyForm" style="display: none">
+											    <input type="text" name="replyComment">
+											    <button id="wrtRepBtn" type="button">답글등록</button>
+											</div>             
+                                       
+                                        	<!-- 대댓글 등록 폼 2 -->
+		                                    <form action="" class="flex" id="replyForm" name="replyForm" style="display: none">
+			                                        <input type="hidden" name="boardId" value="${detail.boardId}">
+			                                        <textarea id="replyComment" cols="30" row="5" name="replyComment" class="form-control flex" style="width: 90%" placeholder="내용">${comment.commentContent}</textarea>
+			                                        <a class="commentAdd flex" style="width: 9%">
+			                                            <button type="button" id="replySaveBtn" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
+			                                        </a>
+		                                    </form>	
+                                    
 									<c:choose>
 										 <c:when test="${!empty loginUsername}">
 											 <form action="" class="flex" id="commentForm" name="commentForm">
@@ -279,7 +167,7 @@
 	                                        <a class="commentAdd flex" style="width: 9%">
 	                                            <button type="button" id="commentSaveBtn" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
 	                                        </a>
-                                    </form>
+                                    		</form>	
 										</c:when>
 									</c:choose>
                                 </div>
@@ -321,7 +209,7 @@
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">
                         Cancel
                     </button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="${contextPath}/auth/logout">Logout</a>
                 </div>
             </div>
         </div>

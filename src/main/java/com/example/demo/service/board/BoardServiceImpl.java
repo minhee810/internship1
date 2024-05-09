@@ -55,6 +55,7 @@ public class BoardServiceImpl implements BoardService {
 		log.info("데이터 총 개수 total = {}", total);
 		log.info("content = {}", content);
 		log.info("pageable = {}", pageable);
+		
 		return new PageImpl<BoardVO>(content, pageable, total);
 	}
 

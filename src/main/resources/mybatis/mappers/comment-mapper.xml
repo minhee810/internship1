@@ -9,6 +9,7 @@
 			<![CDATA[
 				SELECT LEVEL,
 				    COMMENT_ID, 
+				    BOARD_ID,
 				   	DEPTH,
 				    PARENT_ID,
 				    LPAD(' ', 4 *(LEVEL -1)) || COMMENT_CONTENT COMMENT_CONTENT,
@@ -20,21 +21,24 @@
 				       JOIN USERS U 
 				       ON U.USER_ID = C.WRITER
 				       WHERE C.BOARD_ID  = #{boardId}
-				       AND C.IS_DELETED = 0
 				       )
-				WHERE BOARD_ID = #{boardId}
+				WHERE IS_DELETED = 0
 				START WITH PARENT_ID = 0
 				CONNECT BY PRIOR COMMENT_ID = PARENT_ID
-				ORDER SIBLINGS BY COMMENT_ID DESC
+				ORDER SIBLINGS BY COMMENT_ID 
 			]]>	
 			
 		</select>
 		<!-- 댓글 작성하기 -->
-		<insert id="saveComment" parameterType="commentsVO">
+		<insert id="saveComment" parameterType="commentDto">	
 			<![CDATA[
-			INSERT INTO COMMENTS
-			VALUES (COMMENTS_SEQ.NEXTVAL, #{commentContent}, #{parentId}, #{depth}, #{orderNumber}, #{writer}, #{boardId})
+			INSERT INTO COMMENTS (COMMENT_ID, COMMENT_CONTENT, PARENT_ID, DEPTH, WRITER, BOARD_ID)
+			VALUES (COMMENTS_SEQ.NEXTVAL, #{commentContent}, #{parentId}, #{depth}, #{writer}, #{boardId})
 			]]>
+			
+			<selectKey keyProperty="commentId" resultType="long" order="AFTER">
+			       SELECT MAX(COMMENT_ID) FROM COMMENTS
+			</selectKey>
 		</insert>
 		
 		<!-- 댓글 삭제하기 -->
@@ -48,11 +52,29 @@
 		</update>
 		
 		<!-- 댓글 수정하기 -->
-		<update id="updateComment" parameterType="commentsVO">
+		<update id="updateComment" parameterType="commentDto">
 			<![CDATA[
+				UPDATE COMMENT
+	        	SET COMMENT_CONTENT = #{commentContent}
+	          	, MODIFIED_DATE = now()
+	        	WHERE COMMENT_ID = #{commentId} and WRITER = #{writer}
 			]]>
 		
 		</update>
 		
+		<!-- 댓글 개수 -->
+		<select id="count" parameterType="long" resultType="int">
+	        SELECT count(*) FROM COMMENTS
+	        WHERE BOARD_ID = #{boardId} AND PARENT_ID = 0
+	    </select>
+			
+		<!-- 댓글 한 개 조회 -->
+		<select id="selectOneComment" parameterType="long" resultType="commentDto">
+	        SELECT C.*, U.USERNAME 
+	        FROM COMMENTS C
+	        JOIN USERS U
+	        ON U.USER_ID = C.WRITER
+	        WHERE COMMENT_ID = #{commentId}
+	    </select>
 		
 </mapper>

@@ -20,7 +20,8 @@
 		<typeAlias type="com.example.demo.web.dto.auth.LoginDto" alias="loginDto"/>
 		<typeAlias type="com.example.demo.web.dto.board.BoardListDto" alias="boardListDto"/>
 		<typeAlias type="com.example.demo.web.dto.board.BoardModifyDto" alias="boardModifyDto"/>
-		<typeAlias type="com.example.demo.service.utils.RequestList" alias="requestList"/>
+		<typeAlias type="com.example.demo.service.utils.RequestList" alias="requestList"/> 
+		<typeAlias type="com.example.demo.web.dto.comment.CommentDto" alias="commentDto"/> 
 		
 	</typeAliases>
 

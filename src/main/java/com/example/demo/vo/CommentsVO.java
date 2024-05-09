@@ -3,6 +3,7 @@ package com.example.demo.vo;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +22,6 @@ public class CommentsVO {
 	private Long parentId; // 부모 댓글의 아이디 
 	private int depth; // 깊이 = 레벨 
 	private String isDeleted; // 삭제 여부 
-	private int orderNumber;  // 전체 댓글의 순서
 	private Long writer;  // 댓글 작성자 
 	
 	// 추가 필드 
@@ -29,9 +29,9 @@ public class CommentsVO {
 	private String username;
 	private Boolean principal;  // 작성자와 로그인 사용자의 일치 정보
 	
-	
+	@Builder
 	public CommentsVO(Long commentId, String commentContent, LocalDateTime createdDate, LocalDateTime modifiedDate,
-			Long parentId, int depth, String isDeleted, int orderNumber, Long writer) {
+			Long parentId, int depth, String isDeleted, Long writer) {
 		super();
 		this.commentId = commentId;
 		this.commentContent = commentContent;
@@ -40,8 +40,12 @@ public class CommentsVO {
 		this.parentId = parentId;
 		this.depth = depth;
 		this.isDeleted = isDeleted;
-		this.orderNumber = orderNumber;
 		this.writer = writer;
 	}
+
+
+	
+	
+	
 	
 }
