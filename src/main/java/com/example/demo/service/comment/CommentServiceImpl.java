@@ -37,42 +37,23 @@ public class CommentServiceImpl implements CommentService {
 
 		// 댓글 개수 추가
 		int rowCnt = boardMapper.updateCommentCnt(dto.getBoardId(), 1);
+		
 		log.info("rowCnt = {} ", rowCnt);
 		
-		if(dto.getParentId() > 0) {
-			// 대댓글 작성 처리 
-			// 프론트에서 depth / prentId, 
-			CommentDto newComment = CommentDto.builder()
-					.boardId(dto.getBoardId())
-					.commentContent(dto.getCommentContent())
-					.parentId(dto.getParentId())
-					.depth(dto.getDepth())
-					.writer(dto.getWriter())
-					.build();
-			
-		}else {
-			// 일반 댓글 작성 처리 
-			int depth = 0;
+	
+		// 일반 댓글 작성 처리 
+		int depth = 0;
+		Long parentId = (long) 0;
 
+		
 			CommentDto newComment = CommentDto.builder()
 					.boardId(dto.getBoardId())
 					.commentContent(dto.getCommentContent())
-					.parentId((long) 0)
+					.parentId(parentId) // 기본 0으로 설정
 					.depth(depth)
 					.writer(dto.getWriter())
 					.build();
-		}
-		
-		
-
-		int depth = 0;
-		CommentDto newComment = CommentDto.builder()
-				.boardId(dto.getBoardId())
-				.commentContent(dto.getCommentContent())
-				.parentId((long) 0)
-				.depth(depth)
-				.writer(dto.getWriter())
-				.build();
+	
 		
 		int result = commentMapper.saveComment(newComment);
 		CommentDto saveComment = commentMapper.selectOneComment(newComment.getCommentId());
@@ -87,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
 
 		int rowCnt = boardMapper.updateCommentCnt(boardId, -1); // 댓글 수 -1
 		int result = commentMapper.deleteComment(commentId, writer); // 댓글 삭제
-		log.info("rowCnt : ", rowCnt);
+		log.info("rowCnt = {} ", rowCnt);
 		return rowCnt; // 댓글 수 반환
 	}
 

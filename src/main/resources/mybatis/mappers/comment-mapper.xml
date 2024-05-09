@@ -16,7 +16,7 @@
 					CREATED_DATE,
 					WRITER,
 					USERNAME
-				FROM   (SELECT C.* , U.USERNAME
+				FROM (SELECT C.* , U.USERNAME
 				       FROM COMMENTS C 
 				       JOIN USERS U 
 				       ON U.USER_ID = C.WRITER

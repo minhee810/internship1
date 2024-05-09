@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session = "true" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
@@ -15,7 +15,7 @@
     <meta name="author" content="" />
 
     <title>Tables</title>
-	<!-- Custom fonts for this template -->
+    <!-- Custom fonts for this template -->
     <link href="${contextPath}/resources/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
 
@@ -31,14 +31,14 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
         <!-- Sidebar -->
-            <%@ include file="../layout/sidebar.jsp" %>
+        <%@ include file="../layout/sidebar.jsp" %>
         <!-- End of Sidebar -->
-        
+
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
             <div id="content">
-                  <%@ include file="../layout/header.jsp" %>
+                <%@ include file="../layout/header.jsp" %>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -49,128 +49,55 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4 h-75">
                         <div class="card-body">
-                        
+
                             <!-- Basic Card Example -->
                             <div class="card shadow mb-4 h-100">
-                    
+
                                 <div id="boardId" hidden="true">${detail.boardId}</div>
-                                <div class="card-header py-3" data-boardId="${detail.boardId}">
+                                <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary btn float-left">
                                         ${detail.title}
                                     </h6>
-                                    
+
                                     <c:choose>
-				                        <c:when test="${loginUser == detail.writer}">
-					                        <a href="${contextPath}/board/modify/${boardId}">
-		                                        <button type="button" class="btn btn-primary btn float-right ml-1">
-		                                            수정
-		                                        </button>
-                                    		</a>
-			                                    <button type="button" class="btn btn-danger btn float-right" id="deleteBtn" name="deleteBtn">
-			                                        삭제
-			                                    </button>
-				                        </c:when>
-				                    </c:choose>
-                               
-                           
+                                        <c:when test="${loginUser == detail.writer}">
+                                            <a href="${contextPath}/board/modify/${boardId}">
+                                                <button type="button" class="btn btn-primary btn float-right ml-1">
+                                                    수정
+                                                </button>
+                                            </a>
+                                            <button type="button" class="btn btn-danger btn float-right" id="deleteBtn" name="deleteBtn">
+                                                삭제
+                                            </button>
+                                        </c:when>
+                                    </c:choose>
+
+
                                 </div>
                                 <div class="card-body navbar-nav-scroll" style="height: 290px !important">
-            					${detail.content}
+                                    ${detail.content}
                                 </div>
-                          
-                                
+
+
                                 <div class="card-body fileUpLoad">
                                     <label class="fileUpLoadBtn">파일</label>
                                     <div id="fileName" class="fileName">
-                                         <!-- file upload -->
-	                                      	<c:forEach var ="files" items="${files}">
-	                                        <div class="multiple-upload" style="display: flex; justify-content: space-between;"> 
-	                                            
-	                                           
-	                                            <div class="custom-file"> 
-												    <a href="<c:url value='/fileDownload/${detail.boardId}/${files.saveFileName}/${files.orgFileName}' /> ">${files.orgFileName} 파일 다운로드 (${files.fileSize} kb)</a><br>
-	                                            </div> 
+                                        <!-- file upload -->
+                                        <c:forEach var="files" items="${files}">
+                                            <div class="multiple-upload" style="display: flex; justify-content: space-between;">
 
-	                                        </div>
-	                                    </c:forEach> 
+
+                                                <div class="custom-file">
+                                                    <a href="<c:url value='/fileDownload/${detail.boardId}/${files.saveFileName}/${files.orgFileName}' /> ">${files.orgFileName} 파일 다운로드 (${files.fileSize} kb)</a><br>
+                                                </div>
+
+                                            </div>
+                                        </c:forEach>
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <form action="#" id="replyForm" name="replyForm">
-                                                              
-                                		<input type="hidden" id="boardId" name="boardId" value="${detail.boardId}">
-                                        <input type="hidden" name="parentCommentNo" value="0">
-                                        <input type="hidden" name="commentNo" value="0">
-                                        <ul id="commentDiv" style="max-height: 500px; overflow-y: scroll;overflow-x: hidden;">
-										
-										<c:forEach var = "commentList" items="${commentList}">
-											<li class="commentData" data-boardId="${detail.boardId}" data-writer="${commentList.writer}" data-no="${commentList.commentId}" data-name="${commentList.username}" data-date="${commentList.createdDate}" data-parent="${commentList.parentId}"
-											 data-userId ="${commentList.writer}" data-depth="${commentList.depth}">
-								
-	                                                <div class="commentDiv" style="padding-left: ${commentList.depth *20}px;">
-	                                                    <div class="commentHead">
-	                                                        <div class="commentHead1">
-	                                                            <div class="commentName">@ ${commentList.username}</div>
-	                                                          
-	                                                            <div class="commentDate">${commentList.createdDate}
-		                                                         <%--    <fmt:parseDate value="${commentList.createdDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
-	                                                				<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parsedDateTime}" />
-	                                                		 --%>	</div> 	
-                                                				                                          
-	                                                        </div>
-	                                                        <div class="commentHead2">
-													<c:choose>
-								                        <c:when test="${!empty loginUsername}">
-	                                                            <div class="commentReply" onclick="${contextPath}/comment/update/${detail.boardId}/${commentList.commentId}">답글</div>
-								                        </c:when>
-								                    </c:choose>
-												
-													<c:choose>
-														<c:when test="${commentList.username eq loginUsername}">
-																<div class="commentModify" onclick="commentUpdate(${commentList.commentId})">수정</div>
-	                                                            <div class="commentRemove" onclick ="commentDelete(${commentList.commentId})">삭제</div>
-	                                                            <div class="commentCancle" style="display:none;">취소</div>
-														</c:when>
-													</c:choose>
-	                                                        </div>
-	                                                    </div>
-	                                                    <div class="comment">
-	                                                        <p id="commentContent">${commentList.commentContent}</p>
-	                                                    </div>
-	                                                </div>
-	                                                <hr class="sidebar-divider d-none d-md-block">
-	                                            </li>
-										</c:forEach>
-                                        </ul>
-                                        
-	                                                                
-                                    </form>  <!-- 대댓글 등록 폼 1 -->
-	                                        <div id="replyForm" style="display: none">
-											    <input type="text" name="replyComment">
-											    <button id="wrtRepBtn" type="button">답글등록</button>
-											</div>             
-                                       
-                                        	<!-- 대댓글 등록 폼 2 -->
-		                                    <form action="" class="flex" id="replyForm" name="replyForm" style="display: none">
-			                                        <input type="hidden" name="boardId" value="${detail.boardId}">
-			                                        <textarea id="replyComment" cols="30" row="5" name="replyComment" class="form-control flex" style="width: 90%" placeholder="내용">${comment.commentContent}</textarea>
-			                                        <a class="commentAdd flex" style="width: 9%">
-			                                            <button type="button" id="replySaveBtn" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
-			                                        </a>
-		                                    </form>	
-                                    
-									<c:choose>
-										 <c:when test="${!empty loginUsername}">
-											 <form action="" class="flex" id="commentForm" name="commentForm">
-	                                        <input type="hidden" name="boardId" value="${detail.boardId}">
-	                                        <textarea id="commentContent" cols="30" row="5" name="commentContent" class="form-control flex" style="width: 90%" placeholder="내용"></textarea>
-	                                        <a class="commentAdd flex" style="width: 9%">
-	                                            <button type="button" id="commentSaveBtn" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
-	                                        </a>
-                                    		</form>	
-										</c:when>
-									</c:choose>
-                                </div>
+ 								<%@ include file="../layout/comment.jsp" %>
+ 								</div>
                             </div>
                         </div>
                     </div>
@@ -180,7 +107,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-               <%@ include file="../layout/footer.jsp" %>
+            <%@ include file="../layout/footer.jsp" %>
             <!-- End of Footer -->
         </div>
         <!-- End of Content Wrapper -->
@@ -209,7 +136,7 @@
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">
                         Cancel
                     </button>
-                    <a class="btn btn-primary" href="${contextPath}/auth/logout">Logout</a>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
                 </div>
             </div>
         </div>
@@ -231,7 +158,7 @@
 
     <!-- Page level custom scripts -->
     <script src="${contextPath}/resources/static/js/demo/datatables-demo.js"></script>
-    
+
     <script src="${contextPath}/resources/static/js/board/boardDetail.js"></script>
 </body>
 

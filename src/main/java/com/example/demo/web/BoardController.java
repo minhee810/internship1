@@ -162,5 +162,15 @@ public class BoardController {
 		return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제 성공", result), HttpStatus.OK);
 
 	}
+	
+	// 댓글 페이지 리턴 
+	@GetMapping("/board/comment/{boardId}")
+	public String getCommentList(@PathVariable Long boardId, Model model) {
+		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
+		log.info("commentList = {}", commentList);
+
+		model.addAttribute("commentList", commentList);
+		return "/layout/comment";
+	}
 
 }

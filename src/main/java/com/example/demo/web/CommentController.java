@@ -40,17 +40,20 @@ public class CommentController {
 	@GetMapping("/comment")
 	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId, Model model) {
 
+		System.out.println("====================controller ===================");
 		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
 		log.info("commentList = {}", commentList);
 
 		model.addAttribute("commentList", commentList);
 
 		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 불러오기 성공", commentList), HttpStatus.OK);
+		
+//		return "/board/boardDetail/" + boardId;
 	}
 
 	// 댓글 작성
 	@PostMapping("/comment")
-	public ResponseEntity<?> saveComment(@RequestBody CommentDto dto, HttpSession session) {
+	public ResponseEntity<?> saveComment(@RequestBody CommentDto dto, HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 
 		if (userId == null) {
@@ -61,19 +64,28 @@ public class CommentController {
 		// 댓글 작성 시 boardService 호출 한 뒤 댓글 개수 +1 업데이트
 		CommentDto saveComment = commentServiceImpl.saveComment(dto);
 
+		model.addAttribute("saveComment", saveComment);
+		
 		log.info("saveComment = {} ", saveComment);
 		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", saveComment), HttpStatus.CREATED);
+//		return "/layout/comment";
 	}
 
-	// 댓글 삭제
+	/*
+	 * // 댓글 삭제
 	@PutMapping("/comment/delete/{commentId}")
-	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam) {
+	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam, Model model) {
 		log.info("commentId = {}", commentId);
 		log.info("requestParam = {}", requestParam);
 		Long boardId = Long.valueOf(requestParam.get("boardId"));
 		Long writer = Long.valueOf(requestParam.get("writer"));
 
 		int result = commentServiceImpl.deleteComment(commentId, boardId, writer);
+		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
+		log.info("commentList = {}", commentList);
+
+		model.addAttribute("commentList", commentList);
+		
 
 		if (result > 0) {
 			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
@@ -81,6 +93,33 @@ public class CommentController {
 			return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 삭제 실패", result), HttpStatus.OK);
 
 		}
+	
+
+	}
+	*/
+	
+	// 댓글 삭제
+	@PutMapping("/comment/delete/{commentId}")
+	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam, Model model) {
+		log.info("commentId = {}", commentId);
+		log.info("requestParam = {}", requestParam);
+		Long boardId = Long.valueOf(requestParam.get("boardId"));
+		Long writer = Long.valueOf(requestParam.get("writer"));
+
+		int result = commentServiceImpl.deleteComment(commentId, boardId, writer);
+		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
+		log.info("commentList = {}", commentList);
+
+		model.addAttribute("commentList", commentList);
+		
+
+		if (result > 0) {
+			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 삭제 실패", result), HttpStatus.OK);
+
+		}
+	
 
 	}
 
