@@ -227,6 +227,7 @@ $('#replySaveBtn').click(function() {
 	let replyComment = $('#replyComment').val();
 	let boardId = $('.commentData').data('boardId');
 	let writer = $('.commentData').data('userId');
+	
 	let data = {
 		"replyComment": replyComment,
 		"boardId": boardId,
@@ -298,6 +299,7 @@ function commentSubmit() {
 
 
 function createComment(res) {
+	``
 	let element = document.querySelector('#commentDiv');
 
 	console.log("res : ", res.createdDate);
