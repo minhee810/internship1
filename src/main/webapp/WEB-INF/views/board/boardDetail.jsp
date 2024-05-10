@@ -55,6 +55,7 @@
 
                                 <div id="boardId" hidden="true">${detail.boardId}</div>
                                 <div id="writer" hidden="true">${detail.writer}</div>
+                                
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary btn float-left">
                                         ${detail.title}
@@ -81,7 +82,6 @@
 
 
                                 <div class="card-body fileUpLoad">
-
                                     <label class="fileUpLoadBtn">파일</label>
                                     <div id="fileName" class="fileName">
                                         <!-- file upload -->

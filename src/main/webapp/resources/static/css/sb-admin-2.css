@@ -4753,20 +4753,18 @@ input[type="button"].btn-block {
   display: flex;
   padding-left: 0;
   list-style: none;
-  margin-bottom:25px;
   border-radius: 0.35rem;
 }
 
 .page-link {
   position: relative;
   display: block;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   margin-left: -1px;
-  margin-bottom: 50px;
   line-height: 1.25;
   color: #4e73df;
   background-color: #fff;
-  border: 1px solid #dddfeb
+  border: 1px solid #dddfeb;
 }
 
 .page-link:hover {

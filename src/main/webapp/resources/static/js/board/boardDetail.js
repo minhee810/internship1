@@ -72,7 +72,7 @@ function createTable(data) {
 
 	// 그리고 html 요소 전부 초기화
 	// element.insertAdjacentHTML(""); // element 초기화 
- 	$('#replyForm ul').html(''); 
+	$('#replyForm ul').html('');
 	// innerHTML, innerText : 단순한 텍스트만 다룰 경우에는 차이가 없고 다루는 속성에 따라서 다름. 속도가 느리고 외부 공격에 취약
 	// innerHTML : 대상이 element 일 경우 사용 
 	// insertAdjacentElement : 가독성 확보, 월등한 성능을 지님. 사용 권장
@@ -193,6 +193,7 @@ function modifyView(commentId, writer) {
 
 // 댓글 수정 
 function updateComment(commentId, writer, event) {
+	var boardId = $('input[name="boardId"]').val(); 
 	event.preventDefault();
 	// 수정된 댓글 내용을 가져오기
 	var commentContent = document.getElementById('editCommentContent').value;
@@ -201,7 +202,8 @@ function updateComment(commentId, writer, event) {
 	let data = {
 		commentContent: commentContent,
 		commentId: commentId,
-		writer: writer
+		writer: writer,
+		boardId:boardId
 	}
 	// 수정한 정보 서버로 보내는 ajax 
 	$.ajax({
@@ -218,6 +220,7 @@ function updateComment(commentId, writer, event) {
 			} else if (res.code == 1) {
 				alert("SUCCESS : 성공적으로 댓글을 수정했습니다. ");
 			}
+			// 수정 데이터를 받아와서 다시 뿌려라~ 
 			// 성공적으로 업데이트되면 화면에 반영
 			var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
 			commentDiv.querySelector('#commentContent p').innerText = commentContent;

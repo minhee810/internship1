@@ -66,8 +66,10 @@ public class CommentController {
 		model.addAttribute("saveComment", saveComment);
 
 		log.info("saveComment = {} ", saveComment);
+
 		List<CommentsVO> commentList = commentServiceImpl.getCommentList(dto.getBoardId(), userId);
 		log.info("commentList = {}", commentList);
+
 		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", commentList), HttpStatus.CREATED);
 	}
 
@@ -103,17 +105,16 @@ public class CommentController {
 	// 업데이트 시 성공한 행의 개수 반환 vs 삭제한 결과 0/1 반환
 	@PutMapping("/comment")
 	public ResponseEntity<?> update(@RequestBody CommentDto dto) {
-			
+
 		log.info("update controller start =====");
 		log.info("editedCommentContent = {}", dto.getCommentContent());
 		log.info("commentId = {}", dto.getCommentId());
 		log.info("writer = {}", dto.getWriter());
-		
-		
+		log.info("boardId) = {}", dto.getBoardId());
+
 		try {
 			CommentDto comment = CommentDto.builder().commentId(dto.getCommentId())
-					.commentContent(dto.getCommentContent()).writer(dto.getWriter())
-					.build();
+					.commentContent(dto.getCommentContent()).writer(dto.getWriter()).build();
 
 			int result = commentServiceImpl.updateComment(comment);
 
@@ -123,9 +124,13 @@ public class CommentController {
 			} else {
 				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", null), HttpStatus.OK);
 			}
+			
+//			List<CommentsVO> commentList = commentServiceImpl.getCommentList(dto.getBoardId(), dto.getWriter());
+//			log.info("commentList = {}", commentList);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+
 			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 수정 중 예외 발생", e.getMessage()), HttpStatus.OK);
 		}
 
