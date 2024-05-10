@@ -38,16 +38,15 @@ public class CommentController {
 	 * @return
 	 */
 	@GetMapping("/comment")
-	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId, Model model) {
-
+	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId, Model model, HttpSession session) {
+		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 		System.out.println("====================controller ===================");
-		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
+		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId, userId);
 		log.info("commentList = {}", commentList);
-
 		model.addAttribute("commentList", commentList);
 
 		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 불러오기 성공", commentList), HttpStatus.OK);
-		
+
 //		return "/board/boardDetail/" + boardId;
 	}
 
@@ -65,53 +64,23 @@ public class CommentController {
 		CommentDto saveComment = commentServiceImpl.saveComment(dto);
 
 		model.addAttribute("saveComment", saveComment);
-		
+
 		log.info("saveComment = {} ", saveComment);
-		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", saveComment), HttpStatus.CREATED);
-//		return "/layout/comment";
-	}
-
-	/*
-	 * // 댓글 삭제
-	@PutMapping("/comment/delete/{commentId}")
-	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam, Model model) {
-		log.info("commentId = {}", commentId);
-		log.info("requestParam = {}", requestParam);
-		Long boardId = Long.valueOf(requestParam.get("boardId"));
-		Long writer = Long.valueOf(requestParam.get("writer"));
-
-		int result = commentServiceImpl.deleteComment(commentId, boardId, writer);
-		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
+		List<CommentsVO> commentList = commentServiceImpl.getCommentList(dto.getBoardId(), userId);
 		log.info("commentList = {}", commentList);
-
-		model.addAttribute("commentList", commentList);
-		
-
-		if (result > 0) {
-			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 삭제 실패", result), HttpStatus.OK);
-
-		}
-	
-
+		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", commentList), HttpStatus.CREATED);
 	}
-	*/
-	
+
 	// 댓글 삭제
 	@PutMapping("/comment/delete/{commentId}")
-	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam, Model model) {
+	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam,
+			Model model) {
 		log.info("commentId = {}", commentId);
 		log.info("requestParam = {}", requestParam);
 		Long boardId = Long.valueOf(requestParam.get("boardId"));
 		Long writer = Long.valueOf(requestParam.get("writer"));
 
 		int result = commentServiceImpl.deleteComment(commentId, boardId, writer);
-		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
-		log.info("commentList = {}", commentList);
-
-		model.addAttribute("commentList", commentList);
-		
 
 		if (result > 0) {
 			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
@@ -119,42 +88,45 @@ public class CommentController {
 			return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 삭제 실패", result), HttpStatus.OK);
 
 		}
-	
 
 	}
 
 	// 업데이트 시 input 창에 기존의 데이터 출력
 	@GetMapping("/comment/update/{boardId}/{commentId}")
 	public String updatePage(Long boardId, Long commentId, Model model) {
-		
+
 		CommentDto comment = commentServiceImpl.selectOne(boardId);
 		model.addAttribute("comment", comment);
 		return "/board/detail/" + boardId;
 	}
-	
+
 	// 업데이트 시 성공한 행의 개수 반환 vs 삭제한 결과 0/1 반환
 	@PutMapping("/comment")
-	public ResponseEntity<?> update(Long commentId, Long writer, String commentContent) {
-
+	public ResponseEntity<?> update(@RequestBody CommentDto dto) {
+			
+		log.info("update controller start =====");
+		log.info("editedCommentContent = {}", dto.getCommentContent());
+		log.info("commentId = {}", dto.getCommentId());
+		log.info("writer = {}", dto.getWriter());
+		
+		
 		try {
-				CommentDto comment = CommentDto.builder()
-						.commentId(commentId)
-						.commentContent(commentContent)
-						.writer(writer)
-						.build();
+			CommentDto comment = CommentDto.builder().commentId(dto.getCommentId())
+					.commentContent(dto.getCommentContent()).writer(dto.getWriter())
+					.build();
 
 			int result = commentServiceImpl.updateComment(comment);
 
 			if (result > 0) {
 				return new ResponseEntity<>(new ResponseDto<>(1, "댓글 수정 성공", null), HttpStatus.OK);
-			
+
 			} else {
 				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", null), HttpStatus.OK);
 			}
-			
+
 		} catch (Exception e) {
-			
-			return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 중 예외 발생", null), HttpStatus.OK);
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 수정 중 예외 발생", e.getMessage()), HttpStatus.OK);
 		}
 
 	}

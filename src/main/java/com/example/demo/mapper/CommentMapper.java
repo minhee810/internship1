@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,7 +12,7 @@ import com.example.demo.web.dto.comment.CommentDto;
 public interface CommentMapper {
 
 	// 댓글 불러오기
-	public List<CommentsVO> getCommentList(Long boardId);
+	public List<CommentsVO> getCommentList(Map<String, Long> map);
 
 	// 댓글 작성하기
 	public int saveComment(CommentDto commentDto);

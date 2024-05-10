@@ -108,10 +108,10 @@ public class BoardController {
 			log.info("files = {}", file);
 		}
 
-		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
-		log.info("commentList = {}", commentList);
+//		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId, userId);
+//		log.info("commentList = {}", commentList);
 
-		model.addAttribute("commentList", commentList);
+//		model.addAttribute("commentList", commentList);
 		model.addAttribute("files", files);
 		return "/board/boardDetail";
 	}
@@ -163,14 +163,15 @@ public class BoardController {
 
 	}
 	
-	// 댓글 페이지 리턴 
-	@GetMapping("/board/comment/{boardId}")
-	public String getCommentList(@PathVariable Long boardId, Model model) {
-		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId);
-		log.info("commentList = {}", commentList);
-
-		model.addAttribute("commentList", commentList);
-		return "/layout/comment";
-	}
+	/*
+	 * // 댓글 페이지 리턴
+	 * 
+	 * @GetMapping("/board/comment/{boardId}") public String
+	 * getCommentList(@PathVariable Long boardId, Model model) { List<CommentsVO>
+	 * commentList = commentServiceImpl.getCommentList(boardId);
+	 * log.info("commentList = {}", commentList);
+	 * 
+	 * model.addAttribute("commentList", commentList); return "/layout/comment"; }
+	 */
 
 }

@@ -1,17 +1,12 @@
-/**
- * boardDetail.js 
- */
-
-
+// 페이지 로딩 시 호출되는 함수
 $(document).ready(function() {
-	//dataSet();
 	getCommentList();
 	$('#deleteBtn').click(fn_boardDelete);
 	$('#commentSaveBtn').click(commentSubmit);
 
 })
 
-
+// 게시글 삭제
 function fn_boardDelete() {
 	let boardId = $('#boardId').text();
 
@@ -42,49 +37,9 @@ function fn_boardDelete() {
 }
 
 
-// 댓글 작성
-function commentSubmit() {
-	console.log("commentSubmit 호출");
-
-	var boardId = $('input[name="boardId"').val();
-	var commentContent = $('textarea#commentContent').val();
-
-	let data = {
-		"boardId": boardId,
-		"commentContent": commentContent
-	}
-
-	if (commentContent.trim() == "") {
-		alert("댓글 내용을 작성해주세요");
-		$('textarea#commentContent').focus;
-		return false;
-	}
-
-	$.ajax({
-		type: "post",
-		url: "/comment",
-		data: JSON.stringify(data),
-		dataType: "json",
-		contentType: "application/json; charset=utf-8", // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
-		success: function(res) {
-			alert('댓글이 작성되었습니다.');
-			console.log("SUCCESS : ", res);
-			getJSPAndRender();
-
-			// 댓글이 저장된 후, 새로운 데이터를 가져오기 위해 GET 요청 보내기
-
-			// createComment(res.data);
-			// $('textarea#commentContent').val("");
-		},
-		error: function(error) {
-			alert("ERROR : ", error);
-		}
-
-	})
-}
-
-// 댓글 조회 
+// 1. 댓글 조회 
 function getCommentList() {
+
 	var id = $('#id').val();
 	var writer = $('.commentDate').data('writer');
 	var boardId = $('#boardId').text();
@@ -99,7 +54,6 @@ function getCommentList() {
 		contentType: "application/json; charset-utf-8",
 		success: function(data) {
 			console.log("댓글 불러오기 성공", data);
-
 			createTable(data);
 
 		},
@@ -109,73 +63,190 @@ function getCommentList() {
 	});
 };
 
-
+// 댓글 전체 리스트를 화면에 동적으로 그려주는 함수
 function createTable(data) {
-	document.querySelector('#replyForm').innerHTML = ""; // html 요소 전부 초기화되고 대입해준 값으로 대체
+	let list = data.data
 
-	let list = data.data;
+	// replyForm 을 선택하고, ul태그 까지 잡아서 element 화 시킴.
+	let element = document.querySelector('#replyForm ul');
 
-	let element = ``;
-	element = document.querySelector('#replyForm');
-
-	if (data.length > 0) {
-		for (var i = 0; i < data.length; i++) {
+	// 그리고 html 요소 전부 초기화
+	// element.insertAdjacentHTML(""); // element 초기화 
+ 	$('#replyForm ul').html(''); 
+	// innerHTML, innerText : 단순한 텍스트만 다룰 경우에는 차이가 없고 다루는 속성에 따라서 다름. 속도가 느리고 외부 공격에 취약
+	// innerHTML : 대상이 element 일 경우 사용 
+	// insertAdjacentElement : 가독성 확보, 월등한 성능을 지님. 사용 권장
+	if (list.length > 0) {
+		for (var i = 0; i < list.length; i++) {
 			let result = list[i];
-			
+
 			let dateTime = getFormattedDate(result.createdDate);
-				console.log("아 정말 지루해 ")
-			let template = `<div class="commentDiv" style="padding-left: ${result.depth}rem;">`
+
+			// template 변수에 li 안의 값을 문자열로 더해준다. (+=) 
+			let template = `<li class="commentData" data-no="${result.commentId}">
+							<div class="commentDiv" style="padding-left: ${result.depth}rem;">`;
+			console.log(template);
 			template += `<div class="commentHead">`;
 			template += `<div class="commentHead1">`;
-			template += `<div class="commentName"><p>@${result.username}</p></div>`;
-			template += `<div class="commentDate"><p>${dateTime}</p></div>`;
-			template += `</div>`;
-
-			if (id == list.commentId) {
+			if (result.isDeleted == 0) {
+				template += `<div class="commentName"><p>@${result.username}</p></div>`;
+				template += `<div class="commentDate"><p>${dateTime}</p></div>`;
+				template += `</div>`;
 				template += `<div class="commentHead2">`;
 				template += `<a href="#" class="commentReply">답글</a>`; // check 
-				template += `<a onclick ='commentUpdateForm(${result.commentId})' class="commentModify">수정</a>`; // check 
-				template += `<a onclick ='commentDelete(` + result.commentId + `)' class="commentRemove">삭제</a>`; // check
 
-
-				template += `<a class="commentCancle" style="display:none;">취소</a>`;
+				if (result.principal) {
+					template += `<a onclick ='modifyView( ` + result.commentId + `,` + result.writer + `)' class="commentModify">수정</a>`; // check 
+					template += `<a onclick ='commentDelete(` + result.commentId + `, ` + result.writer + `)' class="commentRemove">삭제</a>`; // check
+					template += `<a class="commentCancle" style="display:none;">취소</a>`;
+				}
 				template += `</div>	`;
 				template += `</div>`;
-
 				template += `<div class="comment">  `;
 				template += `<div id="commentContent"><p>${result.commentContent}</p></div>`;
-
-				template += `</div>`;
-				template += `</div>`;
-				template += `<hr class="sidebar-divider d-none d-md-block">`;
-
-				element.insertAdjacentHTML('beforeend', template);
+			} else {
+				template += `<div id="commentContent"><p>삭제된 댓글입니다.</p></div>`;
 			}
+			template += `</div>`;
+			template += `</div>`;
+			template += `<hr class="sidebar-divider d-none d-md-block">`;
 			template += '</li>';
-		}
 
-		element += '</ul>';
-	} else {
-		element += '--등록된 댓글이 없습니다.--';
+			// append : 가장 마지막 요소에 추가됨.
+			// insertAdjacentHTML : 다양한 위치에 요소를 삽입할 수 있다.  
+			// tamplate 를 element화 시켜서 element 에 추가시켜준다. 
+			// beforebegin : targetElement 외부 앞 (트리요소의 부모가 있는 경우에만 작용)
+			// afterbegin : targetElement 내부의 첫번째 자식 
+			// beforeend : targetElement 외부의 마지막 자식 뒤 
+			// afteremd : targetElment 외부 뒤 (트리 요소의 부모가 있는 경우에만 작동) 
+			element.insertAdjacentHTML('beforeend', template);
+		}
 	}
 }
 
 
 
-// 댓글 수정
-function commentUpdateForm() {
-	console.log("commentUpdateForm () 호출");
+// 댓글 작성
+function commentSubmit() {
+
+	console.log("commentSubmit 호출");
+
+	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
+	var boardId = $('input[name="boardId"]').val();
+	var commentContent = $('textarea#inputComment').val().trim();
+
+	let data = {
+		"boardId": boardId,
+		"commentContent": commentContent
+	}
+
+	if (commentContent == "") {
+		alert("댓글 내용을 작성해주세요");
+		$('textarea#inputComment').focus;
+		return false;
+	}
+
+	$.ajax({
+		type: "post",
+		url: "/comment",
+		data: JSON.stringify(data),
+		dataType: "json",
+		contentType: "application/json; charset=utf-8", // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
+		success: function(res) {
+			alert('댓글이 작성되었습니다.');
+			console.log("SUCCESS : ", res);
+
+			$('textarea#inputComment').val(""); // 댓글 입력 창 비우기
+			createTable(res);
+
+		},
+		error: function(error) {
+			alert("ERROR : ", error);
+		}
+	})
 }
 
-function commentUpdate(commentId) {
 
+function modifyView(commentId, writer) {
+	// 수정할 댓글의 ID를 사용하여 해당 댓글의 내용을 가져옴
+	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
+	var commentContent = commentDiv.querySelector('#commentContent p').innerText;
+
+	// 댓글 내용을 수정할 수 있는 입력 창 생성
+	var editTemplate = `
+        <div class="commentEditForm">
+            <textarea id="editCommentContent"  cols="30" row="5" name="inputComment" class="form-control flex" style="width: 90%" placeholder="내용" maxlength="300">${commentContent}</textarea>
+            <a class="commentAdd flex" style="width: 10%">
+           
+            <button class="btn btn-primary btn float-right ml-1" onclick="updateComment(${commentId}, ${writer}, event)">수정 완료</button>
+            <button class="btn btn-primary btn float-right ml-1" onclick="cancelEdit()">취소</button>
+        	</a>
+        </div>
+    `;
+
+	// 수정할 댓글 위치에 입력 창 삽입
+	commentDiv.insertAdjacentHTML('afterend', editTemplate);
+
+	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
+	commentDiv.style.display = 'none';
 }
+
+// 댓글 수정 
+function updateComment(commentId, writer, event) {
+	event.preventDefault();
+	// 수정된 댓글 내용을 가져오기
+	var commentContent = document.getElementById('editCommentContent').value;
+
+
+	let data = {
+		commentContent: commentContent,
+		commentId: commentId,
+		writer: writer
+	}
+	// 수정한 정보 서버로 보내는 ajax 
+	$.ajax({
+		type: "put",
+		url: "/comment",
+		data: JSON.stringify(data),
+		dataType: "json",
+		contentType: "application/json; charset=utf-8", // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
+		success: function(res) {
+			if (res.code == -1) {
+				alert("FAIL : 댓글 작성에 실패하였습니다.");
+			} else if (res.code == -99) {
+				alert("EXCEPTION :댓글 작성 중 예외가 발생했습니다.");
+			} else if (res.code == 1) {
+				alert("SUCCESS : 성공적으로 댓글을 수정했습니다. ");
+			}
+			// 성공적으로 업데이트되면 화면에 반영
+			var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
+			commentDiv.querySelector('#commentContent p').innerText = commentContent;
+
+			// 수정 창 닫기
+			cancelEdit();
+		},
+		error: function(error) {
+			alert("ERROR : ", error);
+		}
+	})
+}
+
+function cancelEdit() {
+	// 수정 창 닫기
+	var commentEditForm = document.querySelector('.commentEditForm');
+	commentEditForm.parentElement.removeChild(commentEditForm);
+
+	// 원래 댓글 보이도록 함
+	var commentDiv = document.querySelector('.commentDiv');
+	commentDiv.style.display = '';
+}
+
 
 // 댓글 삭제
-function commentDelete(commentId) {
+function commentDelete(commentId, writer) {
 
 	let boardId = $('input[name=boardId]').val();
-	let writer = $('.commentData').data('writer');
+
 
 	console.log("boardId : ", boardId);
 	console.log("writer : ", writer);
@@ -191,23 +262,10 @@ function commentDelete(commentId) {
 			contentType: "application/json; charset=utf-8",
 			success: function(response) {
 				alert('댓글이 삭제되었습니다.');
-
-				$.ajax({
-					type: "get",
-					url: "/comment/" + boardId,
-					dataType: "html",
-					success: function(data) {
-						$('.card-footer').html(data);
-						console.log(data);
-					},
-					error: function(error) {
-						console.log(error);
-					}
-
-				})
-
 				console.log("response : ", response);
-
+				// 삭제된 댓글은 글씨를 출력하는 것이 아닌, is deleted 가 1이면 "삭제된 댓글입니다." 라고 출력하기 
+				// 댓글 삭제 후 새로고침 
+				location.href = "/board/detail/" + boardId;
 			}
 			,
 			error: function(error) {
@@ -218,7 +276,7 @@ function commentDelete(commentId) {
 	}
 }
 
-// 대댓글 수정
+// 대댓글 수정 
 $('#replySaveBtn').click(function() {
 	let replyComment = $('#replyComment').val();
 	let boardId = $('.commentData').data('boardId');
@@ -266,8 +324,9 @@ function getJSPAndRender() {
 }
 
 
+// 댓글 작성 후 화면에 그려주는 함수 
 function createComment(res) {
-	``
+
 	let element = document.querySelector('#commentDiv');
 
 	console.log("res : ", res.createdDate);
@@ -303,7 +362,7 @@ function createComment(res) {
 }
 
 
-// utils 로 옮기기
+// utils 로 옮기기 - 날짜 포맷팅 함수 
 function dateFormat(date) {
 	var year = date.substring(0, 4);
 	var month = date.substring(5, 7);
@@ -335,7 +394,4 @@ function getFormattedDate(org) {
 		].join(":")
 	);
 }
-
-getFormattedDate(); // '2024-03-27 15:02:08'
-
 

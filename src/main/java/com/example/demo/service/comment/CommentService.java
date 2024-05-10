@@ -8,7 +8,7 @@ import com.example.demo.web.dto.comment.CommentDto;
 public interface CommentService {
 
 	// 댓글 불러오기
-	public List<CommentsVO> getCommentList(Long boardId);
+	public List<CommentsVO> getCommentList(Long boardId, Long userId);
 
 	// 댓글 작성하기
 	public CommentDto saveComment(CommentDto commentVO);
