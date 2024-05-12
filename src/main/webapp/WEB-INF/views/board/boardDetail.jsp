@@ -94,7 +94,7 @@
                                 </div>
                               
                                 <div class="card-footer">
- 								    <form action="#" id="replyForm" name="replyForm">
+ 								    <form action="" id="replyForm" name="replyForm">
                                     <ul id="commentDiv" style="max-height: 500px; overflow-y: scroll;overflow-x: hidden;">
                                     </ul>
                                     <!--     <input type="hidden" id="boardId" name="boardId" value="${detail.boardId}">

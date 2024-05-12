@@ -82,35 +82,46 @@ function createTable(data) {
 			let dateTime = getFormattedDate(result.createdDate);
 
 			// template 변수에 li 안의 값을 문자열로 더해준다. (+=) 
-			let template = `<li class="commentData" data-no="${result.commentId}" data-boardId="${result.boardId}" 
-											data-writer="${result.writer}" data-no="${result.commentId}" data-name="${result.username}" 
-											data-date="${result.createdDate}" data-parent="${result.parentId}"
-											data-writer ="${result.writer}" >
-							<div class="commentDiv" style="padding-left: ${result.depth}rem;">`;
-			console.log(template);
+			let template = `<li class="commentData" data-no="${result.commentId}" 
+													data-boardId="${result.boardId}" 
+													data-writer="${result.writer}" 
+													data-no="${result.commentId}" 
+													data-depth="${result.depth}"
+													data-name="${result.username}" 
+													data-date="${result.createdDate}" 
+													data-parent="${result.parentId}">
+											
+							<div class="commentDiv" data-depth="${result.depth}" style="padding-left: ${result.depth}rem;">`;
+
 			template += `<div class="commentHead">`;
 			template += `<div class="commentHead1">`;
 
+			// 대댓글일 경우 'ㄴ' 붙이고 싶다. 
 			if (result.isDeleted == 0) {
-				template += `<div class="commentName"><p>@${result.username}</p></div>`;
+				
+				if (result.depth > 0) {
+					template += `<div class="commentName"><p>ㄴ @${result.username}</p></div>`;
+				}else {
+					template += `<div class="commentName"><p>@${result.username}</p></div>`;
+					
+				}
+				
 				template += `<div class="commentDate"><p>${dateTime}</p></div>`;
 				template += `</div>`;
 				template += `<div class="commentHead2">`;
 
-				console.log("작성자와 로그인한 사용자의 정보와 일치하는지 결과 : ", result.principal);
 
 				// 로그인한 사용자일 경우
 				if (result.principal == 0) {
 					template += `<a class="commentReply" onclick="commentAddView(${result.commentId}, ${result.writer})">답글</a>`; // check 
-					console.log("template : ", template);
+
 				}
 
 				// 글 작성자와 로그인 사용자의 정보가 일치할 때 수정, 삭제 가능하도록
 				if (result.principal == 1) {
 
 					template += `<a class="commentReply" onclick="commentAddView(${result.commentId}, ${result.writer})">답글</a>`; // check  
-					console.log("template : ", template);
-					console.log("result.username : ", result.username);
+
 
 					template += `<a onclick ='modifyView( ` + result.commentId + `,` + result.writer + `)' class="commentModify">수정</a>`; // check 
 					template += `<a onclick ='commentDelete(` + result.commentId + `, ` + result.writer + `)' class="commentRemove">삭제</a>`; // check
@@ -120,7 +131,9 @@ function createTable(data) {
 				template += `</div>	`;
 				template += `</div>`;
 				template += `<div class="comment">  `;
-				template += `<div id="commentContent"><p>${result.commentContent}</p></div>`;
+				if (result.depth > 0) {
+				template += `<div id="commentContent"><p> @${result.parentId} ${result.commentContent}</p></div>`;
+				}
 			} else if (result.isDeleted == 2) {
 				template += `<div id="commentContent"><p>삭제된 댓글입니다.</p></div>`;
 			} else if (result.isDeleted == 1) {
@@ -128,8 +141,8 @@ function createTable(data) {
 			}
 			template += `</div>`;
 			template += `</div>`;
-			template += `<hr class="sidebar-divider d-none d-md-block">`;
 			template += '</li>';
+			template += `<hr class="sidebar-divider d-none d-md-block">`;
 
 			// append : 가장 마지막 요소에 추가됨.
 			// insertAdjacentHTML : 다양한 위치에 요소를 삽입할 수 있다.  
@@ -266,6 +279,7 @@ function cancelEdit() {
 	// 원래 댓글 보이도록 함
 	var commentDiv = document.querySelector('.commentDiv');
 	commentDiv.style.display = '';
+	getCommentList();
 }
 
 
@@ -304,7 +318,6 @@ function commentDelete(commentId, writer) {
 				} else {
 					alert("댓글 삭제 중 예외가 발생했습니다.");
 				}
-
 			}
 			,
 			error: function(error) {
@@ -315,7 +328,7 @@ function commentDelete(commentId, writer) {
 	}
 }
 
-// 대댓글 수정 
+// 댓글 수정 
 $('#replySaveBtn').click(function() {
 	let replyComment = $('#replyComment').val();
 	let boardId = $('.commentData').data('boardId');
@@ -404,6 +417,8 @@ $('#replySaveBtn').click(function() {
 // 대댓글 작성 화면 작성 
 function commentAddView(commentId, writer) {
 	let username = $('.commentData').data('name');
+	let boardId = $('.commentData').data('boardId');
+
 	console.log("대댓글 작성 화면으로 넘어오는지 확인!!!!!!!!!")
 	console.log("username : ", username);
 	console.log("commentId : ", commentId);
@@ -422,38 +437,34 @@ function commentAddView(commentId, writer) {
         <div class="commentAddForm">
         <form action="" class="flex">
         <hr/>
-		
 			<div>
 	         <div>
 		        <label> ㄴ To. 
-				<input type="text" class="mini3" id=id name="id" value=" @${username}" readonly/>
+		        <input type="hidden" id="boardId" name="boardId" value="${boardId}">
+				<input type="text" class="mini3" id=id name="id" value="@${username}" readonly/>
 				</label>
 	            <button class="btn btn-primary btn float-right ml-1" onclick="cancelCommentAdd()">취소</button>
-				<button class="btn btn-primary btn float-right ml-1" onclick="commentAdd(${commentId}, ${writer}, event)">완료</button>
-
-			 </div>
+				<button class="btn btn-primary btn float-right ml-1" onclick="commentAdd(${commentId}, ${writer}, event)">완료</button></div>
 			 <input type="hidden" name="boardId" value="">
-            <textarea id="commentAddContent"  cols="30" row="5" name="inputComment" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
+            <textarea id="commentAddContent"  cols="30" row="5" name="commentAddContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
             <a class="commentAdd flex" style="width: 10%">
-                   	</a>
-                   	</div>
+             </a>
+           </div>
         </form>
         </div>
     `;
 
 	// 수정할 댓글 위치에 입력 창 삽입
-	commentDiv.insertAdjacentHTML('beforeend', commentAddTemplate); 
-	
-	//마지막 요소 뒤에 삽입 
-	console.log("commentAddTemplate :  ", commentAddTemplate);
+	commentDiv.insertAdjacentHTML('beforeend', commentAddTemplate);
 
 	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
 	//commentDiv.style.display = 'none';
 
 }
 
+
 function cancelCommentAdd() {
-	// 수정 창 닫기
+
 	var commentAddForm = document.querySelector('.commentAddForm');
 	commentAddForm.parentElement.removeChild(commentAddForm);
 
@@ -463,6 +474,64 @@ function cancelCommentAdd() {
 }
 
 
+// 대댓글 저장 기능
+function commentAdd(commentId, writer, event) {
+
+	console.log("======comment Add ========");
+	// 필요한 정보 : 댓글 아이디 (ParentId) , 글번호, 대댓글 작성자 정보
+	let parentId = commentId;
+	let depth = $(`li[data-no="${commentId}"]`).data('depth');
+	let boardId = $(`li[data-no="${commentId}"]`).data('boardid');
+	// let boardId = $(`input[id="boardId"]`).val() 
+
+
+	// let depth = $('.commentData').data('depth'; 
+
+	console.log("depth : ", depth);
+	console.log("parentId : ", parentId);
+	console.log("writer : ", writer);
+	console.log("boardId : ", boardId);
+	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
+	// var boardId = $('input[name="boardId"]').val();
+	var commentAddContent = $('textarea#commentAddContent').val().trim();
+
+
+	console.log("========================");
+	console.log(boardId, commentAddContent);
+
+	let data = {
+		"boardId": boardId,
+		"commentContent": commentAddContent,
+		"parentId": parentId,
+		"depth": depth
+	}
+
+	if (commentAddContent == "") {
+		alert("대댓글 내용을 작성해주세요");
+		$('textarea#commentAddContent').focus;
+		return false;
+	}
+
+	$.ajax({
+		type: "post",
+		url: "/comment/reply",
+		data: JSON.stringify(data),
+		dataType: "json",
+		contentType: "application/json; charset=utf-8", // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
+		success: function(res) {
+			alert('댓글이 작성되었습니다.');
+			console.log("SUCCESS : ", res);
+
+			$('textarea#commentAddContent').val(""); // 댓글 입력 창 비우기
+			createTable(res);
+
+		},
+		error: function(error) {
+			alert("ERROR : ", error);
+		}
+	})
+
+}
 
 // utils 로 옮기기 - 날짜 포맷팅 함수 
 function dateFormat(date) {

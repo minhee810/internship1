@@ -31,4 +31,10 @@ public interface CommentMapper {
 
 	// 댓글 존재하는지 확
 	public int hasReplies(Long commentId);
+
+	// 대댓글 저장
+	public int commentAdd(CommentDto commentDto);
+	
+	// 댓글 작성자 이름 검색
+	public String parentUsername(Long commentId);
 }

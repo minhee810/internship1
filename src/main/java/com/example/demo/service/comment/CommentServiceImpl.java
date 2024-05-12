@@ -114,4 +114,32 @@ public class CommentServiceImpl implements CommentService {
 		return commentMapper.hasReplies(commentId);
 	}
 
+	// 대댓글 작성
+	@Override
+	public int commentAdd(CommentDto commentDto) {
+
+		// 부모 댓글의 아이디 저장 
+		commentDto.setParentId(commentDto.getParentId());
+		
+		// 깊이 저장 대댓글 작성 시 해당 댓글의 깊이 +1 
+		// 프론트에서 댓글깊이 전송하기 
+		commentDto.setDepth(commentDto.getDepth() + 1);
+		// 게시글 아이디 저장 
+		commentDto.setBoardId(commentDto.getBoardId());
+		
+		// 댓글 작성자 아이디 저장 -> controller 에서 처리
+		
+
+		int result = commentMapper.saveComment(commentDto);
+		
+		return result;
+	}
+	
+	
+	// 사용자 이름 검색
+	public String parentUsername(Long parentId) {
+		return commentMapper.parentUsername(parentId);
+	}
+	
+
 }

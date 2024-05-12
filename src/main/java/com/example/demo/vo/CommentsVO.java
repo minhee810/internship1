@@ -28,6 +28,7 @@ public class CommentsVO {
 	private Long boardId;
 	private String username;
 	private int principal;  // 작성자와 로그인 사용자의 일치 정보
+	private String parentUsername;
 	
 	@Builder
 	public CommentsVO(Long commentId, String commentContent, LocalDateTime createdDate, LocalDateTime modifiedDate,

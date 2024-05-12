@@ -27,5 +27,8 @@ public interface CommentService {
 
 	// 대댓글 존재하는지 확인 
 	public int hasReplies(Long commentId);
+
+	// 대댓글 작성하기 
+	public int commentAdd(CommentDto commentDto);
 	
 }

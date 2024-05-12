@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="com.example.demo.mapper.CommentMapper">
-		<!-- 계층형 쿼리문으로 댓글 불러오기 -->
-		<select id="getCommentList" parameterType="hashMap" resultType="commentsVO">
+
+	<!-- 계층형 쿼리문으로 댓글 불러오기 -->
+	<select id="getCommentList" parameterType="hashMap" resultType="commentDto">
     <![CDATA[
 		 SELECT
             LEVEL,
@@ -21,7 +23,7 @@
                  ELSE 0 END AS PRINCIPAL,
             IS_DELETED
         FROM (
-            SELECT C.* , U.USERNAME, USER_ID
+            SELECT C.* , U.USERNAME, U.USER_ID
             FROM COMMENTS C 
             JOIN USERS U 
             ON U.USER_ID = C.WRITER
@@ -85,6 +87,13 @@
 		    <![CDATA[
 		    	SELECT COUNT(*) FROM COMMENTS WHERE PARENT_ID = #{commentId}
 		    ]]>
+	    </select>
+	    
+	    <select id="parentUsername" resultType="String" parameterType="long">
+		    SELECT u.USERNAME 
+			FROM COMMENTS c
+			JOIN USERS u ON u.USER_ID = c.WRITER  
+			WHERE COMMENT_ID = #{commentId}
 	    </select>
 		
 </mapper>

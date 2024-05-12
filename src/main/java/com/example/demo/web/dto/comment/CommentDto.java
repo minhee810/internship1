@@ -23,12 +23,17 @@ public class CommentDto {
 	private String isDeleted; // 삭제 여부
 	private Long writer; // 댓글 작성자
 	private LocalDateTime createdDate;
+	private LocalDateTime modifiedDate;
+	
+
 
 	// 추가 필드
 	private Long boardId;
 	private String username;
 	private Boolean principal; // 작성자와 로그인 사용자의 일치 정보
-
+	private String parentUsername;
+	
+	
 	@Builder // 댓글 작성 dto 생성자
 	public CommentDto(Long commentId, String commentContent, Long parentId, int depth, Long writer,
 			Long boardId) {
