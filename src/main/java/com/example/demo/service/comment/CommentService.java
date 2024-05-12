@@ -14,7 +14,7 @@ public interface CommentService {
 	public CommentDto saveComment(CommentDto commentVO);
 
 	// 댓글 삭제하기
-	public int deleteComment(Long commentId, Long boardId, Long writer);
+	public int deleteComment(Long commentId, Long boardId, Long writer, int status);
 
 	// 댓글 수정하기
 	public int updateComment(CommentDto commentVO);
@@ -24,5 +24,8 @@ public interface CommentService {
 
 	// 댓글 하나 조회
 	public CommentDto selectOne(Long commentId);
+
+	// 대댓글 존재하는지 확인 
+	public int hasReplies(Long commentId);
 	
 }

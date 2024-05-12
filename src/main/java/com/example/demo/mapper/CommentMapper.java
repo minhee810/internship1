@@ -18,7 +18,7 @@ public interface CommentMapper {
 	public int saveComment(CommentDto commentDto);
 
 	// 댓글 삭제하기
-	public int deleteComment(Long commentId, Long writer);
+	public int deleteComment(Long commentId, Long writer, int status);
 
 	// 댓글 수정하기
 	public int updateComment(CommentDto commentVO);
@@ -28,4 +28,7 @@ public interface CommentMapper {
 	
 	// 댓글 한개 조회 (리턴 받을 용도) 
 	public CommentDto selectOneComment(Long commentId);
+
+	// 댓글 존재하는지 확
+	public int hasReplies(Long commentId);
 }

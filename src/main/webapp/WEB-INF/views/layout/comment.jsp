@@ -6,11 +6,4 @@
 <%@ page session = "true" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
-<html lang="en">
-
-
-                     
-
-                                    
-                    
-                        </html>
+<html lang="en"></html>

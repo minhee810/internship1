@@ -36,7 +36,6 @@ function fn_boardDelete() {
 	}
 }
 
-
 // 1. 댓글 조회 
 function getCommentList() {
 
@@ -83,28 +82,48 @@ function createTable(data) {
 			let dateTime = getFormattedDate(result.createdDate);
 
 			// template 변수에 li 안의 값을 문자열로 더해준다. (+=) 
-			let template = `<li class="commentData" data-no="${result.commentId}">
+			let template = `<li class="commentData" data-no="${result.commentId}" data-boardId="${result.boardId}" 
+											data-writer="${result.writer}" data-no="${result.commentId}" data-name="${result.username}" 
+											data-date="${result.createdDate}" data-parent="${result.parentId}"
+											data-writer ="${result.writer}" >
 							<div class="commentDiv" style="padding-left: ${result.depth}rem;">`;
 			console.log(template);
 			template += `<div class="commentHead">`;
 			template += `<div class="commentHead1">`;
+
 			if (result.isDeleted == 0) {
 				template += `<div class="commentName"><p>@${result.username}</p></div>`;
 				template += `<div class="commentDate"><p>${dateTime}</p></div>`;
 				template += `</div>`;
 				template += `<div class="commentHead2">`;
-				template += `<a href="#" class="commentReply">답글</a>`; // check 
 
-				if (result.principal) {
+				console.log("작성자와 로그인한 사용자의 정보와 일치하는지 결과 : ", result.principal);
+
+				// 로그인한 사용자일 경우
+				if (result.principal == 0) {
+					template += `<a class="commentReply" onclick="commentAddView(${result.commentId}, ${result.writer})">답글</a>`; // check 
+					console.log("template : ", template);
+				}
+
+				// 글 작성자와 로그인 사용자의 정보가 일치할 때 수정, 삭제 가능하도록
+				if (result.principal == 1) {
+
+					template += `<a class="commentReply" onclick="commentAddView(${result.commentId}, ${result.writer})">답글</a>`; // check  
+					console.log("template : ", template);
+					console.log("result.username : ", result.username);
+
 					template += `<a onclick ='modifyView( ` + result.commentId + `,` + result.writer + `)' class="commentModify">수정</a>`; // check 
 					template += `<a onclick ='commentDelete(` + result.commentId + `, ` + result.writer + `)' class="commentRemove">삭제</a>`; // check
 					template += `<a class="commentCancle" style="display:none;">취소</a>`;
 				}
+
 				template += `</div>	`;
 				template += `</div>`;
 				template += `<div class="comment">  `;
 				template += `<div id="commentContent"><p>${result.commentContent}</p></div>`;
-			} else {
+			} else if (result.isDeleted == 2) {
+				template += `<div id="commentContent"><p>삭제된 댓글입니다.</p></div>`;
+			} else if (result.isDeleted == 1) {
 				template += `<div id="commentContent"><p>삭제된 댓글입니다.</p></div>`;
 			}
 			template += `</div>`;
@@ -193,7 +212,7 @@ function modifyView(commentId, writer) {
 
 // 댓글 수정 
 function updateComment(commentId, writer, event) {
-	var boardId = $('input[name="boardId"]').val(); 
+	var boardId = $('input[name="boardId"]').val();
 	event.preventDefault();
 	// 수정된 댓글 내용을 가져오기
 	var commentContent = document.getElementById('editCommentContent').value;
@@ -203,7 +222,7 @@ function updateComment(commentId, writer, event) {
 		commentContent: commentContent,
 		commentId: commentId,
 		writer: writer,
-		boardId:boardId
+		boardId: boardId
 	}
 	// 수정한 정보 서버로 보내는 ajax 
 	$.ajax({
@@ -218,15 +237,20 @@ function updateComment(commentId, writer, event) {
 			} else if (res.code == -99) {
 				alert("EXCEPTION :댓글 작성 중 예외가 발생했습니다.");
 			} else if (res.code == 1) {
-				alert("SUCCESS : 성공적으로 댓글을 수정했습니다. ");
+				alert("댓글을 수정했습니다.");
+				console.log("댓글 내용 : ", res);
+
 			}
 			// 수정 데이터를 받아와서 다시 뿌려라~ 
 			// 성공적으로 업데이트되면 화면에 반영
+			// 엘리먼트화 시킨 commentDiv 
 			var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
-			commentDiv.querySelector('#commentContent p').innerText = commentContent;
+			commentDiv.querySelector('#commentContent p').innerText = res.data.commentContent;
 
 			// 수정 창 닫기
 			cancelEdit();
+			// 댓들 목록 불러오기
+			getCommentList(res);
 		},
 		error: function(error) {
 			alert("ERROR : ", error);
@@ -264,11 +288,23 @@ function commentDelete(commentId, writer) {
 			data: JSON.stringify(data),
 			contentType: "application/json; charset=utf-8",
 			success: function(response) {
-				alert('댓글이 삭제되었습니다.');
-				console.log("response : ", response);
-				// 삭제된 댓글은 글씨를 출력하는 것이 아닌, is deleted 가 1이면 "삭제된 댓글입니다." 라고 출력하기 
-				// 댓글 삭제 후 새로고침 
-				location.href = "/board/detail/" + boardId;
+				let code = response.code;
+
+				if (code == -1) {
+					alert(response.msg);
+
+				} else if (code == 1) {
+					alert('댓글이 삭제되었습니다.');
+					console.log("response : ", response);
+					// 삭제된 댓글은 글씨를 출력하는 것이 아닌, is deleted 가 1이면 "삭제된 댓글입니다." 라고 출력하기 
+					// 댓글 삭제 후 새로고침 
+					location.href = "/board/detail/" + boardId;
+				} else if (code == -99) {
+					alert(response.msg);
+				} else {
+					alert("댓글 삭제 중 예외가 발생했습니다.");
+				}
+
 			}
 			,
 			error: function(error) {
@@ -309,7 +345,7 @@ $('#replySaveBtn').click(function() {
 
 
 // 댓글 작성 후 댓글 목록을 가져와서 화면에 출력하는 함수
-function getJSPAndRender() {
+/*function getJSPAndRender() {
 	var boardId = $('input[name="boardId"').val();
 
 	$.ajax({
@@ -325,10 +361,10 @@ function getJSPAndRender() {
 		}
 	});
 }
-
+*/
 
 // 댓글 작성 후 화면에 그려주는 함수 
-function createComment(res) {
+/*function createComment(res) {
 
 	let element = document.querySelector('#commentDiv');
 
@@ -363,6 +399,69 @@ function createComment(res) {
 
 
 }
+*/
+
+// 대댓글 작성 화면 작성 
+function commentAddView(commentId, writer) {
+	let username = $('.commentData').data('name');
+	console.log("대댓글 작성 화면으로 넘어오는지 확인!!!!!!!!!")
+	console.log("username : ", username);
+	console.log("commentId : ", commentId);
+	console.log("writer : ", writer);
+
+	// 1. 해당 댓글 밑에 댓글 작성 칸 생성 
+	// 2. 해당 댓글 작성자의 username 을 작성 칸 앞에 입력하여 사용자가 명시적으로 어떤 댓글에 답글 작성하고 있는지 보여주기 
+	// 3. 답글 작성 완료 버튼 클릭 시 해당 부모의 댓글 아이디를 서버로 함께 전송하여 대댓글 정보 저장
+	// 대댓글 정보 저장시 필요한 정보 1. parentId, 2. depth, 3. writer, 4.boardId, 5. commentConetent,  
+
+	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
+	//var commentContent = commentDiv.querySelector('#commentContent p').innerText;
+
+	// 댓글 내용을 수정할 수 있는 입력 창 생성
+	var commentAddTemplate = `
+        <div class="commentAddForm">
+        <form action="" class="flex">
+        <hr/>
+		
+			<div>
+	         <div>
+		        <label> ㄴ To. 
+				<input type="text" class="mini3" id=id name="id" value=" @${username}" readonly/>
+				</label>
+	            <button class="btn btn-primary btn float-right ml-1" onclick="cancelCommentAdd()">취소</button>
+				<button class="btn btn-primary btn float-right ml-1" onclick="commentAdd(${commentId}, ${writer}, event)">완료</button>
+
+			 </div>
+			 <input type="hidden" name="boardId" value="">
+            <textarea id="commentAddContent"  cols="30" row="5" name="inputComment" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
+            <a class="commentAdd flex" style="width: 10%">
+                   	</a>
+                   	</div>
+        </form>
+        </div>
+    `;
+
+	// 수정할 댓글 위치에 입력 창 삽입
+	commentDiv.insertAdjacentHTML('beforeend', commentAddTemplate); 
+	
+	//마지막 요소 뒤에 삽입 
+	console.log("commentAddTemplate :  ", commentAddTemplate);
+
+	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
+	//commentDiv.style.display = 'none';
+
+}
+
+function cancelCommentAdd() {
+	// 수정 창 닫기
+	var commentAddForm = document.querySelector('.commentAddForm');
+	commentAddForm.parentElement.removeChild(commentAddForm);
+
+	// 원래 댓글 보이도록 함
+	var commentDiv = document.querySelector('.commentDiv');
+	commentDiv.style.display = '';
+}
+
 
 
 // utils 로 옮기기 - 날짜 포맷팅 함수 

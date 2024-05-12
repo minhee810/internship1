@@ -6,29 +6,30 @@
 		<!-- 계층형 쿼리문으로 댓글 불러오기 -->
 		<select id="getCommentList" parameterType="hashMap" resultType="commentsVO">
     <![CDATA[
-		
-				SELECT
-				    LEVEL,
-				    COMMENT_ID, 
-				    BOARD_ID,
-				    DEPTH,
-				    PARENT_ID,
-				    LPAD(' ', 4 *(LEVEL -1)) || COMMENT_CONTENT COMMENT_CONTENT,
-				    CREATED_DATE,
-				    WRITER,
-				    USERNAME,
-				    CASE WHEN WRITER = #{userId} THEN 1 ELSE 0 END AS PRINCIPAL,
-				    IS_DELETED
-				FROM (
-				        SELECT C.* , U.USERNAME, USER_ID
-				        FROM COMMENTS C 
-				        JOIN USERS U 
-				        ON U.USER_ID = C.WRITER
-				        WHERE C.BOARD_ID  = #{boardId}
-				       )
-				START WITH PARENT_ID = 0
-				CONNECT BY PRIOR COMMENT_ID = PARENT_ID
-				ORDER SIBLINGS BY COMMENT_ID
+		 SELECT
+            LEVEL,
+            COMMENT_ID, 
+            BOARD_ID,
+            DEPTH,
+            PARENT_ID,
+            LPAD(' ', 4 *(LEVEL -1)) || COMMENT_CONTENT COMMENT_CONTENT,
+            CREATED_DATE,
+            WRITER,
+            USERNAME,
+            CASE WHEN WRITER = #{userId} THEN 1
+                 WHEN #{userId} = 2 THEN 2
+                 ELSE 0 END AS PRINCIPAL,
+            IS_DELETED
+        FROM (
+            SELECT C.* , U.USERNAME, USER_ID
+            FROM COMMENTS C 
+            JOIN USERS U 
+            ON U.USER_ID = C.WRITER
+            WHERE C.BOARD_ID  = #{boardId}
+        )
+        START WITH PARENT_ID = 0
+        CONNECT BY PRIOR COMMENT_ID = PARENT_ID
+        ORDER SIBLINGS BY COMMENT_ID
 		]]>
 			
 		</select>
@@ -45,12 +46,12 @@
 		</insert>
 		
 		<!-- 댓글 삭제하기 -->
-		<update id="deleteComment" parameterType="long">
+		<update id="deleteComment" parameterType="hashMap">
 			<![CDATA[
 			 	UPDATE COMMENTS  
 				SET 
-				IS_DELETED = 1 
-			WHERE COMMENT_ID = #{commentId}
+				IS_DELETED = #{status} 
+			WHERE COMMENT_ID = #{commentId} AND WRITER = #{writer}
 			]]>
 		</update>
 		
@@ -78,6 +79,12 @@
 	        JOIN USERS U
 	        ON U.USER_ID = C.WRITER
 	        WHERE COMMENT_ID = #{commentId}
+	    </select>
+	    
+	    <select id="hasReplies" resultType="int" parameterType="long">
+		    <![CDATA[
+		    	SELECT COUNT(*) FROM COMMENTS WHERE PARENT_ID = #{commentId}
+		    ]]>
 	    </select>
 		
 </mapper>
