@@ -29,6 +29,7 @@ public class CommentServiceImpl implements CommentService {
 	public List<CommentsVO> getCommentList(Long boardId, Long userId) {
 		Map<String, Long> map = new HashMap<>();
 		
+		// userId가 없을 경우 임의의 값을 넣어서 데이터베이스로 보냄. -> 로그인하지 않은 사용자의 상태를 관리하기 위함
 		if(userId == null) {
 			userId = (long) 2;
 		}

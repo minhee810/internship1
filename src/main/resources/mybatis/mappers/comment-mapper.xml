@@ -19,8 +19,7 @@
             CREATED_DATE,
             WRITER,
             USERNAME,
-
-            CASE WHEN WRITER = 2 THEN 2
+            CASE WHEN #{userId} = 2 THEN 2
             	WHEN WRITER = #{userId} THEN 1
             	ELSE 0 END AS PRINCIPAL,  
             IS_DELETED,

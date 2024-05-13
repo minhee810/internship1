@@ -6,25 +6,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.demo.interceptor.LoginCheckInterceptor;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
-@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
-
-	private final LoginCheckInterceptor loginCheckInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 
-		registry.addInterceptor(loginCheckInterceptor)
+		registry.addInterceptor(new LoginCheckInterceptor()).order(1).addPathPatterns("/**").excludePathPatterns("/",
+				"/login", "/join", "/logout", "/css/**", "/*.ico", "/error**", "/resources/**", "/board/detail/**",
+				"/comment/**");
 
-				// 모든 페이지 접근 시 preHandle 작동
-				// excludePathPatterns()를 이용해서 로그인 페이지, 로그아웃 페이지 URI는 인터셉터 실행에서 제외
-
-				// 필터링 할 URL 패턴
-				.addPathPatterns("/board/modify/**","/board/writer/**")
-				.excludePathPatterns("/auth/login", "/auth/join", "/","/resources/**"); // filter 제외 대
 	}
 
 }

@@ -28,11 +28,13 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
 		log.info("id = {}", id);
 		
-		if (id == null) {
+		if (session == null|| id == null) {
+			log.info("미인증 사용자의 요청");
+			
 			String urlPrior = request.getRequestURL().toString() + "?" + request.getQueryString();
 			request.getSession().setAttribute("url_prior_login", urlPrior); // 직전 url 을 세션에 저장함. 
 			
-			response.sendRedirect(request.getContextPath() + "/auth/login");
+			response.sendRedirect(request.getContextPath() + "/login");
 			
 			return false; // 세션에 id 정보가 없을 경우 더이상 컨트롤러 요청 진입을 못하도록 return false 처리를 해줘야 함.
 		}

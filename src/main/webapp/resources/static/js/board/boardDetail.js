@@ -119,7 +119,7 @@ function createTable(data) {
 					template += `<a onclick ='commentDelete(` + result.commentId + `, ` + result.writer + `)' class="commentRemove">삭제</a>`; // check
 					template += `<a class="commentCancle" style="display:none;">취소</a>`;
 
-				} else {
+				} else if(result.principal == 2) {
 
 				}
 
