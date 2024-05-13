@@ -44,7 +44,7 @@ function fn_usernameCheck() {
 	let username = $('#username').val().trim();
 
 	$.ajax({
-		url: "/auth/idCheck",
+		url: "/idCheck",
 		type: "post",
 		data: { username: username },
 		dataType: "json",
@@ -132,7 +132,7 @@ function fn_emailCheck() {
 	let email = $('#email').val().trim();
 
 	$.ajax({
-		url: "/auth/emailCheck",
+		url: "/emailCheck",
 		type: "post",
 		data: { email: email },
 		dataType: "json",

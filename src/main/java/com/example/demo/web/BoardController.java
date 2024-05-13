@@ -39,8 +39,7 @@ public class BoardController {
 
 	private final BoardServiceImpl boardServiceImpl;
 	private final FileServiceImpl fileServiceImpl;
-	private final CommentServiceImpl commentServiceImpl;
-
+	
 	// 게시글 목록 조회
 	// get 방식으로 페이지 번호를 넘겨준다.
 	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
@@ -57,7 +56,6 @@ public class BoardController {
 		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage;
 
 		log.info("page = {}", page);
-
 		log.info("boardList = {}", boardList);
 
 		model.addAttribute("boardList", boardList);

@@ -40,41 +40,24 @@ public class CommentController {
 	@GetMapping("/comment")
 	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId, Model model, HttpSession session) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
-		System.out.println("====================controller ===================");
 
 		log.info("userId = {}", userId);
 		List<CommentsVO> commentList = commentService.getCommentList(boardId, userId);
-
 		log.info("commentList = {}", commentList);
-
-		model.addAttribute("commentList", commentList);
-
 		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 불러오기 성공", commentList), HttpStatus.OK);
-
-//		return "/board/boardDetail/" + boardId;
 	}
 
 	// 댓글 작성
 	@PostMapping("/comment")
 	public ResponseEntity<?> saveComment(@RequestBody CommentDto dto, HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
-
 		if (userId == null) {
 			throw new CustomException(-1, "로그인하지 않은 사용자의 접근입니다.");
 		}
-
 		dto.setWriter(userId);
 		// 댓글 작성 시 boardService 호출 한 뒤 댓글 개수 +1 업데이트
 		CommentDto saveComment = commentService.saveComment(dto);
-
-		model.addAttribute("saveComment", saveComment);
-
-		log.info("saveComment = {} ", saveComment);
-
-		List<CommentsVO> commentList = commentService.getCommentList(dto.getBoardId(), userId);
-		log.info("commentList = {}", commentList);
-
-		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", commentList), HttpStatus.CREATED);
+		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", saveComment), HttpStatus.CREATED);
 	}
 
 	// 댓글 삭제
@@ -88,25 +71,24 @@ public class CommentController {
 		Long writer = Long.valueOf(requestParam.get("writer"));
 
 		// 대댓글이 있는지 확인
-		int exist = commentService.hasReplies(commentId);
-		log.info("exits = {}", exist);
+//		int exist = commentService.hasReplies(commentId);
+//		log.info("exits = {}", exist);
+//
+//		// 대댓글이 있어 삭제가 어려울 경우 처리
+//		if (exist > 0) {
+//			int status = 2;
+//			int result = commentService.deleteComment(commentId, boardId, writer, status);
+//
+//			return new ResponseEntity<>(new ResponseDto<>(-1, "대댓글이 있어 내용만 블러처리 됩니다. ", result), HttpStatus.OK);
+//		} else {
+//			int ststus = 1;
+		int result = commentService.deleteComment(commentId, boardId, writer);
 
-		// 대댓글이 있어 삭제가 어려울 경우 처리
-		if (exist > 0) {
-			int status = 2;
-			commentService.deleteComment(commentId, boardId, writer, status);
-
-			return new ResponseEntity<>(new ResponseDto<>(-1, "대댓글이 있어 삭제가 어렵습니다", null), HttpStatus.OK);
+		if (result > 0) {
+			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
 		} else {
-			int ststus = 1;
-			int result = commentService.deleteComment(commentId, boardId, writer, ststus);
+			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 삭제 실패", result), HttpStatus.OK);
 
-			if (result > 0) {
-				return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 삭제 실패", result), HttpStatus.OK);
-
-			}
 		}
 
 	}
@@ -125,24 +107,19 @@ public class CommentController {
 	public ResponseEntity<?> update(@RequestBody CommentDto dto) {
 
 		try {
-//			CommentDto comment = CommentDto.builder().commentId(dto.getCommentId())
-//					.commentContent(dto.getCommentContent()).writer(dto.getWriter()).build();
 
 			int result = commentService.updateComment(dto);
 
 			if (result > 0) {
-				List<CommentsVO> commentList = commentService.getCommentList(dto.getBoardId(), dto.getWriter());
 
-				return new ResponseEntity<>(new ResponseDto<>(1, "댓글 수정 성공", commentList), HttpStatus.OK);
+				return new ResponseEntity<>(new ResponseDto<>(1, "댓글 수정 성공", result), HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", null), HttpStatus.OK);
+				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", result), HttpStatus.OK);
 			}
-
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-
-			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 수정 중 예외 발생", e.getMessage()), HttpStatus.OK);
+			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 수정 중 예외가 발생했습니다.", e.getMessage()), HttpStatus.OK);
 		}
 
 	}
@@ -150,20 +127,9 @@ public class CommentController {
 	// 대댓글 작성
 	@PostMapping("/comment/reply")
 	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto, HttpSession session, Model model) {
-		System.out.println("======commentAdd ()=====");
-
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
-
-		
 		commentDto.setWriter(userId);
-		log.info("userId = {}", userId);
-		log.info("commentDto = {}", commentDto);
-		commentService.commentAdd(commentDto);
-
-		List<CommentsVO> commentList = commentService.getCommentList(commentDto.getBoardId(), commentDto.getWriter());
-		
-		
-		
-		return new ResponseEntity<>(new ResponseDto<>(1, "대댓글 작성 성공", commentList), HttpStatus.OK);
+		int result = commentService.commentAdd(commentDto);
+		return new ResponseEntity<>(new ResponseDto<>(1, "대댓글 작성 성공", result), HttpStatus.OK);
 	}
 }
