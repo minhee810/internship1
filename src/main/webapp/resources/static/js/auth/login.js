@@ -1,6 +1,3 @@
-// import { validator } from "./join.js";
-
-
 $(document).ready(function() {
 
 	if (localStorage.checkbox && localStorage.checkbox !== "") {
@@ -43,7 +40,7 @@ function login() {
 
 	$.ajax({
 
-		url: "/login",
+		url: "/member/login",
 		type: "post",
 		data: user,
 		dataType: "json",

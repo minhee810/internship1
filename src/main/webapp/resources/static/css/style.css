@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-
+/* 
 
 .page_prev_on {
 	background-image: url(../img/page_prev_on.png);
@@ -40,4 +40,15 @@
 	float: left;
 	padding: 3px 3px;
 	text-decoration: none;
+} */
+
+.txt-mention {
+	position: relative;
+	color: #222;
+	padding: 0 3px;
+	margin-right: 3px;
+
+	/* user-select: none; */
+	background-color: #eee;
+	border-radius: 2px;
 }

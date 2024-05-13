@@ -84,10 +84,25 @@
                                       </c:forEach> 
                                     </tbody>
                                 </table>
+                                
+                                <c:choose>
+                                <c:when test="${!empty loginUser}">
                                 <a href="${contextPath}/board/write">
                                     <button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
                                         게시글 작성
-                                    </button></a>
+                                    </button>
+                               	</a>
+                                </c:when>
+                                <c:when test="${empty loginUser}">
+                                 <a onclick="loginPage()">
+                                    <button type="button" id="writeBtn" name="writeBtn" class="btn btn-primary btn float-right">
+                                        게시글 작성
+                                    </button>
+                               	</a>
+                                </c:when>
+                                
+                                </c:choose>
+                               
                             </div>
                        
                         <!--  페이징 표시되는 부분 추가 -->
@@ -167,7 +182,7 @@
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">
                             Cancel
                         </button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
+                        <a class="btn btn-primary" href="@{contextPath}/member/logout">Logout</a>
                     </div>
                 </div>
             </div>

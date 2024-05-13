@@ -21,21 +21,11 @@
 
     <!-- Custom styles for this template -->
     <link href="${contextPath}/resources/static/css/sb-admin-2.min.css" rel="stylesheet" />
+    <link href="${contextPath}/resources/static/css/style.css" rel="stylesheet" />
 
     <!-- Custom styles for this page -->
-	    <link href="${contextPath}/resources/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
-<style type="text/css">
-.txt-mention {
-	position: relative;
-	color: #222;
-	padding: 0 3px;
-	margin-right: 3px;
+	<link href="${contextPath}/resources/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
 
-	/* user-select: none; */
-	background-color: #eee;
-	border-radius: 2px;
-}
-</style>
 </head>
 
 <body id="page-top">

@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="password" type="password" id="password" oninput="pwCheck()" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호" />
+                                        <input name="password" type="password" id="password" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호" />
 
                                     </div>
                                     <div class="col-sm-6">

@@ -34,8 +34,8 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="${contextPath}/login">Login</a>
-                        <a class="collapse-item" href="${contextPath}/join">membership</a>
+                        <a class="collapse-item" href="${contextPath}/member/login">Login</a>
+                        <a class="collapse-item" href="${contextPath}/member/join">membership</a>
                     </div>
                 </div>
             </li>

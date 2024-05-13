@@ -24,7 +24,7 @@ import com.example.demo.web.dto.auth.LoginDto;
 
 import lombok.extern.slf4j.Slf4j;
 
-//@RequestMapping("/auth")
+@RequestMapping("/member")
 @Controller
 @Slf4j
 public class UsersController {
@@ -34,13 +34,19 @@ public class UsersController {
 
 	// 회원가입 페이지 이동
 	@GetMapping("/join")
-	public String joinPage() {
+	public String joinPage(HttpSession session) {
+		if(session != null) {
+			session.invalidate();
+		}
 		return "auth/join";
 	}
 
 	// 로그인 페이지 이동
 	@GetMapping("/login")
-	public String loginPage() {
+	public String loginPage(HttpSession session) {
+		if(session != null) {
+			session.invalidate();
+		}
 		return "auth/login";
 	}
 
