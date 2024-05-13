@@ -78,8 +78,10 @@ function createTable(data) {
 	if (list.length > 0) {
 		for (var i = 0; i < list.length; i++) {
 			let result = list[i];
-
+			let loginUser = $('.commentData').data('name'); 
 			let dateTime = getFormattedDate(result.createdDate);
+			
+			console.log("부모 댓글 이름", result.parentUsername);
 
 			// template 변수에 li 안의 값을 문자열로 더해준다. (+=) 
 			let template = `<li class="commentData" data-no="${result.commentId}" 
@@ -87,9 +89,10 @@ function createTable(data) {
 													data-writer="${result.writer}" 
 													data-no="${result.commentId}" 
 													data-depth="${result.depth}"
-													data-name="${result.username}" 
+													data-name="${result.username}"  
 													data-date="${result.createdDate}" 
-													data-parent="${result.parentId}">
+													data-parent="${result.parentId}"
+													data-parentName="${result.parentUsername}">
 											
 							<div class="commentDiv" data-depth="${result.depth}" style="padding-left: ${result.depth}rem;">`;
 
@@ -98,14 +101,14 @@ function createTable(data) {
 
 			// 대댓글일 경우 'ㄴ' 붙이고 싶다. 
 			if (result.isDeleted == 0) {
-				
+
 				if (result.depth > 0) {
-					template += `<div class="commentName"><p>ㄴ @${result.username}</p></div>`;
-				}else {
 					template += `<div class="commentName"><p>@${result.username}</p></div>`;
-					
+				} else {
+					template += `<div class="commentName"><p>@${result.username}</p></div>`;
+
 				}
-				
+
 				template += `<div class="commentDate"><p>${dateTime}</p></div>`;
 				template += `</div>`;
 				template += `<div class="commentHead2">`;
@@ -113,14 +116,16 @@ function createTable(data) {
 
 				// 로그인한 사용자일 경우
 				if (result.principal == 0) {
-					template += `<a class="commentReply" onclick="commentAddView(${result.commentId}, ${result.writer})">답글</a>`; // check 
+					// 해당 글의 작성자 정보를 넘김
+					template += `<a class="commentReply" onclick="commentAddView('${result.username}' ,${result.commentId}, ${result.writer})">답글</a>`; // check 
 
 				}
 
 				// 글 작성자와 로그인 사용자의 정보가 일치할 때 수정, 삭제 가능하도록
 				if (result.principal == 1) {
-
-					template += `<a class="commentReply" onclick="commentAddView(${result.commentId}, ${result.writer})">답글</a>`; // check  
+					console.log("댓글 작성자 이름 : ", result.username);
+					
+					template += `<a class="commentReply" onclick="commentAddView('${result.username}', ${result.commentId}, ${result.writer})">답글</a>`; // check  
 
 
 					template += `<a onclick ='modifyView( ` + result.commentId + `,` + result.writer + `)' class="commentModify">수정</a>`; // check 
@@ -131,9 +136,17 @@ function createTable(data) {
 				template += `</div>	`;
 				template += `</div>`;
 				template += `<div class="comment">  `;
-				if (result.depth > 0) {
-				template += `<div id="commentContent"><p> @${result.parentId} ${result.commentContent}</p></div>`;
-				}
+
+				console.log("부모 댓글이 없는 경우 : ", result.depth);
+			// 깊이가 0이 아닌 경우 
+			if(result.depth != 0){
+				template += `
+					ㄴ <em class="txt-mention"> @${result.username} </em><div id="commentContent"><p>${result.commentContent}</div></p>
+				</div>`;
+			}else {
+				template += `<div id="commentContent"><p> ${result.commentContent}</p></div>`;
+			}
+
 			} else if (result.isDeleted == 2) {
 				template += `<div id="commentContent"><p>삭제된 댓글입니다.</p></div>`;
 			} else if (result.isDeleted == 1) {
@@ -357,70 +370,16 @@ $('#replySaveBtn').click(function() {
 })
 
 
-// 댓글 작성 후 댓글 목록을 가져와서 화면에 출력하는 함수
-/*function getJSPAndRender() {
-	var boardId = $('input[name="boardId"').val();
-
-	$.ajax({
-		type: "get",
-		url: "/comment/" + boardId, // 댓글 목록을 가져올 JSP 엔드포인트
-		dataType: "html",
-		success: function(htmlData) {
-			// 받아온 JSP 데이터를 화면에 적용하여 리로드
-			$("body").html(htmlData);
-		},
-		error: function(error) {
-			console.error("JSP를 불러오는 중 에러가 발생했습니다:", error);
-		}
-	});
-}
-*/
-
-// 댓글 작성 후 화면에 그려주는 함수 
-/*function createComment(res) {
-
-	let element = document.querySelector('#commentDiv');
-
-	console.log("res : ", res.createdDate);
-	let dateTime = getFormattedDate(res.createdDate);
-
-	let template = `<li class="commentData" data-boardId="${res.boardId}" data-writer="${res.writer}" data-no="${res.commentId}" data-name="${res.username}" data-date="${res.createdDate}" data-parent="${res.parentId}"
-											 data-writer ="${res.writer}">`;
-
-	template += `<div class="commentDiv" style="padding-left: ${res.depth}rem;">`
-	template += `<div class="commentHead">`;
-	template += `<div class="commentHead1">`;
-	template += `<div class="commentName"><p>@ ${res.username}</p></div>`;
-	template += `<div class="commentDate"><p>${dateTime}</p></div>`;
-	template += `</div>`;
-	template += `<div class="commentHead2">`;
-	template += `<div class="commentReply">답글</div>`;
-	template += `<div class="commentModify">수정</div>`;
-	template += `<div class="commentRemove" onclick ="commentDelete(${res.commentId})" >삭제</div>`;
-	template += `<div class="commentCancle" style="display:none;">취소</div>`;
-	template += `</div>	`;
-	template += `</div>`;
-
-	template += `<div class="comment">  `;
-	template += `<div id="commentContent"><p>${res.commentContent}</p></div>`;
-
-	template += `</div>`;
-	template += `</div>`;
-	template += `<hr class="sidebar-divider d-none d-md-block">`;
-
-	element.insertAdjacentHTML('beforeend', template);
-
-
-}
-*/
-
 // 대댓글 작성 화면 작성 
-function commentAddView(commentId, writer) {
-	let username = $('.commentData').data('name');
-	let boardId = $('.commentData').data('boardId');
-
-	console.log("대댓글 작성 화면으로 넘어오는지 확인!!!!!!!!!")
-	console.log("username : ", username);
+function commentAddView(username, commentId, writer) {
+	// 대댓글 작성자 이름 가져오기 
+	// username : 로그인한 사용자 정보
+	// loginUser : 
+	
+	let loginUser = $('.commentData').data('name'); // 댓글을 작성한 사람의 이름 
+	let boardId = $('.commentData').data('boardid');
+	
+	console.log("현재 로그인을 하고 있는 사용자의 정보 -> username : ", username); // 로그인한 사용자 정보 
 	console.log("commentId : ", commentId);
 	console.log("writer : ", writer);
 
@@ -477,6 +436,7 @@ function cancelCommentAdd() {
 // 대댓글 저장 기능
 function commentAdd(commentId, writer, event) {
 
+	// 댓글을 작성한 사람의 이름이 들어와야 해 그래야 
 	console.log("======comment Add ========");
 	// 필요한 정보 : 댓글 아이디 (ParentId) , 글번호, 대댓글 작성자 정보
 	let parentId = commentId;

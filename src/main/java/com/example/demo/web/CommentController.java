@@ -154,6 +154,7 @@ public class CommentController {
 
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 
+		
 		commentDto.setWriter(userId);
 		log.info("userId = {}", userId);
 		log.info("commentDto = {}", commentDto);

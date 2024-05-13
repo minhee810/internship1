@@ -118,6 +118,10 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public int commentAdd(CommentDto commentDto) {
 
+		log.info("commentDto.getParentUsername() = {}", commentDto.getParentUsername());
+		String ParentUsername = commentDto.getParentUsername();
+		
+		int rowCnt = boardMapper.updateCommentCnt(commentDto.getBoardId(), 1);
 		// 부모 댓글의 아이디 저장 
 		commentDto.setParentId(commentDto.getParentId());
 		
