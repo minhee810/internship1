@@ -36,7 +36,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 			
 			return false; // 세션에 id 정보가 없을 경우 더이상 컨트롤러 요청 진입을 못하도록 return false 처리를 해줘야 함.
 		}
-
 		return true; // return true 시 컨트롤러 진입 후 요청 진행
 	}
 

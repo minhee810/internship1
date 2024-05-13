@@ -43,7 +43,7 @@ function login() {
 
 	$.ajax({
 
-		url: "/auth/login",
+		url: "/login",
 		type: "post",
 		data: user,
 		dataType: "json",

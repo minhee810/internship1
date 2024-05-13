@@ -26,11 +26,10 @@ public class CommentDto {
 	private LocalDateTime modifiedDate;
 	
 
-
 	// 추가 필드
 	private Long boardId;
 	private String username;
-	private Boolean principal; // 작성자와 로그인 사용자의 일치 정보
+	private int principal; // 작성자와 로그인 사용자의 일치 정보
 	private String parentUsername;
 	
 	

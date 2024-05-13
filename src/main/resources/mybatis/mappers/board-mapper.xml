@@ -82,7 +82,8 @@
 			UPDATE BOARD
 			SET 
 				TITLE = #{title},
-				CONTENT = #{content}
+				CONTENT = #{content},
+				MODIFIED_DATE = sysdate
 			WHERE BOARD_ID = #{boardId}
 		]]>
 	</update>

@@ -24,7 +24,7 @@ import com.example.demo.web.dto.auth.LoginDto;
 
 import lombok.extern.slf4j.Slf4j;
 
-@RequestMapping("/auth")
+//@RequestMapping("/auth")
 @Controller
 @Slf4j
 public class UsersController {
@@ -97,9 +97,7 @@ public class UsersController {
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) throws Exception {
-
 		session.invalidate();
-
 		return "redirect:/";
 
 	}

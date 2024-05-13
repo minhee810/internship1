@@ -8,7 +8,8 @@
 	<!-- 계층형 쿼리문으로 댓글 불러오기 -->
 	<select id="getCommentList" parameterType="hashMap" resultType="commentDto">
     <![CDATA[
-		 SELECT
+
+        SELECT
             LEVEL,
             COMMENT_ID, 
             BOARD_ID,
@@ -18,11 +19,13 @@
             CREATED_DATE,
             WRITER,
             USERNAME,
+
             CASE WHEN WRITER = 2 THEN 2
             	WHEN WRITER = #{userId} THEN 1
             	ELSE 0 END AS PRINCIPAL,  
             IS_DELETED,
              (select USERNAME from users a join comments b on a.USER_ID= b.WRITER where b.comment_id = f.PARENT_ID) AS PARENT_USERNAME
+
         FROM (
             SELECT C.* , U.USERNAME, U.USER_ID
             FROM COMMENTS C 
@@ -33,7 +36,7 @@
         START WITH PARENT_ID = 0
         CONNECT BY PRIOR COMMENT_ID = PARENT_ID
         ORDER SIBLINGS BY COMMENT_ID
-        
+
 		]]>
 			
 		</select>
@@ -54,7 +57,7 @@
 			<![CDATA[
 			 	UPDATE COMMENTS  
 				SET 
-				IS_DELETED = #{status} 
+				IS_DELETED = 1
 			WHERE COMMENT_ID = #{commentId} AND WRITER = #{writer}
 			]]>
 		</update>
