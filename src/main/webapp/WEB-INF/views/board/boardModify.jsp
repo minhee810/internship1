@@ -73,13 +73,9 @@
                                         <textarea id="content" name="content" cols="30" class="form-control h-100" 
                                         placeholder="내용" style="resize: none">${detail.content} </textarea>
                                          <!-- file upload -->
-	                                      
-	                                        <div class="multiple-upload" >
 	                                            <!-- new code -->
 												<input type="file" name="files" multiple="multiple" onchange="test(this.files)">
-												<div id="file-list"></div> 
-	                                        </div>
-	                                                                   	       
+												<div id="file-list"></div>        
                         			</div>
                                 </div>
                             </form>

@@ -9,14 +9,13 @@ import com.example.demo.interceptor.LoginCheckInterceptor;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 
-		registry.addInterceptor(new LoginCheckInterceptor())
-		.order(1)
-		.addPathPatterns("/**")
-		.excludePathPatterns("/", "/member/**", "/css/**", "/*.ico", "/error**", "/resources/**", "/board/detail/**",
-				"/comment/**");
+		registry.addInterceptor(new LoginCheckInterceptor()).order(1).addPathPatterns("/**").excludePathPatterns("/",
+				"/auth/**", "/member/**", "/css/**", "/*.ico", "/error**", "/resources/**", "/board/detail/**",
+				"/member/join", "/comment/**");
 
 	}
 

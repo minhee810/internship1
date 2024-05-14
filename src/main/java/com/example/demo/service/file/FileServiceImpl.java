@@ -26,7 +26,7 @@ public class FileServiceImpl implements FileService {
 	private final FileMapper fileMapper;
 
 	/**
-	 * file 이름 조회 
+	 * file 이름 조회
 	 */
 	@Transactional
 	@Override
@@ -36,9 +36,8 @@ public class FileServiceImpl implements FileService {
 		return fileMapper.findAllByBoardId(boardId);
 	}
 
-	
 	/**
-	 * 삭제할 파일 아이디 값 받아와서 삭제하는 메서드 
+	 * 삭제할 파일 아이디 값 받아와서 삭제하는 메서드
 	 */
 	@Transactional
 	@Override
@@ -58,37 +57,36 @@ public class FileServiceImpl implements FileService {
 	@Override
 	@Transactional
 	public boolean deleteFile(Long boardId, List<Long> deletedFilesId) throws UnsupportedEncodingException {
+		log.info("파일 삭제 로직 수행");
+
 		// 경로 지정
-
-		// 파일 이름을 알아와야 한다.
-
-		// 파일 경로와 이름으로 해당 파일을 찾아서 삭제 로직 수행.
-
-		// 동시에 파일 이름 디코딩을 실시해서 문제 없이 삭제할 수 잇도록 구현.
 		String projectPath = path + "/" + boardId;
+		log.info("projectPath ={}", projectPath);
 		boolean allDeleted = true;
 
-		log.info("deleteFile 지우러 왔습니다. ");
-
+		// 파일 이름을 알아와야 한다. 파일 이름 목록이 없을 경우 파일 삭제 하지 않고 return false;
 		if (deletedFilesId == null || deletedFilesId.isEmpty()) {
 			log.info("deletedFilesId 가 null 입니다. ");
 			return false;
 		}
 
+		// 파일 경로와 이름으로 해당 파일을 찾아서 삭제 로직 수행.
 		for (Long fileId : deletedFilesId) {
 
 			String fileName = fileMapper.selectFileNameByIds(fileId);
 
-			log.info("fileName = {}", fileName);
+			log.info("삭제할 파일 이름들 : fileName = {}", fileName);
 
-			if (fileName != null) {
+			if (fileName != null) { // 파일 아이디에 해당하는 파일 이름이 존재할 경우
 
 				try {
+					// 동시에 파일 이름 디코딩을 실시해서 문제 없이 삭제할 수 잇도록 구현.
 					String decodedFileName = URLDecoder.decode(fileName, "UTF-8");
-					File file = new File(projectPath + File.separator + decodedFileName);
-
+					File file = new File(projectPath + File.separator + decodedFileName); // 운영체제 영향 없도록
+					log.info("file = {}", file);
 					// 파일 삭제
 					if (file.exists()) {
+						
 						if (!file.delete()) {
 							allDeleted = false; // 파일 삭제에 실패한 경우
 						}
@@ -102,22 +100,21 @@ public class FileServiceImpl implements FileService {
 				allDeleted = false; // 파일 이름을 찾을 수 없는 경우
 			}
 		}
-
-		deleteFolder(projectPath);
-
+		// deleteFolder(projectPath);
 		return allDeleted;
-
 	}
 
-
-	
 	/**
-	 * 폴더 삭제 -> 수정 예정
+	 * 폴더 삭제 
+	 * 
 	 * @param path
 	 */
 	@Transactional
-	public static void deleteFolder(String path) {
-
+	@Override
+	public void deleteFolder(String path) {
+		log.info("폴더 삭제 로직 수행");
+		log.info("path = {}", path);
+		
 		File folder = new File(path);
 		try {
 			if (folder.exists()) {
@@ -139,7 +136,6 @@ public class FileServiceImpl implements FileService {
 			e.getStackTrace();
 		}
 	}
-
 
 	/**
 	 * file id 조회

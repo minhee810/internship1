@@ -47,13 +47,17 @@ $(document).ready(function() {
 			cache: false,
 			timeout: 600000,
 			success: function(data) {
+				console.log(data);
 				location.href = "/";
 				alert("저장되었습니다.");
 				console.log('SUCCESS : ', data);
 			},
 			error: function(error) {
-				console.log('ERROR : ', error);
-				alert("저장에 실패하였습니다.")
+				console.log(error.code);
+				let msg = error.msg;
+				console.log("error : ", error);
+				console.log('ERROR : ', msg);
+				alert("저장에 실패하였습니다.", msg);
 			}
 		});
 
@@ -66,16 +70,16 @@ $(document).ready(function() {
 let selectedFiles = [];
 
 function test(files) {
-	
+
 	console.log(files);
 	const fileList = document.getElementById('file-list');
-	
+
 	for (let i = 0; i < files.length; i++) {
 		selectedFiles.push(files[i]);
 		const item = document.createElement('div');
 		const fileName = document.createTextNode(files[i].name);
 		const deleteButton = document.createElement('button');
-		
+
 		deleteButton.addEventListener('click', (event) => {
 			item.remove();
 			event.preventDefault();

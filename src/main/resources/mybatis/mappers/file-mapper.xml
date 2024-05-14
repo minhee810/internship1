@@ -50,18 +50,6 @@
 	</insert>
 	
 	
-	<!-- 파일 리스트 조회  -->
-
-	<!-- 파일 리스트 삭제 
-	<delete id="deleteFile" parameterType="Long">
-			<![CDATA[
-				DELETE FROM UPLOADFILE
-				WHERE BOARD_ID = #{boardId}; 
-			]]>
-	</delete>
-	 --> 
-	
-	
 	<!-- 파일 논리 삭제 -->
     <delete id="deleteAllByIds" parameterType="list" >
         UPDATE UPLOADFILE

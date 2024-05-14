@@ -14,4 +14,6 @@ public interface FileService {
 	public boolean deleteFile(Long boardId, List<Long> deletedFilesId) throws UnsupportedEncodingException;
 
 	public List<Long> getFileIdByBoardId(Long boardId);
+	
+	public void deleteFolder(String path);
 }

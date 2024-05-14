@@ -1,7 +1,10 @@
 const validator = {
-	"passwordRegExp": /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
-	"emailRegExp": /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/,
-	"phoneRegExp": /^(01[0-9]{1}-?[0-9]{4}-?[0-9]{4}|01[0-9]{8})$/
+	// passwordRegExp: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/,
+	// passwordRegExp: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
+	passwordRegExp: /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()-_=+])(?!.*\s).{8,15}$/,
+
+	emailRegExp: /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/,
+	phoneRegExp: /^(01[0|1|6|7|8|9]-?[0-9]{3,4}-?([0-9]{4}))$/
 }
 
 
@@ -46,13 +49,19 @@ function checkEngNum(str) {
 }
 
 function checkEmail(str) {
-	return validator.emailRegExp.test(str);
+	return validator["emailRegExp"].test(str);
 }
 
-
+// 비밀번호 정규식 확인 결과
 function pwValid(str) {
-	return validator.passwordRegExp.test(str);
+	return validator["passwordRegExp"].test(str);
 }
+
+// 휴대전화 정규식
+function checkPhone(str) {
+	return validator["phoneRegExp"].test(str);
+}
+
 
 
 const isRequired = value => value === '' ? false : true;

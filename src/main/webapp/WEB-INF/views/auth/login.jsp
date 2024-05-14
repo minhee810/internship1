@@ -57,7 +57,7 @@
                                         <hr />
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="${contextPath}/join">Create an Account!</a>
+                                        <a class="small" href="${contextPath}/member/join">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>

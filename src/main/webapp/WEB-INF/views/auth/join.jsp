@@ -36,7 +36,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">회원가입</h1>
                             </div>
-                            <form id="joinForm" class="user" action="${contextPath}/auth/join" method="post" name=joinForm>
+                            <form id="joinForm" class="user" action="#" method="post" name=joinForm>
 
                                 <div class="form-group eror">
                                     <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" maxlength="10"/>
@@ -60,9 +60,6 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <input name="password_confirm" type="password" id="password_confirm" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호 확인" />
-                                    </div>
-                                    <div>
-                                        &nbsp&nbsp&nbsp&nbsp&nbsp<span id="passwordCheck"> </span>
                                     </div>
 
                                 </div>

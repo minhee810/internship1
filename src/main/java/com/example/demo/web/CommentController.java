@@ -70,18 +70,6 @@ public class CommentController {
 		Long boardId = Long.valueOf(requestParam.get("boardId"));
 		Long writer = Long.valueOf(requestParam.get("writer"));
 
-		// 대댓글이 있는지 확인
-//		int exist = commentService.hasReplies(commentId);
-//		log.info("exits = {}", exist);
-//
-//		// 대댓글이 있어 삭제가 어려울 경우 처리
-//		if (exist > 0) {
-//			int status = 2;
-//			int result = commentService.deleteComment(commentId, boardId, writer, status);
-//
-//			return new ResponseEntity<>(new ResponseDto<>(-1, "대댓글이 있어 내용만 블러처리 됩니다. ", result), HttpStatus.OK);
-//		} else {
-//			int ststus = 1;
 		int result = commentService.deleteComment(commentId, boardId, writer);
 
 		if (result > 0) {

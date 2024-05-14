@@ -10,17 +10,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.exception.CustomException;
-import com.example.demo.service.file.FileServiceImpl;
+import com.example.demo.service.file.FileService;
 import com.example.demo.vo.UploadFileVO;
-import com.example.demo.web.dto.ResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +33,7 @@ public class FileController {
 	@Value("${file.path}")
 	private String path;
 
-	private final FileServiceImpl fileServiceImpl;
+	private final FileService fileService;
 
 	/**
 	 * 게시글 아이디로 파일 리스트 불러오기
@@ -46,18 +43,8 @@ public class FileController {
 	 */
 	@GetMapping("/board/files/{boardId}")
 	public List<UploadFileVO> findAllFileByBoardId(@PathVariable final Long boardId) {
-		return fileServiceImpl.findAllFileByBoardId(boardId);
+		return fileService.findAllFileByBoardId(boardId);
 	}
-
-	/**
-	 * file 삭제
-	 * 
-	 * @param boardId
-	 */
-//	@DeleteMapping("/board/delete/{boardId}")
-//	public void fileDelete(@PathVariable Long boardId) {
-//		fileServiceImpl.deleteFile(boardId, );
-//	}
 
 	/**
 	 * 파일 다운로드

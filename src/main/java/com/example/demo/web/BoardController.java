@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.exception.CustomException;
-import com.example.demo.service.board.BoardServiceImpl;
-import com.example.demo.service.comment.CommentServiceImpl;
-import com.example.demo.service.file.FileServiceImpl;
+import com.example.demo.service.board.BoardService;
+import com.example.demo.service.file.FileService;
 import com.example.demo.vo.BoardVO;
-import com.example.demo.vo.CommentsVO;
 import com.example.demo.vo.UploadFileVO;
 import com.example.demo.web.dto.ResponseDto;
 import com.example.demo.web.dto.board.BoardListDto;
@@ -37,16 +37,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BoardController {
 
-	private final BoardServiceImpl boardServiceImpl;
-	private final FileServiceImpl fileServiceImpl;
-	
+	private final BoardService boardService;
+
+	private final FileService fileService;
+
+	public static final long MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
+	public static final long MAX_REQUEST_SIZE = 215 * 1024 * 1024; // 215MB
+
 	// 게시글 목록 조회
 	// get 방식으로 페이지 번호를 넘겨준다.
 	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
 	@GetMapping("/")
 	public String getBoardList(@PageableDefault(size = 10, page = 0) Pageable page, Model model) {
 		// 게시글 목록 조회
-		Page<BoardVO> boardList = boardServiceImpl.getBoardList(page);
+		Page<BoardVO> boardList = boardService.getBoardList(page);
 		int pageNumber = boardList.getPageable().getPageNumber(); // 현재 페이지
 		int totalPages = boardList.getTotalPages(); // 총 페이지 개수
 		int pageBlock = 10;
@@ -79,37 +83,46 @@ public class BoardController {
 
 	// 게시글 저장
 	@PostMapping("/board/write")
-	public String insertBoard(BoardListDto dto, Model model, HttpSession session) throws Exception {
+	public ResponseEntity<?> insertBoard(BoardListDto dto, Model model, HttpSession session) throws Exception {
 
-		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
+		try {
+			Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 
-		if (userId == null) {
-			throw new CustomException(-1, "로그인 정보가 없습니다.");
+			if (userId == null) {
+				throw new CustomException(-1, "로그인 정보가 없습니다.");
+			}
+
+			for (MultipartFile file : dto.getFiles()) {
+
+				// 업로드된 파일의 크기를 확인하고 제한을 초과하는지 검사
+				if (file.getSize() > MAX_FILE_SIZE) {
+					throw new MaxUploadSizeExceededException(MAX_FILE_SIZE);
+				}
+			}
+			dto.setUserId(userId);
+
+			boardService.insertBoard(dto);
+
+			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", null), HttpStatus.CREATED);
+
+		} catch (MaxUploadSizeExceededException e) {
+			
+			return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
 		}
-
-		dto.setUserId(userId);
-
-		boardServiceImpl.insertBoard(dto);
-
-		return "redirect:/";
 	}
 
 	// 게시글 상세보기
 	@GetMapping("/board/detail/{boardId}")
 	public String getDetail(@PathVariable Long boardId, Model model) {
 
-		BoardVO detail = boardServiceImpl.getDetail(boardId);
+		BoardVO detail = boardService.getDetail(boardId);
 		model.addAttribute("detail", detail);
 
-		List<UploadFileVO> files = fileServiceImpl.findAllFileByBoardId(boardId);
+		List<UploadFileVO> files = fileService.findAllFileByBoardId(boardId);
 		for (UploadFileVO file : files) {
 			log.info("files = {}", file);
 		}
 
-//		List<CommentsVO> commentList = commentServiceImpl.getCommentList(boardId, userId);
-//		log.info("commentList = {}", commentList);
-
-//		model.addAttribute("commentList", commentList);
 		model.addAttribute("files", files);
 		return "/board/boardDetail";
 	}
@@ -118,12 +131,15 @@ public class BoardController {
 	@GetMapping("/board/modify/{boardId}")
 	public String modifyPage(@PathVariable Long boardId, Model model) {
 
-		BoardVO detail = boardServiceImpl.getDetail(boardId);
+		BoardVO detail = boardService.getDetail(boardId);
 		model.addAttribute("detail", detail);
-		List<UploadFileVO> files = fileServiceImpl.findAllFileByBoardId(boardId);
+
+		List<UploadFileVO> files = fileService.findAllFileByBoardId(boardId);
+
 		for (UploadFileVO file : files) {
 			log.info("files = {}", file);
 		}
+
 		model.addAttribute("files", files);
 		log.info("=====[modifyPage() END]=====");
 		return "/board/boardModify";
@@ -142,7 +158,7 @@ public class BoardController {
 		}
 
 		log.info("[modifyboard] service 호출 전 ");
-		boardServiceImpl.modifyBoard(boardId, dto, deletedFilesId);
+		boardService.modifyBoard(boardId, dto, deletedFilesId);
 
 		return "redirect:/board/detail/" + boardId;
 	}
@@ -153,23 +169,11 @@ public class BoardController {
 		log.info("boardId = {}", boardId);
 		log.info("delete boardController");
 
-		int result = boardServiceImpl.deleteBoard(boardId);
+		int result = boardService.deleteBoard(boardId);
 
 		log.info("result = {}", result);
 
 		return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제 성공", result), HttpStatus.OK);
 
 	}
-	
-	/*
-	 * // 댓글 페이지 리턴
-	 * 
-	 * @GetMapping("/board/comment/{boardId}") public String
-	 * getCommentList(@PathVariable Long boardId, Model model) { List<CommentsVO>
-	 * commentList = commentServiceImpl.getCommentList(boardId);
-	 * log.info("commentList = {}", commentList);
-	 * 
-	 * model.addAttribute("commentList", commentList); return "/layout/comment"; }
-	 */
-
 }
