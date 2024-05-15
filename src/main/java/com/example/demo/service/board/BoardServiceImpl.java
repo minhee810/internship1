@@ -45,7 +45,9 @@ public class BoardServiceImpl implements BoardService {
 		RequestList<?> requestList = RequestList.builder().data(null).pageable(pageable).build();
 
 		List<BoardVO> content = boardMapper.getBoardList(requestList);
+		log.info("requestList = {} ", requestList);
 		int total = boardMapper.getListBoardCount();
+		
 		log.info("데이터 총 개수 total = {}", total);
 		log.info("content = {}", content);
 		log.info("pageable = {}", pageable);

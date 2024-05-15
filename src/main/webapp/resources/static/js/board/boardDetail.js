@@ -159,8 +159,6 @@ function createTable(data) {
 	}
 }
 
-
-
 // 댓글 작성
 function commentSubmit(e) {
 	e.preventDefault();

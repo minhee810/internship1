@@ -9,7 +9,6 @@ function loginPage() {
 }
 
 function getBoardList(pageNo) {
-	console.log("getBoardList()")
 	pageNo = pageNo || 0;
 
 	$.ajax({
@@ -19,7 +18,7 @@ function getBoardList(pageNo) {
 		success: function(response) {
 			let data = response.data;
 			console.log("data 응답 성공 : ", data);
-			location.href = "/list?page=" + pageNo;
+			location.href = "/?page=" + pageNo;
 		},
 		error: function(error) {
 			console.log("ERROR : ", error);

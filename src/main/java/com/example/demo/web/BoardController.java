@@ -49,23 +49,24 @@ public class BoardController {
 	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
 	@GetMapping("/")
 	public String getBoardList(@PageableDefault(size = 10, page = 0) Pageable page, Model model) {
+		
+		log.info("===getBoardList 로직실행===");
 		// 게시글 목록 조회
 		Page<BoardVO> boardList = boardService.getBoardList(page);
+		
 		int pageNumber = boardList.getPageable().getPageNumber(); // 현재 페이지
 		int totalPages = boardList.getTotalPages(); // 총 페이지 개수
 		int pageBlock = 10;
 		int startBlockPage = ((pageNumber) / pageBlock) * pageBlock + 1; // 현재 페이지가 7이라면 1*5
-
 		int endBlockPage = startBlockPage + pageBlock - 1;
 		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage;
 
-		log.info("page = {}", page);
-		log.info("boardList = {}", boardList);
+		log.info("page = {}", page.toString());
+		log.info("boardList = {}", boardList.toString());
 
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("startBlockPage", startBlockPage);
 		model.addAttribute("endBlockPage", endBlockPage);
-//		return new ResponseEntity<>(new ResponseDto<>(1, "조회 성공", boardList), HttpStatus.OK);
 
 		return "/board/boardMain";
 	}

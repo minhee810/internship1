@@ -51,8 +51,6 @@
                     </div>
                 </c:when>
             </c:choose>
-
-
         </li>
     </ul>
 </nav>

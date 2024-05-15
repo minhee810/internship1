@@ -6,7 +6,6 @@ const usernameEl = document.querySelector('#username');
 const emailEl = document.querySelector('#email');
 const passwordEl = document.querySelector('#password');
 const confirmPasswordEl = document.querySelector('#password_confirm');
-
 const form = document.querySelector('#joinForm');
 
 form.addEventListener('submit', function(e) {
