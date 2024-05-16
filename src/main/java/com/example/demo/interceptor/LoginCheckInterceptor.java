@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.web.SessionConst;
+import com.example.demo.users.consts.SessionConst;
 
 import lombok.extern.slf4j.Slf4j;
 

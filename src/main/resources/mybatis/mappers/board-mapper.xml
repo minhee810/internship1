@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.mapper.BoardMapper">
+<mapper namespace="com.example.demo.board.mapper.BoardMapper">
 
 	<!-- 1대 다 : collection (한명의 유저가 작성한 글 목록) 1대 1 : association 일반 컬럼과 pk 컬럼 
 		구분, pk 컬럼에는 result 아닌 id 사용 -->

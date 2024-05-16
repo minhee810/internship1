@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.mapper.UserMapper">
+<mapper namespace="com.example.demo.users.mapper.UserMapper">
 	<!-- usersVO 타입으로 받아오겠다는 명시가 필요함. -->
 	<insert id="join" parameterType="joinDto">
 	        

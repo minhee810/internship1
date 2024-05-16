@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(value = {"com.example.demo.mapper"})  // mapperScan 등록 
+@MapperScan(value = {"com.example.demo.**.mapper"})  // mapperScan 등록 
 public class DemoApplication {
 
 	public static void main(String[] args) {

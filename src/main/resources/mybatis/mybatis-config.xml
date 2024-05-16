@@ -12,17 +12,18 @@
 	
 	<!-- 별칭 작성 부분 -->
 	<typeAliases>
-		<typeAlias type="com.example.demo.vo.UsersVO" alias="usersVO"/>
-		<typeAlias type="com.example.demo.vo.BoardVO" alias="boardVO"/>
-		<typeAlias type="com.example.demo.vo.CommentsVO" alias="commentsVO"/>
-		<typeAlias type="com.example.demo.vo.UploadFileVO" alias="fileVO"/>
-		<typeAlias type="com.example.demo.web.dto.auth.JoinDto" alias="joinDto"/>
-		<typeAlias type="com.example.demo.web.dto.auth.LoginDto" alias="loginDto"/>
-		<typeAlias type="com.example.demo.web.dto.board.BoardListDto" alias="boardListDto"/>
-		<typeAlias type="com.example.demo.web.dto.board.BoardModifyDto" alias="boardModifyDto"/>
-		<typeAlias type="com.example.demo.service.utils.RequestList" alias="requestList"/> 
-		<typeAlias type="com.example.demo.web.dto.comment.CommentDto" alias="commentDto"/> 
+		<typeAlias type="com.example.demo.users.vo.UsersVO" alias="usersVO"/>
+		<typeAlias type="com.example.demo.board.vo.BoardVO" alias="boardVO"/>
+		<typeAlias type="com.example.demo.comment.vo.CommentsVO" alias="commentsVO"/>
+		<typeAlias type="com.example.demo.file.vo.UploadFileVO" alias="fileVO"/>
+		<typeAlias type="com.example.demo.users.dto.JoinDto" alias="joinDto"/>
+		<typeAlias type="com.example.demo.users.dto.LoginDto" alias="loginDto"/>
 		
+		<typeAlias type="com.example.demo.board.dto.BoardListDto" alias="boardListDto"/>
+		<typeAlias type="com.example.demo.board.dto.BoardModifyDto" alias="boardModifyDto"/>
+		
+		<typeAlias type="com.example.demo.board.dto.RequestList" alias="requestList"/> 
+		<typeAlias type="com.example.demo.comment.dto.CommentDto" alias="commentDto"/> 	
 	</typeAliases>
 
 </configuration>	
