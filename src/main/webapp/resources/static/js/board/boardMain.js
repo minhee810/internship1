@@ -1,6 +1,3 @@
-/**
- * main.js 
- */
 
 function loginPage() {
 	if (confirm("로그인을 진행하시겠습니까?")) {
@@ -27,39 +24,6 @@ function getBoardList(pageNo) {
 	})
 
 }
-/*
-// 초기화
-function resetList() {
-	document.querySelector("#title").value = "";
-	document.querySelector("#writer").value = "";
-	document.querySelector("#fieldListBody").innerHTML = "";
-
-	getBoardList();
-}
-*/
-/*
-// 동적으로 테이블 생성
-function resultTable(response) {
-	document.querySelector("#fieldListBody").innerHTML = "";
-	
-	if (response.size > 0) {
-		const content = response.content;
-		
-		// ✅ 반복문 변경 (Pageable 결과값을 기준으로 값 가져오기 위함)
-		for (var i = 0; i < content.length; i++) {
-			let element = document.querySelector("#fieldListBody");
-			let result = content[i];
-			let template = `
-					<td><p>${result.username}</p></td>
-					<td><a href="/board/detail/${result.boardId}">${result.title}</a></td>
-					<td><p>${result.createdDate}</p></td>
-					<td><p>${result.commentCnt}</p></td>
-				`;
-			element.insertAdjacentHTML('beforeend', template);
-		}
-	}
-}
-*/
 
 /* 게시글 작성 */
 function writeBoard() {

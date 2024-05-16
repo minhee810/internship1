@@ -1,5 +1,12 @@
 
-function exeDaumPostcode() {
+function msgAlert(msg){
+	let target = msg;
+	let message = "입니다."; 
+	alert(target + message); 
+}
+
+
+function exeDaumPostcode(note, zipCode, address, datailAddress) {
 	new daum.Postcode({
 		oncomplete: function(data) {
 			// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -32,17 +39,55 @@ function exeDaumPostcode() {
 					extraAddr = ' (' + extraAddr + ')';
 				}
 				// 조합된 참고항목을 해당 필드에 넣는다.
-				document.getElementById('note').value = extraAddr;
+				// 해당 아이디의 값을 가진 태그의 값을 가져온다. 
+				document.getElementById(note).value = extraAddr;
 
 			} else {
-				document.getElementById('note').value = '';
+				document.getElementById(note).value = '';
 			}
 
 			// 우편번호와 주소 정보를 해당 필드에 넣는다.
-			document.getElementById('zipCode').value = data.zonecode;
-			document.getElementById('address').value = addr;
+			document.getElementById(zipCode).value = data.zonecode;
+			document.getElementById(address).value = addr;
 			// 커서를 상세주소 필드로 이동한다.
-			document.getElementById("detailAddress").focus();
+			document.getElementById(datailAddress).focus();
 		}
 	}).open();
+}
+
+// note, zipCode, address, detailAddress
+// 만약에 파라미터로 네개의 데이터를 받아오는 함수를 호출하여 보내준다면
+// 그대로 인자로 값을 받아서 각 요소의 값을 할당해준다. 
+
+// utils 로 옮기기 - 날짜 포맷팅 함수 
+function dateFormat(date) {
+	var year = date.substring(0, 4);
+	var month = date.substring(5, 7);
+	var day = date.substring(8, 10);
+	var fmtDate = year + '-' + month + '-' + day;
+
+	return fmtDate;
+}
+
+function padTwoDigits(num) {
+	return num.toString().padStart(2, "0");
+}
+
+
+function getFormattedDate(org) {
+	const date = new Date(org);
+
+	return (
+		[
+			date.getFullYear(),
+			padTwoDigits(date.getMonth() + 1),
+			padTwoDigits(date.getDate()),
+		].join("-") +
+		" " +
+		[
+			padTwoDigits(date.getHours()),
+			padTwoDigits(date.getMinutes()),
+			padTwoDigits(date.getSeconds()),
+		].join(":")
+	);
 }

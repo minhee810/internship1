@@ -177,6 +177,8 @@
     <!-- Page level custom scripts -->
     <script src="${contextPath}/resources/static/js/demo/datatables-demo.js"></script>
     <script src="${contextPath}/resources/static/js/board/boardDetail.js"></script>
+    <script src="${contextPath}/resources/static/js/utils/utility.js"></script>
+    
 
 </body>
 

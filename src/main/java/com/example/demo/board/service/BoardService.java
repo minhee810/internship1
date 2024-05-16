@@ -19,11 +19,6 @@ public interface BoardService {
 	
 	int deleteBoard(Long boardId);
 
-	/**
-	 * 게시글 수정 기능
-	 * @param deletedFilesId 
-	 * @param boardId 
-	 */
 	int modifyBoard(Long boardId, BoardListDto dto, List<Long> deletedFilesId) throws Exception;
 
 

@@ -121,8 +121,8 @@
                                     <c:choose>
                                         <c:when test="${boardList.last}"></c:when>
                                         <c:otherwise>
-                                            <li class="page-item "><a class="page-link" href="${contextPath}/?page=${boardList.number+1}">&rarr;</a></li>
-                                            <li class="page-item "><a class="page-link" href="${contextPath}/?page=${boardList.totalPages-1}">마지막</a></li>
+                                            <li class="page-item"><a class="page-link" href="${contextPath}/?page=${boardList.number+1}">&rarr;</a></li>
+                                            <li class="page-item"><a class="page-link" href="${contextPath}/?page=${boardList.totalPages-1}">마지막</a></li>
                                         </c:otherwise>
                                     </c:choose>
                                 </ul>
@@ -135,7 +135,6 @@
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
-
             <!-- Footer -->
             <%@ include file="../layout/footer.jsp" %>
             <!-- End of Footer -->
@@ -150,27 +149,7 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Select "Logout" below if you are ready to end your current session.
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">
-                        Cancel
-                    </button>
-                    <a class="btn btn-primary" href="@{contextPath}/member/logout">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <%@ include file="../layout/logoutModal.jsp" %>
     <%@ include file="../layout/script.jsp" %>
     <!-- Page level plugins -->
     <script src="../resources/static/vendor/datatables/jquery.dataTables.min.js"></script>

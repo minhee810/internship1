@@ -57,7 +57,7 @@
                                         <input name="address" type="text" id="address" class="form-control form-control-user" placeholder="주소" />
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="button" onclick="exeDaumPostcode()" class="btn btn-primary btn-user btn-block" value="주소찾기" />
+                                        <input type="button" onclick="exeDaumPostcode('note', 'zipCode', 'address', 'detailAddress')" class="btn btn-primary btn-user btn-block" value="주소찾기" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -75,7 +75,7 @@
                             </form>
                             <hr />
                             <div class="text-center">
-                                <a class="small" href="/auth/login">Already have an account? Login!</a>
+                                <a class="small" href="/member/login">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>
@@ -84,9 +84,9 @@
         </div>
     </div>
 	<%@ include file="../layout/script.jsp" %>
-    <script type="text/javascript" src="../resources/static/js/postCode.js"></script>
     <script type="text/javascript" src="../resources/static/js/auth/join.js"></script>
     <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
+    <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
 </body>
 
 </html>

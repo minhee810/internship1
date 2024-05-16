@@ -442,36 +442,5 @@ function commentAdd(commentId, writer, event) {
 
 }
 
-// utils 로 옮기기 - 날짜 포맷팅 함수 
-function dateFormat(date) {
-	var year = date.substring(0, 4);
-	var month = date.substring(5, 7);
-	var day = date.substring(8, 10);
-	var fmtDate = year + '-' + month + '-' + day;
 
-	return fmtDate;
-}
-
-function padTwoDigits(num) {
-	return num.toString().padStart(2, "0");
-}
-
-
-function getFormattedDate(org) {
-	const date = new Date(org);
-
-	return (
-		[
-			date.getFullYear(),
-			padTwoDigits(date.getMonth() + 1),
-			padTwoDigits(date.getDate()),
-		].join("-") +
-		" " +
-		[
-			padTwoDigits(date.getHours()),
-			padTwoDigits(date.getMinutes()),
-			padTwoDigits(date.getSeconds()),
-		].join(":")
-	);
-}
 
