@@ -25,13 +25,13 @@
                             <form id="joinForm" class="user" action="#" method="post" name=joinForm>
 
                                 <div class="form-group eror">
-                                    <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" maxlength="10"/>
+                                    <input name="username" type="text" id="username" class="form-control form-control-user" placeholder="아이디" data-title="아이디" maxlength="10"/>
                                     <font id="id_feedback" size="2"></font>
 
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input name="email" type="text" id="email" class="form-control form-control-user" placeholder="이메일주소" />
+                                        <input name="email" type="text" id="email" class="form-control form-control-user" placeholder="이메일주소" data-title="이메일"/>
 
                                     </div>
                                     <div class="col-sm-3">
@@ -87,6 +87,7 @@
     <script type="text/javascript" src="../resources/static/js/auth/join.js"></script>
     <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
     <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
+  
 </body>
 
 </html>

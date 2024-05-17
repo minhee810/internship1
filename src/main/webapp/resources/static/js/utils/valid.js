@@ -1,121 +1,80 @@
 const validator = {
-	passwordRegExp: /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()-_=+])(?!.*\s).{8,15}$/,
-	emailRegExp: /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/,
-	phoneRegExp: /^(01[0|1|6|7|8|9]-?[0-9]{3,4}-?([0-9]{4}))$/,
-	checkSpecial: /[!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]/g,
-	checkKor: /[ㄱ-ㅎㅏ-ㅣ가-힣]/g,
-	checkEngNum: /[a-zA-Z0-9]/g,
-	usernameRegExp: /[a-zA-Z0-9]/g
+	password: /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()-_=+])(?!.*\s).{8,15}$/,
+	email: /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/,
+	phone: /^(01[0|1|6|7|8|9]-?[0-9]{3,4}-?([0-9]{4}))$/,
+	username: /[a-zA-Z0-9]/g
 }
 
-// 공백(스페이스 바) 체크
-function checkSpace(str) {
-	if (str.search(/\s/) !== -1) {
-		return true; // 스페이스가 있는 경우
-	} else {
-		return false; // 스페이스 없는 경우
+const commonValidator = {
+	checkSpecial: /[!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]/g,
+	checkKor: /[ㄱ-ㅎㅏ-ㅣ가-힣]/g,
+	checkEngNum: /[a-zA-Z0-9]/g
+}
+
+const keyword = {
+	username: /[^\w\d\s]/gi,
+	phone: /[^\w\d\s]/gi,
+	email: /[^\w\d\s@.]/gi
+}
+
+const regMessage = {
+	username: "아이디는 영문, 숫자 포함 08-15자 이상",
+	password: "비밀번호는 특수문자 포함",
+	phone: "숫자만",
+	email: "이메일 형식으로 입력해주세요."
+}
+
+
+const nullMessage = {
+	username: "아이디를 입력해주세요.",
+	password: "비밀번호를 입력해주세요.",
+	phone: "휴대전화 번호를 입력해주세요.",
+	email: "이메일을 입력해주세요."
+}
+
+function makeMessage(element) {
+	let name = element.data('title');
+	let msg = "이(가) 형식에 맞지 않습니다";
+	return name + msg;
+}
+
+// 공통 정규식 체크 
+function ckeckRegExp(type, str) {
+	const regex = validator[type];
+	if (regex) {
+		return regex.test(str);
 	}
 }
 
-// 한글 체크
-function checkKor(str) {
-	return validator["checkKor"].test(str);
-}
-
-// 특수 문자 체크 
-function checkSpecial(str) {
-	return validator["checkSpecial"].test(str);
-}
-
-// 영문+숫자만 입력 체크
-function checkEngNum(str) {
-	return validator["checkEngNum"].test(str);
-}
-
-function checkEmail(str) {
-	return validator["emailRegExp"].test(str);
-}
-
-// 비밀번호 정규식 확인 결과
-function pwValid(str) {
-	return validator["passwordRegExp"].test(str);
-}
-
-// 휴대전화 정규식
-function checkPhone(str) {
-	return validator["phoneRegExp"].test(str);
-}
-
-// username 정규식 
-function checkUsername(str) {
-	return validator["usernameRegExp"].test(str);
-}
-
+// 공통 널값 체크 
 const isRequired = value => value === '' ? false : true;
 
+// 이벤트 객체에서 name 속성 추출하는 이벤트 -> replace 함수 호출
+function regTest(e) {
+	let name = e.target.name;
+	console.log("name : ", name);
+	replaceChar(name);
+}
+
+// 공통 replace 함수
+function replaceChar(name) {
+	let data = $('#' + name).val();
+	if (!ckeckRegExp(data)) {
+		data = data.replace(keyword[name], '');
+		$('#' + name).val(data);
+	}
+}
+
+// 비밀번호 비교 체크 
 function isMatch(password1, password2) {
 	return password1 == password2;
 }
 
-// 휴대 전화번호 유효성 검사 
-function fn_phoneChar() {
-	let data = $('#phone').val().trim();
-	let keyword = /[^0-9]/g;
-
-
-	if (!checkPhone(data)) {
-		data = data.replace(keyword, '');
-		$('#phone').val(data);
-	}
-}
-
-// 글자 replace 함수
-function checkChar(type, data) {
-
-	let regExp = {
-		phone: /[^0-9]/g,
-		email: /[^\w\d\s@.]/gi
-	}
-
-	if (type == phone) {
-		data.replace(regExp["phone"], "");
-	} else if (type == email) {
-		data.replace(regExp["email"], "");
-	}
-}
-
-
-// 이메일 글자 검사
-function fn_emailChar() {
-	let data = $('#email').val().trim();
-	let nonEmailKeyword = /[^\w\d\s@.]/gi;
-
-	emailCheck = false;
-
-	// 이메일 형식 대로 검사 
-	if (!checkEmail(data)) {  // 이메일 형식이 아닌 경우 다음 문장 실행
-		data = data.replace(nonEmailKeyword, "");
-		$('#email').val(data);
-	}
-}
-
-// 아이디 글자 유효성 검사
-function fn_usernameChar() {
-	let data = $('#username').val().trim();
-	let keyword = /[^\w\d\s]/gi;
-
-	if (!checkUsername(data)) {
-		data = data.replace(keyword, '');
-		$('#username').val(data);
-	}
-}
-
-
-function CV_checkNullInput(strNameArr, strInputArr, parentId){
-	for(var i = 0; i <strNameArr.length; i++){
-		if($('#' + parentId + 'input[name="' + strInputArr[i] + '"]').val() ==''){
+function CV_checkNullInput(strNameArr, strInputArr, parentId) {
+	for (var i = 0; i < strNameArr.length; i++) {
+		if ($('#' + parentId + 'input[name="' + strInputArr[i] + '"]').val() == '') {
 			alert(strNameArr[i] + '을(를) 입력해주세요.');
-			$('#' + parentId + 'input[name="' + strInputArr[i] + '"]').focus(); 
+			$('#' + parentId + 'input[name="' + strInputArr[i] + '"]').focus();
 			return false;
 		}
 	}

@@ -14,9 +14,7 @@ $(document).ready(function() {
 
 		if ($('#rememberId').is(':checked')) {
 			localStorage.email = $('#email').val();
-
 			localStorage.checkbox = $('#rememberId').val();
-
 		} else {
 			localStorage.email = '';
 		}
@@ -39,7 +37,6 @@ function login() {
 	});
 
 	$.ajax({
-
 		url: "/member/login",
 		type: "post",
 		data: user,
