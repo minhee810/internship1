@@ -9,7 +9,7 @@ $(document).ready(function() {
 	$("#username, #phone, #email").keyup((e) => regTest(e));
 
 	// 사용자 아이디 유효성, 중복 검사 
-	$("#username").change(fn_usernameCheck);
+	$("#username").change(checkDuplicateUsername);
 
 	// 비밀번호 입력 확인 
 	$("#password").change(pwCheck);
@@ -25,9 +25,34 @@ $(document).ready(function() {
 
 });
 
-// 아이디 중복확인 + 유효성 검사 
-function fn_usernameCheck() {
-	let username = $('#username').val().trim();
+// 아이디 유효성 검사 
+function usernameRegTest(usernameEl, username) {
+
+	usernameCheck = false;
+
+	if (!isRequired(username)) {
+		$("#id_feedback").html('');
+		return false;
+	}
+
+	if (!ckeckRegExp("username", username)) {
+		$("#id_feedback").html(makeMessage(usernameEl, hintMsg.username));
+		$("#id_feedback").attr('color', '#dc3545');
+		usernameCheck = false;
+		return false;
+	}
+	return true;
+}
+
+// 아이디 중복 검사 
+function checkDuplicateUsername() {
+	let usernameEl = $('#username');
+	let username = usernameEl.val();
+	usernameCheck = false;
+
+	if (!usernameRegTest(usernameEl, username)) {
+		return false;
+	}
 
 	$.ajax({
 		url: "/member/idCheck",
@@ -36,72 +61,63 @@ function fn_usernameCheck() {
 		dataType: "json",
 		success: function(result) {
 
-			if (!isRequired(username)) {
-				$("#id_feedback").html('');
-				return false;
-
-			} else if (username.length < 4 || username.length > 11) {
-				$("#id_feedback").html('아이디는 최소 3자 이상 및 10자 이내입니다.');
-				$("#id_feedback").attr('color', '#dc3545');
-				usernameCheck = false;
-				return false;
-			}
-
 			if (result == 1) {
-				$("#id_feedback").html('이미 사용중인 아이디입니다.');
+				$("#id_feedback").html(makeMessage(usernameEl, messageEx.dupe.username));
 				$("#id_feedback").attr('color', '#dc3545');
 				usernameCheck = false;
 
 			} else {
-				$("#id_feedback").html('사용 가능한 아이디입니다.');
+				$("#id_feedback").html(makeMessage(usernameEl, messageEx.success.avail));
 				$("#id_feedback").attr('color', '#2fb380');
 				usernameCheck = true;
 			}
 		},
 		error: function() {
-			alert("서버 요청에 실패했습니다.");
+			alert(messageEx.error);
 		}
 	})
+
+
 }
 
 // 이메일 중복확인 
 function fn_emailCheck() {
 	let emailEl = $('#email');
-	let value = emailEl.val();
+	let email = emailEl.val();
 
 	$.ajax({
 		url: "/member/emailCheck",
 		type: "post",
-		data: { email: value },
+		data: { email: email },
 		dataType: "json",
 		success: function(result) {
 
 			fn_emailCheck = false;
 
 			if (!isRequired(email)) {
-				alert(nullMessage["email"]);
+				alert(makeMessage(emailEl, messageEx.fail.null));
 
 			} else if (!ckeckRegExp("email", value)) {
-				alert(makeMessage(emailEl));
-				$("#email").val(value);
-				$("#email").focus();
+				alert(makeMessage(emailEl, messageEx.fail.valid));
+				emailEl.val(email);
+				emailEl.focus();
 				return false;
 
 			} else if (result == 1) {
-				alert("이미 가입된 이메일입니다.");
-				$("#email").focus();
+				alert(makeMessage(emailEl, messageEx.dupe.email));
+				emailEl.focus();
 				return false;
 
 			} else if (result == 0) {
-				$('#emailCheck').attr("value", "Y");
-				alert("사용가능한 이메일입니다.");
+				alert(makeMessage(emailEl, messageEx.success.avail));
 				emailCheck = true;
 				return true;
 			}
 		},
 		error: function(error) {
 			console.log(error);
-			alert("이메일을 다시 입력해주세요.");
+			alert(messageEx.error);
+
 		}
 	});
 };
@@ -109,23 +125,24 @@ function fn_emailCheck() {
 
 // 비밀번호 입력 확인
 function pwCheck() {
+	let passwordEl = $('#password');
 	let password = $('#password').val().trim();
 
 	// 정규식 체크 
 	if (!ckeckRegExp("password", password)) {
-		alert("비밀번호는 문자와 특수문자 조합 8 ~ 15 자리 이상이어야 합니다.");
-		$('#password').focus();
+		alert(makeMessage(passwordEl, hintMsg.password));
+		passwordEl.focus();
 		return false;
 	}
-	alert("사용 가능한 비밀번호입니다.");
+	alert(makeMessage(passwordEl, messageEx.success.avail));
 }
 
 // 비밀번호 확인 입력란 입력 후 이벤트 발생하는 함수 
 function fn_passwordConfirm() {
 
 	var pwCheckStatus = false;
-
-	let password = $('#password').val().trim();
+	let passwordEl = $('#password');
+	let password = passwordEl.val().trim();
 	let password_confirm = $('#password_confirm').val();
 
 	if (ckeckRegExp("password", password_confirm) && isMatch(password, password_confirm)) {
@@ -141,26 +158,24 @@ function fn_passwordConfirm() {
 	return pwCheckStatus;
 }
 
-// 전화번호 형식 체크 + '-' 형식 작성 
+// 전화번호 형식 체크
 function fn_phoneCheck() {
-	var phone = $("#phone").val();
+	var phoneEl = $("#phone");
+	var phone = phoneEl.val();
 
 
 	if (!ckeckRegExp("phone", phone)) {
-		alert("전화번호 형식이 올바르지 않습니다.");
-		$('#phone').focus();
+		alert(makeMessage(phoneEl, hintMsg.common));
+		phoneEl.focus();
 		return false;
 	} else {
-		alert("사용가능한 전화번호입니다.");
+		alert(makeMessage(phoneEl, messageEx.success.avail));
 	}
 
-	if (phone.length === 10) {
-		phone = phone.substring(0, 3) + '-' + phone.substring(3, 6) + '-' + phone.substring(6, 10);
-	} else if (phone.length === 11) {
-		phone = phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
-	}
+	// 포맷팅 함수 
+	let fmtPhone = phoneFormat(phone);
 
-	$("#phone").val(phone);
+	$("#phone").val(fmtPhone);
 
 }
 
@@ -287,7 +302,7 @@ function joinMemebership() {
 	var detailAddress = $("#detailAddress").val();
 	var zipCode = $("#zipCode").val();
 	var note = $('#note').val();
-	
+
 	// var fomData = $('#joinForm').serializeObject()
 
 	if (confirm("회원가입을 진행하시겠습니까?") == true) {

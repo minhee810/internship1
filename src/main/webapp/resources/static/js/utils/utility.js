@@ -1,11 +1,3 @@
-
-function msgAlert(msg){
-	let target = msg;
-	let message = "입니다."; 
-	alert(target + message); 
-}
-
-
 function exeDaumPostcode(note, zipCode, address, datailAddress) {
 	new daum.Postcode({
 		oncomplete: function(data) {
@@ -55,11 +47,7 @@ function exeDaumPostcode(note, zipCode, address, datailAddress) {
 	}).open();
 }
 
-// note, zipCode, address, detailAddress
-// 만약에 파라미터로 네개의 데이터를 받아오는 함수를 호출하여 보내준다면
-// 그대로 인자로 값을 받아서 각 요소의 값을 할당해준다. 
-
-// utils 로 옮기기 - 날짜 포맷팅 함수 
+// 날짜 포맷팅 함수 
 function dateFormat(date) {
 	var year = date.substring(0, 4);
 	var month = date.substring(5, 7);
@@ -72,7 +60,6 @@ function dateFormat(date) {
 function padTwoDigits(num) {
 	return num.toString().padStart(2, "0");
 }
-
 
 function getFormattedDate(org) {
 	const date = new Date(org);
@@ -91,3 +78,18 @@ function getFormattedDate(org) {
 		].join(":")
 	);
 }
+
+function phoneFormat(phone) {
+	console.log("phone : ", phone);
+	if (phone.length === 10) {
+		return phone = phone.substring(0, 3) + '-' + phone.substring(3, 6) + '-' + phone.substring(6, 10);
+	} else if (phone.length === 11) {
+		return phone = phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
+	}
+}
+
+
+
+
+
+

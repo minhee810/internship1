@@ -41,34 +41,34 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="password" type="password" id="password" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호" />
+                                        <input name="password" type="password" id="password" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호" data-title="비밀번호" />
 
                                     </div>
                                     <div class="col-sm-6">
-                                        <input name="password_confirm" type="password" id="password_confirm" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호 확인" />
+                                        <input name="password_confirm" type="password" id="password_confirm" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호 확인" data-title="비밀번호 확인" />
                                     </div>
 
                                 </div>
                                 <div class="form-group">
-                                    <input name="phone" type="tel" id="phone" class="form-control form-control-user" placeholder="휴대폰번호" />
+                                    <input name="phone" type="tel" id="phone" class="form-control form-control-user" placeholder="휴대폰번호" data-title="휴대폰번호"/>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input name="address" type="text" id="address" class="form-control form-control-user" placeholder="주소" />
+                                        <input name="address" type="text" id="address" class="form-control form-control-user" placeholder="주소" data-title="주소"/>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="button" onclick="exeDaumPostcode('note', 'zipCode', 'address', 'detailAddress')" class="btn btn-primary btn-user btn-block" value="주소찾기" />
+                                        <input type="button" onclick="exeDaumPostcode('note', 'zipCode', 'address', 'detailAddress')" class="btn btn-primary btn-user btn-block" value="주소찾기" data-title="주소찾기"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input name="detailAddress" type="text" id="detailAddress" class="form-control form-control-user" placeholder="상세주소" />
+                                    <input name="detailAddress" type="text" id="detailAddress" class="form-control form-control-user" placeholder="상세주소" data-title="상세주소"/>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="zipCode" type="text" id="zipCode" class="form-control form-control-user" placeholder="우편번호" />
+                                        <input name="zipCode" type="text" id="zipCode" class="form-control form-control-user" placeholder="우편번호" data-title="우편번호" />
                                     </div>
                                     <div class="col-sm-6">
-                                        <input name="note" type="text" id="note" class="form-control form-control-user" placeholder="참고사항" />
+                                        <input name="note" type="text" id="note" class="form-control form-control-user" placeholder="참고사항" data-title="참고사항"/>
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-primary btn-user btn-block" name="joinBtn" id="joinBtn">Register Account</button>
