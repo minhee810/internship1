@@ -64,9 +64,10 @@ public class UsersController {
 	}
 
 	/** 아이디 중복 검사 **/
-	@PostMapping("/id/check")
+	@PostMapping("/username/check")
 	@ResponseBody
 	public int idCheck(String username) {
+		
 		return userSerivce.idCheck(username);
 	}
 

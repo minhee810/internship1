@@ -25,7 +25,7 @@ const commonValidator = {
 
 const keyword = {
 	username: /[^\w\d\s]/gi,
-	phone: /[^\w\d\s]/gi,
+	phone: /[^\d\s]/g,
 	email: /[^\w\d\s@.]/gi
 }
 

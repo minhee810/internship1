@@ -1,5 +1,7 @@
-let usernameCheck = false;
-let emailCheck = false;
+
+var usernameCheck = false;
+var emailCheck = false;
+var pwCheckStatus = false;
 
 window.addEventListener('load', () => $('#username').focus());
 
@@ -8,20 +10,24 @@ $(document).ready(function() {
 	// 입력값 replace 함수 호출
 	$("#username, #phone, #email").keyup((e) => regTest(e));
 
-	// 사용자 아이디 유효성, 중복 검사 
-	$("#username").change(checkDuplicateUsername);
+	$("#username").change(function() {
+		duplicateCheck($(this));
+	});
+
+	// 이메일 중복 버튼 클릭시 중복 검사
+	$('#emailCheck').click(function() {
+		let emailEl = $('#email');
+		duplicateCheck(emailEl);
+	});
 
 	// 비밀번호 입력 확인 
 	$("#password").change(pwCheck);
 
-	// 비밀번호 확인 칸 바뀔때마다 확인
-	$('#password_confirm').change(fn_passwordConfirm);
+	$('#password_confirm').change(passwordConfirm);
 
 	// 휴대전화 번호 정규식 + '-' 형식
 	$('#phone').change(fn_phoneCheck);
 
-	// 이메일 중복 버튼 클릭시 중복 검사
-	$('#emailCheck').click(fn_emailCheck);
 
 });
 
@@ -41,116 +47,93 @@ function usernameRegTest(usernameEl, username) {
 		usernameCheck = false;
 		return false;
 	}
+
 	return true;
 }
 
-// 아이디 중복 검사 
-function checkDuplicateUsername() {
-	let usernameEl = $('#username');
-	let username = usernameEl.val();
-	usernameCheck = false;
+function emailRegTest(emailEl, email) {
 
-	if (!usernameRegTest(usernameEl, username)) {
+	emailCheck = false;
+
+	if (!isRequired(email)) {
+		alert(makeMessage(emailEl, messageEx.fail.null));
 		return false;
+
+	} else if (!ckeckRegExp("email", email)) {
+		alert(makeMessage(emailEl, messageEx.fail.valid));
+		emailEl.val(email);
+		emailEl.focus();
+		return false;
+
+	}
+	return true;
+}
+
+function duplicateCheck(element) {
+
+	let fieldId = element.attr('id');
+	let value = $('#' + fieldId).val();
+
+	if (fieldId == 'email') {
+		if (!emailRegTest(element, value)) {
+			return false;
+		}
+
+	} else if (fieldId == 'username') {
+		if (!usernameRegTest(element, value)) {
+			return false;
+		}
 	}
 
 	$.ajax({
-		url: "/member/idCheck",
+		url: "/member/" + fieldId + "/check",
 		type: "post",
-		data: { username: username },
+		data: { [fieldId]: value },
 		dataType: "json",
 		success: function(result) {
+			if (fieldId == 'username') {
 
-			if (result == 1) {
-				$("#id_feedback").html(makeMessage(usernameEl, messageEx.dupe.username));
-				$("#id_feedback").attr('color', '#dc3545');
-				usernameCheck = false;
+				if (result == 1) {
+					$("#id_feedback").html(makeMessage(element, messageEx.dupe.username));
+					$("#id_feedback").attr('color', '#dc3545');
+					usernameCheck = false;
 
-			} else {
-				$("#id_feedback").html(makeMessage(usernameEl, messageEx.success.avail));
-				$("#id_feedback").attr('color', '#2fb380');
-				usernameCheck = true;
+				} else {
+					$("#id_feedback").html(makeMessage(element, messageEx.success.avail));
+					$("#id_feedback").attr('color', '#2fb380');
+					usernameCheck = true;
+				}
+			} else if (fieldId == 'email') {
+
+				if (result == 1) {
+					alert(makeMessage(element, messageEx.dupe.email));
+					emailEl.focus();
+					return false;
+
+				} else if (result == 0) {
+					alert(makeMessage(element, messageEx.success.avail));
+					emailCheck = true;
+					return true;
+				}
 			}
+
 		},
 		error: function() {
 			alert(messageEx.error);
 		}
 	})
 
-
 }
+// 비밀번호 일치 검사 
+function passwordConfirm() {
+	let password = $('#password').val();
+	let passwordCnf = $('#password_confirm').val();
 
-// 이메일 중복확인 
-function fn_emailCheck() {
-	let emailEl = $('#email');
-	let email = emailEl.val();
-
-	$.ajax({
-		url: "/member/emailCheck",
-		type: "post",
-		data: { email: email },
-		dataType: "json",
-		success: function(result) {
-
-			fn_emailCheck = false;
-
-			if (!isRequired(email)) {
-				alert(makeMessage(emailEl, messageEx.fail.null));
-
-			} else if (!ckeckRegExp("email", value)) {
-				alert(makeMessage(emailEl, messageEx.fail.valid));
-				emailEl.val(email);
-				emailEl.focus();
-				return false;
-
-			} else if (result == 1) {
-				alert(makeMessage(emailEl, messageEx.dupe.email));
-				emailEl.focus();
-				return false;
-
-			} else if (result == 0) {
-				alert(makeMessage(emailEl, messageEx.success.avail));
-				emailCheck = true;
-				return true;
-			}
-		},
-		error: function(error) {
-			console.log(error);
-			alert(messageEx.error);
-
-		}
-	});
-};
-
-
-// 비밀번호 입력 확인
-function pwCheck() {
-	let passwordEl = $('#password');
-	let password = $('#password').val().trim();
-
-	// 정규식 체크 
-	if (!ckeckRegExp("password", password)) {
-		alert(makeMessage(passwordEl, hintMsg.password));
-		passwordEl.focus();
-		return false;
-	}
-	alert(makeMessage(passwordEl, messageEx.success.avail));
-}
-
-// 비밀번호 확인 입력란 입력 후 이벤트 발생하는 함수 
-function fn_passwordConfirm() {
-
-	var pwCheckStatus = false;
-	let passwordEl = $('#password');
-	let password = passwordEl.val().trim();
-	let password_confirm = $('#password_confirm').val();
-
-	if (ckeckRegExp("password", password_confirm) && isMatch(password, password_confirm)) {
+	if (isMatch(password, passwordCnf)) {
 		alert("비밀번호가 일치합니다.");
 		pwCheckStatus = true;
-
-	} else if (!isMatch(password, password_confirm)) {
-		alert("비밀번호가 일치하지 않습니다.");
+	} else {
+		alert("비밀번호가 일치하지않습니다.");
 		$('#password_confirm').focus();
 		pwCheckStatus = false;
 		return false;
@@ -158,133 +141,138 @@ function fn_passwordConfirm() {
 	return pwCheckStatus;
 }
 
+// 비밀번호 입력 확인
+function pwCheck() {
+	let passwordEl = $('#password');
+	let password = passwordEl.val();
+
+	// 정규식 체크 
+	if (!ckeckRegExp("password", password)) {
+		alert(makeMessage(passwordEl, hintMsg.password));
+		passwordEl.focus();
+		return false;
+	}
+	// 사용가능한 비밀번호입니다. 알림
+	alert(makeMessage(passwordEl, messageEx.success.avail));
+}
+
 // 전화번호 형식 체크
 function fn_phoneCheck() {
 	var phoneEl = $("#phone");
 	var phone = phoneEl.val();
 
-
 	if (!ckeckRegExp("phone", phone)) {
 		alert(makeMessage(phoneEl, hintMsg.common));
 		phoneEl.focus();
 		return false;
-	} else {
-		alert(makeMessage(phoneEl, messageEx.success.avail));
 	}
-
+	alert(makeMessage(phoneEl, messageEx.success.avail));
 	// 포맷팅 함수 
 	let fmtPhone = phoneFormat(phone);
 
-	$("#phone").val(fmtPhone);
+	console.log("fmtPhone : ", fmtPhone);
 
+	$("#phone").val(fmtPhone);
 }
 
 
+function checkRequiredFields() {
+	var allFilled = true;
+	var emptyFields = [];
+
+	$('input').each(function() {
+		var value = $(this).val();
+		var title = $(this).data('title');
+
+		if (!isRequired(value)) {
+			emptyFields.push(title);
+			allFilled = false;
+		}
+	});
+
+	return allFilled ? true : emptyFields;
+}
+
+function checkRegFields() {
+	var alllFilled = true;
+	var failFields = [];
+
+	$('input').each(function() {
+		var element = $(this);
+		var value = $(this).val();
+		var type = $(this).attr('id');
+
+		if (!ckeckRegExp(type, value)) {
+			//makeMessage(element)
+		}
+	});
+	return alllFilled ? true : failFields;
+
+}
 // 폼 데이터 전송 전에 전체 필드 유효성 검사
 $('#joinBtn').on('click change', function() {
-
+	var requiredCheckResult = checkRequiredFields();
+	var requriedRegResult = checkRegFields();
 	var password = $("#password").val();
 	var password_confirm = $("#password_confirm").val();
-	var username = $('#username').val();
-	var email = $("#email").val();
+	var emailEl = $("#email");
 	var phone = $("#phone").val();
-	var address = $("#address").val();
-	var detailAddress = $("#detailAddress").val();
-	var zipCode = $("#zipCode").val();
+	var usernameEl = $('#username');
 
-	// 아이디 공백 확인 
-	if (!isRequired(username)) {
-		alert("아이디를 입력하세요");
-		$('username').focus();
+	if (requiredCheckResult !== true) {
+		alert(requiredCheckResult.join(', ') + ' 필드를 입력하세요');
+		$('#' + requiredCheckResult[0]).focus();
 		return false;
-	};
+	}
+
+	if (checkRegFields !== true) {
+		alert(requriedRegResult[0] + "이(가) 형식에 맞지 않습니다.");
+		$('#' + requriedRegResult[0]).focus();
+	}
 
 	// 이메일 중복 체크 여부 
 	if (usernameCheck == false) {
-		alert('이미 사용중인 아이디입니다.');
-		$('username').focus();
+		duplicateCheck(usernameEl);
 		return false;
 	}
-
-	// 이메일 공백 확인 
-	if (!isRequired(email)) {
-		alert("이메일을 입력해주세요.");
-		$('email').focus();
-		return false;
-	};
 
 	// 이메일 중복 체크 여부 
 	if (emailCheck == false) {
-		alert("이메일 중복여부를 확인해주세요.");
-		$('email').focus();
-		return false;
-	}
-
-	// 이메일 유효성 검사 
-	if (!ckeckRegExp("email", email)) {
-		alert("이메일 형식으로 입력해주세요.");
-		$('email').focus();
+		duplicateCheck(emailEl);
 		return false;
 	}
 
 	if (pwCheckStatus = false) {
 		pwCheck();
-	}
-
-	// 비밀번호 공백 확인 
-	if (!isRequired(password) && !isRequired(password_confirm)) {
-		alert("비밀번호를 입력하세요")
-		$('password').focus();
-		return false;
-	};
-
-	// 비밀번호 유효성 검사 
-	if (!checkeckRegExp("password", password) && !checkeckRegExp("password", password_confirm)) {
-		alert("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.");
-		$('password').focus();
 		return false;
 	}
 
 	// 비밀번호 확인 
 	if (!isMatch(password, password_confirm)) {
-		alert("비밀번호가 일치하지 않습니다.");
-		$('password_confirm').focus();
+		passwordConfirm();
 		return false;
 	};
 
-	// 휴대전화번호 공백 확인 
-	if (!isRequired(phone)) {
-		alert("휴대폰번호를 입력하세요");
-		$('phone').focus();
-		return false;
-	};
 
-	// 휴대전화 번호 유효성 검사 
+	// 이메일 유효성 검사 
+	if (!ckeckRegExp("email", emailEl.val())) {
+		alert("이메일 형식으로 입력해주세요.");
+		$('email').focus();
+		return false;
+	}
+
+	// 비밀번호 유효성 검사 
+	if (!ckeckRegExp("password", password) && !ckeckRegExp("password", password_confirm)) {
+		alert("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.");
+		$('password').focus();
+		return false;
+	}
+
 	if (!ckeckRegExp("phone", phone)) {
 		alert("전화번호 형식이 올바르지 않습니다.");
 		$('phone').focus();
 		return false;
 	}
-
-	// 주소 공백 확인 
-	if (!isRequired(address)) {
-		alert("주소를 입력하세요");
-		$('address').focus();
-		return false;
-	};
-
-	if (!isRequired(detailAddress)) {
-		alert("상세주소를 입력하세요");
-		$('detailAddress').focus();
-		return false;
-	};
-
-
-	if (!isRequired(zipCode)) {
-		alert("우편번호를 입력하세요");
-		$('zipCode').focus();
-		return false;
-	};
 
 	joinMemebership();
 })
@@ -324,6 +312,7 @@ function joinMemebership() {
 			contentType: "application/json; charset-utf-8",
 			success: function(response) {
 				let code = response.code
+
 				if (code = 1) {
 					console.log("SUCCESS : ", response);
 					alert("회원가입이 완료 되었습니다.");
