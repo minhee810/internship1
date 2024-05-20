@@ -31,44 +31,6 @@ $(document).ready(function() {
 
 });
 
-// 아이디 유효성 검사 
-function usernameRegTest(usernameEl, username) {
-
-	usernameCheck = false;
-
-	if (!isRequired(username)) {
-		$("#id_feedback").html('');
-		return false;
-	}
-
-	if (!ckeckRegExp("username", username)) {
-		$("#id_feedback").html(makeMessage(usernameEl, hintMsg.username));
-		$("#id_feedback").attr('color', '#dc3545');
-		usernameCheck = false;
-		return false;
-	}
-
-	return true;
-}
-
-function emailRegTest(emailEl, email) {
-
-	emailCheck = false;
-
-	if (!isRequired(email)) {
-		alert(makeMessage(emailEl, messageEx.fail.null));
-		return false;
-
-	} else if (!ckeckRegExp("email", email)) {
-		alert(makeMessage(emailEl, messageEx.fail.valid));
-		emailEl.val(email);
-		emailEl.focus();
-		return false;
-
-	}
-	return true;
-}
-
 function duplicateCheck(element) {
 
 	let fieldId = element.attr('id');
@@ -107,7 +69,7 @@ function duplicateCheck(element) {
 
 				if (result == 1) {
 					alert(makeMessage(element, messageEx.dupe.email));
-					emailEl.focus();
+					element.focus();
 					return false;
 
 				} else if (result == 0) {
@@ -124,6 +86,7 @@ function duplicateCheck(element) {
 	})
 
 }
+
 // 비밀번호 일치 검사 
 function passwordConfirm() {
 	let password = $('#password').val();
@@ -141,41 +104,7 @@ function passwordConfirm() {
 	return pwCheckStatus;
 }
 
-// 비밀번호 입력 확인
-function pwCheck() {
-	let passwordEl = $('#password');
-	let password = passwordEl.val();
-
-	// 정규식 체크 
-	if (!ckeckRegExp("password", password)) {
-		alert(makeMessage(passwordEl, hintMsg.password));
-		passwordEl.focus();
-		return false;
-	}
-	// 사용가능한 비밀번호입니다. 알림
-	alert(makeMessage(passwordEl, messageEx.success.avail));
-}
-
-// 전화번호 형식 체크
-function fn_phoneCheck() {
-	var phoneEl = $("#phone");
-	var phone = phoneEl.val();
-
-	if (!ckeckRegExp("phone", phone)) {
-		alert(makeMessage(phoneEl, hintMsg.common));
-		phoneEl.focus();
-		return false;
-	}
-	alert(makeMessage(phoneEl, messageEx.success.avail));
-	// 포맷팅 함수 
-	let fmtPhone = phoneFormat(phone);
-
-	console.log("fmtPhone : ", fmtPhone);
-
-	$("#phone").val(fmtPhone);
-}
-
-
+// 공백 검사 후 빈칸 alert 띄우기 
 function checkRequiredFields() {
 	var allFilled = true;
 	var emptyFields = [];
@@ -189,56 +118,55 @@ function checkRequiredFields() {
 			allFilled = false;
 		}
 	});
-
 	return allFilled ? true : emptyFields;
 }
 
+// 정규식 검사 후 alert 띄우기
 function checkRegFields() {
-	var alllFilled = true;
+	// 정규식 체크 대상 : 아이디, 이메일, 비밀번호, 휵대전화
+	var checkTarget = ['username', 'email', 'password', 'phone'];
+	var fieldCheck = true;
 	var failFields = [];
 
-	$('input').each(function() {
-		var element = $(this);
-		var value = $(this).val();
-		var type = $(this).attr('id');
-
-		if (!ckeckRegExp(type, value)) {
-			//makeMessage(element)
+	for (var i = 0; i < checkTarget.length; i++) {
+		var title = $('#' + checkTarget[i]).data('title');
+		if (!checkRegExp(checkTarget[i], $('#' + checkTarget[i]).val())) {
+			failFields.push(title);
+			fieldCheck = false;
 		}
-	});
-	return alllFilled ? true : failFields;
-
+	}
+	return fieldCheck ? true : failFields;
 }
+
 // 폼 데이터 전송 전에 전체 필드 유효성 검사
 $('#joinBtn').on('click change', function() {
 	var requiredCheckResult = checkRequiredFields();
 	var requriedRegResult = checkRegFields();
-	var password = $("#password").val();
-	var password_confirm = $("#password_confirm").val();
-	var emailEl = $("#email");
-	var phone = $("#phone").val();
-	var usernameEl = $('#username');
 
+	// 공백 검사 
 	if (requiredCheckResult !== true) {
-		alert(requiredCheckResult.join(', ') + ' 필드를 입력하세요');
+		alert(requiredCheckResult[0] + '을(를) 입력해주세요');
 		$('#' + requiredCheckResult[0]).focus();
 		return false;
 	}
-
-	if (checkRegFields !== true) {
+	// 유효성 검사 
+	if (requriedRegResult !== true) {
+		console.log("형식 체크 실패 필드들 : ", requriedRegResult);
 		alert(requriedRegResult[0] + "이(가) 형식에 맞지 않습니다.");
 		$('#' + requriedRegResult[0]).focus();
+		return false;
 	}
 
 	// 이메일 중복 체크 여부 
 	if (usernameCheck == false) {
-		duplicateCheck(usernameEl);
+		duplicateCheck($('#username'));
 		return false;
 	}
 
 	// 이메일 중복 체크 여부 
 	if (emailCheck == false) {
-		duplicateCheck(emailEl);
+		alert("이메일 중복 검사를 실시해주세요. ");
+		// duplicateCheck(emailEl);
 		return false;
 	}
 
@@ -248,31 +176,10 @@ $('#joinBtn').on('click change', function() {
 	}
 
 	// 비밀번호 확인 
-	if (!isMatch(password, password_confirm)) {
+	if (!isMatch($("#password").val(), $("#password_confirm").val())) {
 		passwordConfirm();
 		return false;
 	};
-
-
-	// 이메일 유효성 검사 
-	if (!ckeckRegExp("email", emailEl.val())) {
-		alert("이메일 형식으로 입력해주세요.");
-		$('email').focus();
-		return false;
-	}
-
-	// 비밀번호 유효성 검사 
-	if (!ckeckRegExp("password", password) && !ckeckRegExp("password", password_confirm)) {
-		alert("비밀번호는 8 ~ 15자 영문 대 소문자, 특수문자를 사용하세요.");
-		$('password').focus();
-		return false;
-	}
-
-	if (!ckeckRegExp("phone", phone)) {
-		alert("전화번호 형식이 올바르지 않습니다.");
-		$('phone').focus();
-		return false;
-	}
 
 	joinMemebership();
 })
@@ -282,37 +189,18 @@ $('#joinBtn').on('click change', function() {
 // 회원가입 완료
 function joinMemebership() {
 
-	var username = $("#username").val();
-	var password = $("#password").val();
-	var email = $("#email").val();
-	var phone = $("#phone").val();
-	var address = $("#address").val();
-	var detailAddress = $("#detailAddress").val();
-	var zipCode = $("#zipCode").val();
-	var note = $('#note').val();
-
-	// var fomData = $('#joinForm').serializeObject()
+	var formData = $('#joinForm').serialize();
 
 	if (confirm("회원가입을 진행하시겠습니까?") == true) {
 
 		$.ajax({
 			url: "/member/join",
 			type: "post",
-			data: JSON.stringify({
-				username: username,
-				email: email,
-				password: password,
-				phone: phone,
-				address: address,
-				detailAddress: detailAddress,
-				zipCode: zipCode,
-				note: note
-			}),
+			data: formData,
 			dataType: "json",
-			contentType: "application/json; charset-utf-8",
+			// contentType: "application/json; charset-utf-8",
 			success: function(response) {
 				let code = response.code
-
 				if (code = 1) {
 					console.log("SUCCESS : ", response);
 					alert("회원가입이 완료 되었습니다.");

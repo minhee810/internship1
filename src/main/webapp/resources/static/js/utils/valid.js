@@ -32,7 +32,7 @@ const keyword = {
 
 // message 모음 객체
 const messageEx = {
-	
+
 	success: {
 		avail: "사용 가능한 {name}입니다."
 	},
@@ -48,19 +48,95 @@ const messageEx = {
 
 }
 
+// 아이디 유효성 검사 
+function usernameRegTest(usernameEl, username) {
+
+	usernameCheck = false;
+
+	if (!isRequired(username)) {
+		$("#id_feedback").html('');
+		return false;
+	}
+
+	if (!checkRegExp("username", username)) {
+		$("#id_feedback").html(makeMessage(usernameEl, hintMsg.username));
+		$("#id_feedback").attr('color', '#dc3545');
+		usernameCheck = false;
+		return false;
+	}
+
+	return true;
+}
+
+function emailRegTest(emailEl, email) {
+
+	emailCheck = false;
+
+	if (!isRequired(email)) {
+		alert(makeMessage(emailEl, messageEx.fail.null));
+		return false;
+
+	} else if (!checkRegExp("email", email)) {
+		alert(makeMessage(emailEl, messageEx.fail.valid));
+		emailEl.val(email);
+		emailEl.focus();
+		return false;
+
+	}
+	return true;
+}
+
+// 비밀번호 입력 확인
+function pwCheck() {
+	let passwordEl = $('#password');
+	let password = passwordEl.val();
+
+	// 정규식 체크 
+	if (!checkRegExp("password", password)) {
+		alert(makeMessage(passwordEl, hintMsg.password));
+		passwordEl.focus();
+		return false;
+	}
+	// 사용가능한 비밀번호입니다. 알림
+	alert(makeMessage(passwordEl, messageEx.success.avail));
+}
+
 // alert 메시지 만드는 함수 
 function makeMessage(element, msg) {
 	let name = element.data('title');
 	return msg.replace('{name}', name);
 }
 
+// 전화번호 형식 체크
+function fn_phoneCheck() {
+	var phoneEl = $("#phone");
+	var phone = phoneEl.val();
+
+	if (!checkRegExp("phone", phone)) {
+		alert(makeMessage(phoneEl, hintMsg.common));
+		phoneEl.focus();
+		return false;
+	}
+	alert(makeMessage(phoneEl, messageEx.success.avail));
+	// 포맷팅 함수 
+	let fmtPhone = phoneFormat(phone);
+
+	console.log("fmtPhone : ", fmtPhone);
+
+	$("#phone").val(fmtPhone);
+}
+
 // 공통 정규식 체크 
-function ckeckRegExp(type, str) {
+function checkRegExp(type, str) {
 	const regex = validator[type];
+	console.log("regex : ", regex);
+	console.log("test type :", type);
 	if (regex) {
 		return regex.test(str);
 	}
 }
+
+
 
 // 공통 널값 체크 
 const isRequired = value => value === '' ? false : true;
@@ -75,7 +151,7 @@ function regTest(e) {
 // 공통 replace 함수
 function replaceChar(name) {
 	let data = $('#' + name).val();
-	if (!ckeckRegExp(data)) {
+	if (!checkRegExp(data)) {
 		data = data.replace(keyword[name], '');
 		$('#' + name).val(data);
 	}
