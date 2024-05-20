@@ -27,8 +27,6 @@ $(document).ready(function() {
 
 	// 휴대전화 번호 정규식 + '-' 형식
 	$('#phone').change(fn_phoneCheck);
-
-
 });
 
 function duplicateCheck(element) {
@@ -166,7 +164,7 @@ $('#joinBtn').on('click change', function() {
 
 	// 이메일 중복 체크 여부 
 	if (emailCheck == false) {
-		alert("이메일 중복 검사를 실시해주세요. ");
+		alert("이메일 중복 검사를 실시해주세요.");
 		// duplicateCheck(emailEl);
 		return false;
 	}
@@ -184,8 +182,6 @@ $('#joinBtn').on('click change', function() {
 
 	joinMemebership();
 })
-
-
 
 // 회원가입 완료
 function joinMemebership() {
@@ -219,6 +215,3 @@ function joinMemebership() {
 	}
 
 }
-
-
-

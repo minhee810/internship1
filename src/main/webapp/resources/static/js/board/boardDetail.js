@@ -3,8 +3,6 @@ $(document).ready(function() {
 	getCommentList();
 	$('#deleteBtn').click(fn_boardDelete);
 	$('#commentSaveBtn').click(commentSubmit);
-
-
 })
 
 // 게시글 삭제
@@ -114,19 +112,19 @@ function createTable(data) {
 					// 로그인 하지 않은 사용자라면 답글 버튼도 안보이게 
 					// 글 작성자와 로그인 사용자의 정보가 일치할 때 수정, 삭제 가능하도록
 				} else if (result.principal == 1) {
-					template += `<a class="commentReply" onclick="commentAddView('${result.username}', ${result.commentId}, ${result.writer})">답글</a>`; // check  
-					template += `<a onclick ='modifyView( ` + result.commentId + `,` + result.writer + `)' class="commentModify">수정</a>`; // check 
+					// template += `<a class="commentReply" onclick="commentAddView('${result.username}', ${result.commentId}, ${result.writer})">답글</a>`; // check  
+					template += `<a onclick ="test_CommentCreateView('${result.username}', ${result.commentId} ,${result.writer}, 'modify')" class="commentModify">수정</a>`; // check 
+					template += `<a class="commentReply" onclick="test_CommentCreateView('${result.username}', ${result.commentId}, ${result.writer}, 'reply')">답글</a>`; // check  
+					//template += `<a onclick ="updateComment( '${result.username}' , ${result.commentId} ,${result.writer}, 'modify')" class="commentModify">수정</a>`; // check 
 					template += `<a onclick ='commentDelete(` + result.commentId + `, ` + result.writer + `)' class="commentRemove">삭제</a>`; // check
 					template += `<a class="commentCancle" style="display:none;">취소</a>`;
 
-				} else if(result.principal == 2) {
+				} else if (result.principal == 2) {
 
 				}
-
 				template += `</div>	`;
 				template += `</div>`;
 				template += `<div class="comment">  `;
-
 
 				// 깊이가 0이 아닌 경우 
 				if (result.depth != 0) {
@@ -229,6 +227,176 @@ function modifyView(commentId, writer) {
 	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
 	commentDiv.style.display = 'none';
 }
+
+
+// 대댓글 작성 화면 작성 
+function commentAddView(username, commentId, writer) {
+
+	var existingAddForm = document.querySelector('.commentAddForm');
+
+	if (existingAddForm) {
+		return;
+	}
+	let boardId = $('.commentData').data('boardid');
+	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
+
+	var commentTemp = document.getElementById('modifyAddForm').textContent;
+
+	commentDiv.append(commentTemp);
+	console.log("element 만들기 : ", commentDiv);
+
+	var commentAddTemplate = `
+        <div class="commentForm">
+        <form action="" class="flex">
+        <hr/>
+			<div>
+	         <div>
+				<label> ㄴ To. 
+		        <input type="hidden" id="boardId" name="boardId" value="${boardId}">
+				<input type="text" class="mini3" id=id name="id" value="@${username}" readonly/>
+				</label>		
+	            <button class="btn btn-primary btn float-right ml-1" onclick="cancelCommentAdd()">취소</button>
+				<button class="btn btn-primary btn float-right ml-1" onclick="commentAdd(${commentId}, ${writer}, event)">완료</button></div>
+			 <input type="hidden" name="boardId" value="">
+            <textarea id="commentAddContent"  cols="30" row="5" name="commentAddContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
+            <a href="#" class="commentAdd flex" style="width: 10%">
+             </a>
+           </div>
+        </form>
+        </div>
+    `;
+
+	// 수정할 댓글 위치에 입력 창 삽입
+	commentDiv.insertAdjacentHTML('beforeend', commentAddTemplate);
+
+	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
+	//commentDiv.style.display = 'none';
+
+}
+
+// test 통합 뷰 
+function commentView(username, commentId, writer, type) {
+	console.log("type : ", type);
+	var existingAddForm = document.querySelector('.commentForm');
+
+	if (existingAddForm) {
+		return;
+	}
+
+	let boardId = $('.commentData').data('boardid');
+	// 1. 해당 댓글 밑에 댓글 작성 칸 생성 
+	// 2. 해당 댓글 작성자의 username 을 작성 칸 앞에 입력하여 사용자가 명시적으로 어떤 댓글에 답글 작성하고 있는지 보여주기 
+	// 3. 답글 작성 완료 버튼 클릭 시 해당 부모의 댓글 아이디를 서버로 함께 전송하여 대댓글 정보 저장
+	// 대댓글 정보 저장시 필요한 정보 1. parentId, 2. depth, 3. writer, 4.boardId, 5. commentConetent,  
+
+	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
+	//var commentContent = commentDiv.querySelector('#commentContent p').innerText;
+
+	// 댓글 내용을 수정할 수 있는 입력 창 생성
+	var commentAddTemplate = `
+        <div class="commentForm">
+        <form action="" class="flex">
+        <hr/>	<div>    <div>`
+	if (type == "reply") {
+		commentAddTemplate += `<label> ㄴ To. 
+		        <input type="hidden" id="boardId" name="boardId" value="${boardId}">
+				<input type="text" class="mini3" id=id name="id" value="@${username}" readonly/>
+				</label>`
+	}
+
+	commentAddTemplate += `
+	            <button class="btn btn-primary btn float-right ml-1" onclick="cancelComment()">취소</button>`
+
+
+	if (type == "modify") {
+		commentAddTemplate += `	
+					<button class="btn btn-primary btn float-right ml-1" onclick="updateComment(${commentId}, ${writer}, event)">완료</button>
+					</div>
+			 <input type="hidden" name="boardId" value="">
+            <textarea id="editCommentContent"  cols="30" row="5" name="inputComment" class="form-control flex" style="width: 90%" placeholder="내용" maxlength="300">${commentContent}</textarea>
+            <a href="#" class="commentAdd flex" style="width: 10%">
+             </a>
+           </div>
+        </form>
+        </div>`
+	} else {
+		commentAddTemplate += `
+				<button class="btn btn-primary btn float-right ml-1" onclick="commentAdd(${commentId}, ${writer}, event)">완료</button>`
+
+		commentAddTemplate += `</div>
+			 <input type="hidden" name="boardId" value="">
+            <textarea id="commentAddContent"  cols="30" row="5" name="commentAddContent" class="form-control flex" style="width: 90%" placeholder="댓글 내용을 작성해주세요." maxlength="300"></textarea>
+            <a href="#" class="commentAdd flex" style="width: 10%">
+             </a>
+           </div>
+        </form>
+        </div>
+    `;
+	}
+
+	if (type == "modify") {
+		commentDiv.insertAdjacentHTML('afterend', commentAddTemplate);
+		commentDiv.style.display = 'none';
+	} else {
+		// 수정할 댓글 위치에 입력 창 삽입
+		commentDiv.insertAdjacentHTML('beforeend', commentAddTemplate);
+	}
+
+
+
+	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
+	//commentDiv.style.display = 'none';
+
+}
+
+// onclick 스크립트로 넣어줄 수 있음.
+// 부모 댓글 이름 display none 으로 설정할 수 있음. 
+// 스크립트 적으로 생각해보기 
+function test_CommentCreateView(username, commentId, writer, type) {
+	var parent = document.querySelector('.commentData');
+	console.log(parent);
+
+	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
+	var commentHead = document.querySelector(`li[data-no="${commentId}"] .commentHead`);
+	var comment = document.querySelector(`li[data-no="${commentId}"] .comment`);
+
+
+	console.log(commentHead);
+	console.log(comment);
+	let template = document.querySelector('#modifyAddForm');
+	let newContent = document.importNode(template.content, true);
+
+	if (type == "reply") {
+		let usernameDiv = newContent.querySelector('#id');
+		usernameDiv.textContent = "ㄴ To.  @" + username;
+	}
+
+	if (type == "modify") {
+		var commentContent = commentDiv.querySelector('#commentContent p').innerText;
+		var commentTextArea = newContent.querySelector('#commentAddContent');
+		commentTextArea.textContent = commentContent;
+		console.log("commentTextArea : ", commentTextArea);
+	}
+	let submitButton = newContent.querySelector('#submitButton');
+
+	submitButton.setAttribute('onclick', 'commentAdd(' + commentId + ', ' + 'type' + ')');
+
+
+	if (type == "reply") {
+		commentDiv.appendChild(newContent);
+	}
+	if (type == "modify") {
+		// var newEl = document.createElement('div');
+		// newEl.textContent = newContent;
+		commentDiv.insertAdjacentElement('afterend', commentTextArea);
+/*		commentHead.style.display = 'none';
+		comment.style.display = 'none';*/
+		console.log("dkshk")
+		//commentDiv.prepend(newContent);
+	}
+
+}
+
 
 // 댓글 수정 
 function updateComment(commentId, writer, event) {
@@ -334,53 +502,7 @@ function commentDelete(commentId, writer) {
 	}
 }
 
-// 대댓글 작성 화면 작성 
-function commentAddView(username, commentId, writer) {
 
-	var existingAddForm = document.querySelector('.commentAddForm');
-
-	if (existingAddForm) {
-		return;
-	}
-
-	let boardId = $('.commentData').data('boardid');
-	// 1. 해당 댓글 밑에 댓글 작성 칸 생성 
-	// 2. 해당 댓글 작성자의 username 을 작성 칸 앞에 입력하여 사용자가 명시적으로 어떤 댓글에 답글 작성하고 있는지 보여주기 
-	// 3. 답글 작성 완료 버튼 클릭 시 해당 부모의 댓글 아이디를 서버로 함께 전송하여 대댓글 정보 저장
-	// 대댓글 정보 저장시 필요한 정보 1. parentId, 2. depth, 3. writer, 4.boardId, 5. commentConetent,  
-
-	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
-	//var commentContent = commentDiv.querySelector('#commentContent p').innerText;
-
-	// 댓글 내용을 수정할 수 있는 입력 창 생성
-	var commentAddTemplate = `
-        <div class="commentAddForm">
-        <form action="" class="flex">
-        <hr/>
-			<div>
-	         <div>
-		        <label> ㄴ To. 
-		        <input type="hidden" id="boardId" name="boardId" value="${boardId}">
-				<input type="text" class="mini3" id=id name="id" value="@${username}" readonly/>
-				</label>
-	            <button class="btn btn-primary btn float-right ml-1" onclick="cancelCommentAdd()">취소</button>
-				<button class="btn btn-primary btn float-right ml-1" onclick="commentAdd(${commentId}, ${writer}, event)">완료</button></div>
-			 <input type="hidden" name="boardId" value="">
-            <textarea id="commentAddContent"  cols="30" row="5" name="commentAddContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
-            <a href="#" class="commentAdd flex" style="width: 10%">
-             </a>
-           </div>
-        </form>
-        </div>
-    `;
-
-	// 수정할 댓글 위치에 입력 창 삽입
-	commentDiv.insertAdjacentHTML('beforeend', commentAddTemplate);
-
-	// 입력창은 보이게 하고 기존의 창은 안보이도록 설정하기 
-	//commentDiv.style.display = 'none';
-
-}
 
 
 function cancelCommentAdd(e) {
@@ -393,10 +515,27 @@ function cancelCommentAdd(e) {
 	commentDiv.style.display = '';
 }
 
+// test 
+function cancelComment(e) {
+	e.preventDefault();
+	var commentForm = document.querySelector('.commentForm');
+	commentForm.parentElement.removeChild(commentForm);
+
+	// 원래 댓글 보이도록 함
+	var commentDiv = document.querySelector('.commentDiv');
+	commentDiv.style.display = '';
+}
+
+
 
 // 대댓글 저장 기능
-function commentAdd(commentId, writer, event) {
-	event.preventDefault();
+function commentAdd(commentId, type) {
+
+	console.log("commentAdd 호출");
+
+	console.log("type : ", type);
+
+	// event.preventDefault();
 	// 댓글을 작성한 사람의 이름이 들어와야 해 그래야 
 	console.log("======comment Add ========");
 	// 필요한 정보 : 댓글 아이디 (ParentId) , 글번호, 대댓글 작성자 정보

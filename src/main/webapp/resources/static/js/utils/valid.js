@@ -86,7 +86,7 @@ function emailRegTest(emailEl, email) {
 	return true;
 }
 
-// 비밀번호 입력 확인
+// 비밀번호 입력 정규식 확인
 function pwCheck() {
 	let passwordEl = $('#password');
 	let password = passwordEl.val();
@@ -117,13 +117,13 @@ function fn_phoneCheck() {
 		phoneEl.focus();
 		return false;
 	}
-	alert(makeMessage(phoneEl, messageEx.success.avail));
 	// 포맷팅 함수 
 	let fmtPhone = phoneFormat(phone);
 
 	console.log("fmtPhone : ", fmtPhone);
 
 	$("#phone").val(fmtPhone);
+	alert(makeMessage(phoneEl, messageEx.success.avail));
 }
 
 // 공통 정규식 체크 

@@ -132,7 +132,28 @@
                                             </c:forEach>
                                         </ul> -->
                                     </form> 
-
+                                    <template id="modifyAddForm">
+                                            <div class="commentForm">
+										        <form action="#" class="">
+													<div>
+											         <div>
+														<label id="id" name="id"> 
+												        <input type="hidden" id="boardId" name="boardId" value="{boardId}">
+														<div type="text" class="mini3" id="id" name="id">
+														</div>
+														</label>		
+											            <button id="cancelCommentAdd" class="btn btn-primary btn float-right ml-1" onclick="cancelCommentAdd()">취소</button>
+														<button id="submitButton" class="btn btn-primary btn float-right ml-1">완료</button>
+														</div>
+							
+										            <textarea id="commentAddContent"  cols="30" row="5" name="commentAddContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
+										           
+										           </div>
+										        </form>
+										     </div>
+									</template>
+								
+								
                                     <c:choose>
                                         <c:when test="${!empty loginUsername}">
                                             <form action="" class="flex" id="commentForm" name="commentForm">

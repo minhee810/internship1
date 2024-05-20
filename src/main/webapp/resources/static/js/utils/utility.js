@@ -82,9 +82,13 @@ function getFormattedDate(org) {
 function phoneFormat(phone) {
 	console.log("phone : ", phone);
 	if (phone.length === 10) {
+		console.log(10);
 		return phone = phone.substring(0, 3) + '-' + phone.substring(3, 6) + '-' + phone.substring(6, 10);
 	} else if (phone.length === 11) {
+		console.log(11);
 		return phone = phone.substring(0, 3) + '-' + phone.substring(3, 7) + '-' + phone.substring(7, 11);
+	} else if(phone){
+		return phone;
 	}
 }
 
