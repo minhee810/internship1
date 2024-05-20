@@ -136,8 +136,6 @@ function checkRegExp(type, str) {
 	}
 }
 
-
-
 // 공통 널값 체크 
 const isRequired = value => value === '' ? false : true;
 
@@ -162,12 +160,3 @@ function isMatch(password1, password2) {
 	return password1 == password2;
 }
 
-function CV_checkNullInput(strNameArr, strInputArr, parentId) {
-	for (var i = 0; i < strNameArr.length; i++) {
-		if ($('#' + parentId + 'input[name="' + strInputArr[i] + '"]').val() == '') {
-			alert(strNameArr[i] + '을(를) 입력해주세요.');
-			$('#' + parentId + 'input[name="' + strInputArr[i] + '"]').focus();
-			return false;
-		}
-	}
-}

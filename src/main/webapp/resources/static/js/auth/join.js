@@ -107,18 +107,18 @@ function passwordConfirm() {
 // 공백 검사 후 빈칸 alert 띄우기 
 function checkRequiredFields() {
 	var allFilled = true;
-	var emptyFields = [];
+	var emptyEl = [];
 
 	$('input').each(function() {
 		var value = $(this).val();
-		var title = $(this).data('title');
+		var element = $(this);
 
 		if (!isRequired(value)) {
-			emptyFields.push(title);
+			emptyEl.push(element);
 			allFilled = false;
 		}
 	});
-	return allFilled ? true : emptyFields;
+	return allFilled ? true : emptyEl;
 }
 
 // 정규식 검사 후 alert 띄우기
@@ -126,16 +126,16 @@ function checkRegFields() {
 	// 정규식 체크 대상 : 아이디, 이메일, 비밀번호, 휵대전화
 	var checkTarget = ['username', 'email', 'password', 'phone'];
 	var fieldCheck = true;
-	var failFields = [];
+	var failEl = []
 
 	for (var i = 0; i < checkTarget.length; i++) {
-		var title = $('#' + checkTarget[i]).data('title');
+		var element = $('#' + checkTarget[i]);
 		if (!checkRegExp(checkTarget[i], $('#' + checkTarget[i]).val())) {
-			failFields.push(title);
+			failEl.push(element);
 			fieldCheck = false;
 		}
 	}
-	return fieldCheck ? true : failFields;
+	return fieldCheck ? true : failEl;
 }
 
 // 폼 데이터 전송 전에 전체 필드 유효성 검사
@@ -145,15 +145,16 @@ $('#joinBtn').on('click change', function() {
 
 	// 공백 검사 
 	if (requiredCheckResult !== true) {
-		alert(requiredCheckResult[0] + '을(를) 입력해주세요');
-		$('#' + requiredCheckResult[0]).focus();
+		alert(makeMessage(requiredCheckResult[0], messageEx.fail.null));
+		// alert(requiredCheckResult[0] + '을(를) 입력해주세요');
+		requiredCheckResult[0].focus();
 		return false;
 	}
 	// 유효성 검사 
 	if (requriedRegResult !== true) {
 		console.log("형식 체크 실패 필드들 : ", requriedRegResult);
-		alert(requriedRegResult[0] + "이(가) 형식에 맞지 않습니다.");
-		$('#' + requriedRegResult[0]).focus();
+		alert(makeMessage(requriedRegResult[0], messageEx.fail.valid));
+		requriedRegResult[0].focus();
 		return false;
 	}
 
@@ -198,7 +199,6 @@ function joinMemebership() {
 			type: "post",
 			data: formData,
 			dataType: "json",
-			// contentType: "application/json; charset-utf-8",
 			success: function(response) {
 				let code = response.code
 				if (code = 1) {

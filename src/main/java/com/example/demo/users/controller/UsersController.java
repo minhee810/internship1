@@ -50,18 +50,6 @@ public class UsersController {
 	}
 
 	// 회원가입
-	/*
-	 * @PostMapping("/join") public ResponseEntity<?> join(@RequestBody JoinDto
-	 * joinDto) throws UnsupportedEncodingException {
-	 * 
-	 * log.info("회원가입 로직 실행");
-	 * 
-	 * if (userSerivce.join(joinDto) > 0) { return new ResponseEntity<>(new
-	 * ResponseDto<>(1, "회원가입에 성공하였습니다.", null), HttpStatus.CREATED); } // 회원가입 실패시
-	 * return new ResponseEntity<>(new ResponseDto<>(-1, "회원가입에 실패하였습니다.", null),
-	 * HttpStatus.BAD_REQUEST); }
-	 */
-
 	@PostMapping("/join")
 	public ResponseEntity<?> join(JoinDto joinDto) throws UnsupportedEncodingException {
 
