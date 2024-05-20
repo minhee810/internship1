@@ -45,7 +45,6 @@
 			INSERT INTO COMMENTS (COMMENT_ID, COMMENT_CONTENT, PARENT_ID, DEPTH, WRITER, BOARD_ID)
 			VALUES (COMMENTS_SEQ.NEXTVAL, #{commentContent}, #{parentId}, #{depth}, #{writer}, #{boardId})
 			]]>
-			
 			<selectKey keyProperty="commentId" resultType="long" order="AFTER">
 			       SELECT MAX(COMMENT_ID) FROM COMMENTS
 			</selectKey>
@@ -67,7 +66,7 @@
 				UPDATE COMMENTS
 	        	SET COMMENT_CONTENT = #{commentContent}
 	          	, MODIFIED_DATE = sysdate
-	        	WHERE COMMENT_ID = #{commentId} and WRITER = #{writer}
+	        	WHERE COMMENT_ID = #{commentId}
 			]]>
 		
 		</update>

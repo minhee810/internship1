@@ -1,3 +1,22 @@
+
+//form.serialize() 
+function ajaxCall(type, url, data, dataType, successCallback, errorCallback) {
+	$.ajax({
+		type: type,
+		url: url,
+		data: data,
+		dataType: dataType,
+		// contentType: "application/json; charset=utf-8", // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
+		success: function(respnse) {
+			successCallback(respnse);
+
+		},
+		error: function(error) {
+			errorCallback(error);
+		}
+	})
+}
+
 function exeDaumPostcode(note, zipCode, address, datailAddress) {
 	new daum.Postcode({
 		oncomplete: function(data) {

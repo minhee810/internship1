@@ -93,7 +93,9 @@ public class CommentController {
 
 	// 업데이트 시 성공한 행의 개수 반환 vs 삭제한 결과 0/1 반환
 	@PutMapping("/comment")
-	public ResponseEntity<?> update(@RequestBody CommentDto dto) {
+	public ResponseEntity<?> update(CommentDto dto) {
+		log.info("댓글 수정 로직 실행");
+		log.info("#################dto################## = {}", dto);
 
 		try {
 
@@ -115,7 +117,7 @@ public class CommentController {
 
 	// 대댓글 작성
 	@PostMapping("/comment/reply")
-	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto, HttpSession session, Model model) {
+	public ResponseEntity<?> commentAdd(CommentDto commentDto, HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 		commentDto.setWriter(userId);
 		int result = commentService.commentAdd(commentDto);

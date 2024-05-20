@@ -134,19 +134,18 @@
                                     </form> 
                                     <template id="modifyAddForm">
                                             <div class="commentForm">
-										        <form action="#" class="">
+										        <form action="#" id="modifyAddForm" class="">
+										         <button id="cancelCommentAdd" class="btn btn-primary btn float-right ml-1" onclick="cancelView()">취소</button>
+														<button id="submitButton" class="btn btn-primary btn float-right ml-1">완료</button>
 													<div>
 											         <div>
 														<label id="id" name="id"> 
-												        <input type="hidden" id="boardId" name="boardId" value="{boardId}">
+												       <!--  <input type="hidden" id="boardId" name="boardId" > -->
 														<div type="text" class="mini3" id="id" name="id">
 														</div>
 														</label>		
-											            <button id="cancelCommentAdd" class="btn btn-primary btn float-right ml-1" onclick="cancelCommentAdd()">취소</button>
-														<button id="submitButton" class="btn btn-primary btn float-right ml-1">완료</button>
 														</div>
-							
-										            <textarea id="commentAddContent"  cols="30" row="5" name="commentAddContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
+										            	<textarea id="commentContent"  cols="30" row="5" name="commentContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
 										           
 										           </div>
 										        </form>
@@ -157,10 +156,6 @@
                                     <c:choose>
                                         <c:when test="${!empty loginUsername}">
                                             <form action="" class="flex" id="commentForm" name="commentForm">
-                                            <div>
-                                            <label>댓글 작성자</label> 
-											<input type="text" class="mini3" id=id name="id" value="${loginUsername}" readonly />
-											</div>
                                                 <input type="hidden" name="boardId" value="${detail.boardId}">
                                                 <textarea id="inputComment" cols="30" row="5" name="inputComment" class="form-control flex" style="width: 90%" placeholder="내용" maxlength="300"></textarea>
                                                 <a class="commentAdd flex" style="width: 9%">

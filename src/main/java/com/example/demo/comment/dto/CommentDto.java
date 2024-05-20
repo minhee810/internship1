@@ -18,6 +18,7 @@ public class CommentDto {
 	
 	private Long commentId; // 댓글 번호
 	private String commentContent; // 댓글 내용
+	private String commentAddContent; // 댓글 내용
 	private Long parentId; // 부모 댓글의 아이디
 	private int depth; // 깊이 = 레벨
 	private String isDeleted; // 삭제 여부

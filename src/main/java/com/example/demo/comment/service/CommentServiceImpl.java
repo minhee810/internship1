@@ -93,8 +93,10 @@ public class CommentServiceImpl implements CommentService {
 
 	@Transactional
 	@Override
-	public int updateComment(CommentDto commentVO) {
-		int result = commentMapper.updateComment(commentVO);
+	public int updateComment(CommentDto dto) {
+		int result = commentMapper.updateComment(dto);
+		log.info("서비스까지만 와줘라 제발 result = {}", result);
+		log.info("dto = {}", dto);
 		return result;
 	}
 
