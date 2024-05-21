@@ -151,8 +151,6 @@
 										        </form>
 										     </div>
 									</template>
-								
-								
                                     <c:choose>
                                         <c:when test="${!empty loginUsername}">
                                             <form action="" class="flex" id="commentForm" name="commentForm">

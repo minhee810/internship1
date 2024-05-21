@@ -19,7 +19,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
 		log.info("[=====preHandle]=====");
 
 		// 1. 세션에서 회원 정보 조회

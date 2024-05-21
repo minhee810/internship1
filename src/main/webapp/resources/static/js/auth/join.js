@@ -7,32 +7,24 @@ window.addEventListener('load', () => $('#username').focus());
 
 $(document).ready(function() {
 
-	// 입력값 replace 함수 호출
 	$("#username, #phone, #email").keyup((e) => regTest(e));
-
+	$("#password").change(pwCheck);
+	$('#password_confirm').change(passwordConfirm);
+	$('#phone').change(fn_phoneCheck);
 	$("#username").change(function() {
 		duplicateCheck($(this));
 	});
-
-	// 이메일 중복 버튼 클릭시 중복 검사
 	$('#emailCheck').click(function() {
 		let emailEl = $('#email');
 		duplicateCheck(emailEl);
 	});
-
-	// 비밀번호 입력 확인 
-	$("#password").change(pwCheck);
-
-	$('#password_confirm').change(passwordConfirm);
-
-	// 휴대전화 번호 정규식 + '-' 형식
-	$('#phone').change(fn_phoneCheck);
 });
 
 function duplicateCheck(element) {
 
 	let fieldId = element.attr('id');
 	let value = $('#' + fieldId).val();
+	let data = { [fieldId]: value };
 
 	if (fieldId == 'email') {
 		if (!emailRegTest(element, value)) {
@@ -44,15 +36,10 @@ function duplicateCheck(element) {
 			return false;
 		}
 	}
-
-	$.ajax({
-		url: "/member/" + fieldId + "/check",
-		type: "post",
-		data: { [fieldId]: value },
-		dataType: "json",
-		success: function(result) {
+	ajaxCall(ajaxType.url.post, '/member/' + fieldId + '/check', data, ajaxType.contentType.form,
+	
+		function(result) {
 			if (fieldId == 'username') {
-
 				if (result == 1) {
 					$("#id_feedback").html(makeMessage(element, messageEx.dupe.username));
 					$("#id_feedback").attr('color', '#dc3545');
@@ -76,15 +63,9 @@ function duplicateCheck(element) {
 					return true;
 				}
 			}
-
 		},
-		error: function() {
-			alert(messageEx.error);
-		}
-	})
-
+		function(error) { handleError(error) });
 }
-
 // 비밀번호 일치 검사 
 function passwordConfirm() {
 	let password = $('#password').val();
@@ -100,23 +81,6 @@ function passwordConfirm() {
 		return false;
 	}
 	return pwCheckStatus;
-}
-
-// 공백 검사 후 빈칸 alert 띄우기 
-function checkRequiredFields() {
-	var allFilled = true;
-	var emptyEl = [];
-
-	$('input').each(function() {
-		var value = $(this).val();
-		var element = $(this);
-
-		if (!isRequired(value)) {
-			emptyEl.push(element);
-			allFilled = false;
-		}
-	});
-	return allFilled ? true : emptyEl;
 }
 
 // 정규식 검사 후 alert 띄우기
@@ -187,31 +151,21 @@ $('#joinBtn').on('click change', function() {
 function joinMemebership() {
 
 	var formData = $('#joinForm').serialize();
-
-	if (confirm("회원가입을 진행하시겠습니까?") == true) {
-
-		$.ajax({
-			url: "/member/join",
-			type: "post",
-			data: formData,
-			dataType: "json",
-			success: function(response) {
-				let code = response.code
-				if (code = 1) {
-					console.log("SUCCESS : ", response);
-					alert("회원가입이 완료 되었습니다.");
-					location.href = "/member/login";
-				} else {
-					console.log("ERROR : ", error);
-					alert("회원가입에 실패하였습니다.");
-				}
-			},
-			error: function(error) {
-				console.log("ERROR : ", error);
-				alert("회원가입에 실패하였습니다.");
-			}
-
-		})
+	if (!confirm("회원가입을 진행하시겠습니까?")) {
+		return false;
 	}
-
+	ajaxCall(ajaxType.url.post, "/member/join", formData, ajaxType.contentType.form, joinMembershipResp, function(error) { handleError(error) });
 }
+
+function joinMembershipResp(response) {
+	let code = response.code
+	if (code = 1) {
+		console.log("SUCCESS : ", response);
+		alert("회원가입이 완료 되었습니다.");
+		location.href = "/member/login";
+	} else {
+		console.log("ERROR : ", error);
+		alert("회원가입에 실패하였습니다.");
+	}
+}
+

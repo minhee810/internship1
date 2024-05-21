@@ -25,6 +25,4 @@ public interface BoardMapper {
 	public int deleteBoard(Long boardId);
 
 	public int updateCommentCnt(Long boardId, int count); // map으로 받아와야 하나
-	
-	
 }

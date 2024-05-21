@@ -28,10 +28,10 @@
                                     </div>
                                     <form class="user">
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                            <input type="text" class="form-control form-control-user" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." data-title="이메일"/>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" name="password" id="password" autocomplete="off" placeholder="Password" />
+                                            <input type="password" class="form-control form-control-user" name="password" id="password" autocomplete="off" placeholder="Password" data-title="비밀번호" />
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -56,6 +56,7 @@
 	<%@ include file="../layout/script.jsp" %>
     <script type="text/javascript" src="../resources/static/js/auth/login.js"></script>
     <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
+    <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
 </body>
 
 </html>

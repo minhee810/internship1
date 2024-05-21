@@ -15,6 +15,7 @@ import com.example.demo.board.dto.BoardListDto;
 import com.example.demo.board.dto.RequestList;
 import com.example.demo.board.mapper.BoardMapper;
 import com.example.demo.board.vo.BoardVO;
+import com.example.demo.comment.service.CommentService;
 import com.example.demo.file.mapper.FileMapper;
 import com.example.demo.file.service.FileManager;
 import com.example.demo.file.service.FileService;
@@ -30,6 +31,7 @@ public class BoardServiceImpl implements BoardService {
 	private final FileService fileService;
 	private final FileManager fileManager;
 	private final BoardMapper boardMapper;
+	private final CommentService commentService;
 
 	@Value("${file.path}")
 	private String path;
@@ -46,12 +48,14 @@ public class BoardServiceImpl implements BoardService {
 
 		List<BoardVO> content = boardMapper.getBoardList(requestList);
 		// log.info("requestList = {} ", requestList);
-		
+
 		int total = boardMapper.getListBoardCount();
-		
+
 		log.info("데이터 총 개수 total = {}", total);
 		log.info("content = {}", content);
 		log.info("pageable = {}", pageable);
+		
+		System.out.println("offset = " + pageable.getOffset() + ", pageSize = " + pageable.getPageSize());
 
 		return new PageImpl<BoardVO>(content, pageable, total);
 	}
@@ -147,8 +151,9 @@ public class BoardServiceImpl implements BoardService {
 		String projectPath = path + "/" + boardId;
 		fileService.deleteFolder(projectPath);
 
-		
-		
+		// 4. 관련 댓글 삭제 처리
+		commentService.commentDeleteAll(boardId);
+
 		log.info("deleteBoard service result ={}", result);
 
 		return result;

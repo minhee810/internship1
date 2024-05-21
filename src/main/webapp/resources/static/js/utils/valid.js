@@ -32,7 +32,6 @@ const keyword = {
 
 // message 모음 객체
 const messageEx = {
-
 	success: {
 		avail: "사용 가능한 {name}입니다."
 	},

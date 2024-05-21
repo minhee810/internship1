@@ -63,8 +63,7 @@ public class CommentController {
 
 	// 댓글 삭제
 	@PutMapping("/comment/delete/{commentId}")
-	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam,
-			Model model) {
+	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam) {
 		log.info("commentId = {}", commentId);
 		log.info("requestParam = {}", requestParam);
 
@@ -95,7 +94,6 @@ public class CommentController {
 	@PutMapping("/comment")
 	public ResponseEntity<?> update(CommentDto dto) {
 		log.info("댓글 수정 로직 실행");
-		log.info("#################dto################## = {}", dto);
 
 		try {
 
