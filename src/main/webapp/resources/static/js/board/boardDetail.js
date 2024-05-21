@@ -185,8 +185,9 @@ function commentCreateView(username, commentId, writer, req) {
 	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
 	var commentHead = document.querySelector(`li[data-no="${commentId}"] .commentHead`);
 	var comment = document.querySelector(`li[data-no="${commentId}"] .comment`);
-
+	// 템플릿 활용하기 위해 가져오기
 	let template = document.querySelector('#modifyAddForm');
+	// 템플릿요소의 콘텐츠를 복사해서 새로운노드로 가져오기 위함 (쉽게말해 비활성화 되어있는 template을 활성화하는 과정)
 	let newContent = document.importNode(template.content, true);
 
 	if (req == "reply") {
