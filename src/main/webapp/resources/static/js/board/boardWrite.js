@@ -1,68 +1,48 @@
-/**
- * boardWrite.js 
- */
-
-
-function maxlengthCheck() {
-	var content = $('textarea#content').val();
-
-	if (content.length > 100000) {
+function maxlengthCheck(element, maxLength) {
+	var content = element.value();
+	if (content.length > maxLength) {
 		alert("본문 내용은 100,000자 이내여야 합니다.");
 		return false;
 	}
 }
 
 $(document).ready(function() {
-	$('#insertBtn').click(function(event) {
-
-		event.preventDefault();
-
-		var title = $('#title').val();
-		var content = $('textarea#content').val();
-		console.log("content : ", content);
-
-
-		if (title.trim() === '') {
-			alert('제목을 입력해주세요.');
-			return false;
-		}
-		if (content.trim() === '') {
-			alert('내용을 입력해주세요.');
-			return false;
-		}
-		if (!confirm("저장하시겠습니까?")) {
-			return;
-		}
-
-		var form = $('#writeForm')[0];
-		var data = new FormData(form);
-
-		$.ajax({
-			type: 'POST',
-			enctype: 'multipart/form-data',
-			url: "/board/write",
-			data: data,
-			processData: false,
-			contentType: false,
-			cache: false,
-			timeout: 600000,
-			success: function(data) {
-				console.log(data);
-				location.href = "/";
-				alert("저장되었습니다.");
-				console.log('SUCCESS : ', data);
-			},
-			error: function(error) {
-				console.log(error.code);
-				let msg = error.msg;
-				console.log("error : ", error);
-				console.log('ERROR : ', msg);
-				alert("저장에 실패하였습니다.", msg);
-			}
-		});
-
-	});
+	$('#insertBtn').click(writeBoard);
 });
+
+function writeBoard(event) {
+	event.preventDefault();
+
+	var title = $('#title').val();
+	var content = $('textarea#content').val();
+
+	if (title.trim() === '') {
+		alert('제목을 입력해주세요.');
+		return false;
+	}
+	if (content.trim() === '') {
+		alert('내용을 입력해주세요.');
+		return false;
+	}
+
+	if (!confirm("저장하시겠습니까?")) {
+		return false;
+	}
+
+	var data = new FormData($('#writeForm')[0]);
+	ajaxCall(ajaxType.url.post, "/board/write", data, false, function(data) {
+		console.log(data);
+		location.href = "/";
+		alert("저장되었습니다.");
+		console.log('SUCCESS : ', data);
+	}, function(error) {
+		console.log(error.code);
+		let msg = error.msg;
+		console.log('ERROR : ', msg);
+		alert("저장에 실패하였습니다.", msg);
+	}, false, false, 600000)
+}
+
 
 
 

@@ -8,62 +8,37 @@ $(document).ready(function() {
 // 게시글 삭제
 function fn_boardDelete() {
 	let boardId = $('#boardId').text();
-
-	if (confirm("게시글을 삭제하시겠습니까?")) {
-		$.ajax({
-			type: "post",
-			url: "/board/delete/" + boardId,
-			dataType: "json",
-			contentType: "application/json; charset-utf-8",
-			success: function(data) {
-
-				console.log(data);
-
-				let code = data.code;
-
-				if (code == 1) {
-					alert("게시글이 삭제 완료되었습니다.");
-					location.href = "/";
-				}
-			},
-
-			error: function(data) {
-				alert("게시글 삭제 실패");
-				console.log(data);
-			}
-		});
+	if (!confirm("게시글을 삭제하시겠습니까?")) {
+		return false;
 	}
+	ajaxCall(ajaxType.url.post, "/board/delete/" + boardId, {}, ajaxType.contentType.json, function(response) {
+		if (response.code == 1) {
+			alert("게시글이 삭제 완료되었습니다.");
+			location.href = "/";
+		}
+	}, function(error) {
+		handleError(error);
+	}
+	);
 }
 
 // 1. 댓글 조회 
 function getCommentList() {
-
-	var id = $('#id').val();
-	var writer = $('.commentDate').data('writer');
 	var boardId = $('#boardId').text();
+	let data = { boardId: boardId };
 
-	console.log(id, writer);
-
-	$.ajax({
-		type: "get",
-		url: `/comment/`,
-		data: { boardId: boardId },
-		dataType: "json",
-		contentType: "application/json; charset-utf-8",
-		success: function(data) {
-			console.log("댓글 불러오기 성공", data);
-			createTable(data);
-
-		},
-		error: function() {
-			alert('댓글 조회 통신 실패');
-		}
+	ajaxCall(ajaxType.url.get, '/comment/', data, ajaxType.contentType.json, function(response) {
+		console.log("댓글 불러오기 성공", response);
+		createTable(response);
+	}, function(error) {
+		handleError(error);
 	});
 };
 
 // 댓글 전체 리스트를 화면에 동적으로 그려주는 함수
 function createTable(data) {
 	let list = data.data;
+	console.log("list : ", list);
 	let element = document.querySelector('#replyForm ul');
 	$('#replyForm ul').html('');
 	if (list.length > 0) {
@@ -88,8 +63,6 @@ function createTable(data) {
 
 			// 대댓글일 경우 'ㄴ' 붙이고 싶다. 
 			if (result.isDeleted == 0) {
-
-
 				template += `<div class="commentName"><p>@${result.username}</p></div>`;
 				template += `<div class="commentDate"><p>${dateTime}</p></div>`;
 				template += `</div>`;
@@ -137,44 +110,32 @@ function createTable(data) {
 // 댓글 작성
 function commentSubmit(e) {
 	e.preventDefault();
-
-	console.log("commentSubmit 호출");
-
-	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
 	var boardId = $('input[name="boardId"]').val();
 	var commentContent = $('textarea#inputComment').val().trim();
 
-	let data = {
+	let data = JSON.stringify({
 		"boardId": boardId,
 		"commentContent": commentContent
-	}
+	})
 
 	if (commentContent == "") {
 		alert("댓글 내용을 작성해주세요");
 		$('textarea#inputComment').focus;
 		return false;
 	}
+	ajaxCall(ajaxType.url.post, '/comment', data, ajaxType.contentType.json, function(res) {
+		alert('댓글이 작성되었습니다.');
+		console.log("SUCCESS : ", res);
 
-	$.ajax({
-		type: "post",
-		url: "/comment",
-		data: JSON.stringify(data),
-		dataType: "json",
-		contentType: "application/json; charset=utf-8", // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
-		success: function(res) {
-			alert('댓글이 작성되었습니다.');
-			console.log("SUCCESS : ", res);
+		$('textarea#inputComment').val(""); // 댓글 입력 창 비우기
+		getCommentList()
 
-			$('textarea#inputComment').val(""); // 댓글 입력 창 비우기
-			getCommentList()
-
-		},
-		error: function(error) {
-			alert("ERROR : ", error);
-		}
-	})
+	}, function(error) {
+		handleError(error)
+	});
 }
 
+// 댓글 작성 화면 생성
 function commentCreateView(username, commentId, writer, req) {
 
 	var existingAddForm = document.querySelector('.commentForm');
@@ -215,6 +176,7 @@ function commentCreateView(username, commentId, writer, req) {
 
 }
 
+// 댓글 작성 창 취소 시 
 function cancelView() {
 	// 수정 창 닫기
 	var commentEditForm = document.querySelector('.commentForm');
@@ -234,7 +196,7 @@ function commentAdd(commentId, str) {
 	let depth = $(`li[data-no="${commentId}"]`).data('depth');
 	let boardId = $(`li[data-no="${commentId}"]`).data('boardid');
 
-  	console.log("boardId : ", boardId);
+	console.log("boardId : ", boardId);
 	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
 	var commentContent = $('textarea#commentContent').val().trim();
 
@@ -251,7 +213,7 @@ function commentAdd(commentId, str) {
 	}
 
 	if (str == 'reply') {
-		ajaxCall('POST', '/comment/reply', formData, "json", function(response) {
+		ajaxCall('POST', '/comment/reply', formData, ajaxType.contentType.form, function(response) {
 			alert('댓글이 작성되었습니다.');
 			$('textarea#commentContent').val(""); // 댓글 입력 창 비우기
 			getCommentList();
@@ -261,7 +223,7 @@ function commentAdd(commentId, str) {
 	}
 
 	if (str == 'modify') {
-		ajaxCall('PUT', '/comment', formData, "json", function(response) {
+		ajaxCall('PUT', '/comment', formData, ajaxType.contentType.form, function(response) {
 			if (response.code == -1) {
 				alert("FAIL : 댓글 작성에 실패하였습니다.");
 			} else if (response.code == -99) {
@@ -272,9 +234,37 @@ function commentAdd(commentId, str) {
 			cancelView();
 			getCommentList();
 		}, function(error) {
-			alert("ERROR : ", error);
+			handleError(error);
 		})
 	}
 }
 
+function commentDelete(commentId, writer) {
+	let boardId = $('input[name=boardId]').val();
+	let data = { "boardId": boardId, "writer": writer };
 
+	if (!confirm("해당 댓글을 삭제하시겠습니까?")) {
+		return false;
+	}
+
+	ajaxCall('put', '/comment/delete/' + commentId, JSON.stringify(data), ajaxType.contentType.json, function(response) {
+		let code = response.code;
+
+		if (code == -1) {
+			alert(response.msg);
+			getCommentList();
+		} else if (code == 1) {
+			alert('댓글이 삭제되었습니다.');
+			console.log("response : ", response);
+			getCommentList();
+		} else if (code == -99) {
+			alert(response.msg);
+			getCommentList();
+
+		} else {
+			alert("댓글 삭제 중 예외가 발생했습니다.");
+		}
+	}, function(error) {
+		handleError(error);
+	});
+}

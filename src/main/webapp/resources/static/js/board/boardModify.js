@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 
 
 // file 정보 요청 및 html 에 뿌리기
@@ -16,6 +14,7 @@ $.ajax({
 		console.log("ERROR : ", error);
 	}
 })
+
 
 function loadFiles(files) {
 	const fileList = document.getElementById('file-list');

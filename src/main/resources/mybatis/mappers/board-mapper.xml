@@ -17,19 +17,20 @@
 				           B.CREATED_DATE, 
 				           B.COMMENT_CNT, 
 				           U.USERNAME,
-				           ROWNUM AS RN
+				           ROW_NUMBER() OVER (ORDER BY B.CREATED_DATE DESC) AS RN
 				    FROM BOARD B
 				    INNER JOIN USERS U ON B.WRITER = U.USER_ID 
 				    WHERE B.IS_DELETED = 0
 				    ORDER BY CREATED_DATE DESC
 				)
-				WHERE RN > #{pageable.offset} AND ROWNUM <= #{pageable.pageSize}
+				WHERE RN > #{pageable.offset} AND RN <= (#{pageable.offset} + #{pageable.pageSize})
 			]]>
 	</select>
 	
 	<select id="getListBoardCount" parameterType="boardVO" resultType="int">
 			SELECT COUNT(*) AS CNT 
 			FROM BOARD
+			WHERE IS_DELETED = 0		
 	</select>
 	
 	<!-- 게시판 글 생성 -->
@@ -84,7 +85,7 @@
 	        UPDATE BOARD
 	        SET COMMENT_CNT = COMMENT_CNT + #{count}
 	        WHERE BOARD_ID = #{boardId}
-	    </update>
+	   </update>
 	
 </mapper>
 

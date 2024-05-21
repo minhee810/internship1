@@ -84,7 +84,6 @@
                                             </button>
                                         </a>
                                     </c:when>
-
                                 </c:choose>
 
                             </div>
@@ -96,33 +95,32 @@
                                     <c:choose>
                                         <c:when test="${boardList.first}"></c:when>
                                         <c:otherwise>
-                                            <li class="page-item"><a class="page-link" href="${contextPath}/?page=0">처음</a></li>
-                                            <li class="page-item"><a class="page-link" href="${contextPath}/?page=${boardList.number-1}">&larr;</a></li>
+                                            <li class="page-item"><a class="page-link" href="${contextPath}?page=0">처음</a></li>
+                                            <li class="page-item"><a class="page-link" href="${contextPath}?page=${boardList.number-1}">&larr;</a></li>
                                         </c:otherwise>
                                     </c:choose>
 
                                     <!--  paging -->
                                     <c:forEach begin="${startBlockPage}" end="${endBlockPage}" var="i">
                                         <c:choose>
-                                            <c:when test="${boardList.pageable.pageNumber+1 == i}">
+                                            <c:when test="${boardList.pageable.pageNumber + 1 == i}">
                                                 <li class="page-item active">
-                                                    <a class="page-link" href="/?page=${i-1}">${i}</a>
+                                                    <a class="page-link" href="?page=${i-1}">${i}</a>
                                                 </li>
                                             </c:when>
                                             <c:otherwise>
                                                 <li class="page-item">
-                                                    <a class="page-link" href="/?page=${i-1}">${i}</a>
+                                                    <a class="page-link" href="?page=${i-1}">${i}</a>
                                                 </li>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
-
                                     <!-- 다음 -->
                                     <c:choose>
                                         <c:when test="${boardList.last}"></c:when>
                                         <c:otherwise>
-                                            <li class="page-item"><a class="page-link" href="${contextPath}/?page=${boardList.number+1}">&rarr;</a></li>
-                                            <li class="page-item"><a class="page-link" href="${contextPath}/?page=${boardList.totalPages-1}">마지막</a></li>
+                                            <li class="page-item"><a class="page-link" href="${contextPath}?page=${boardList.number+1}">&rarr;</a></li>
+                                            <li class="page-item"><a class="page-link" href="${contextPath}?page=${boardList.totalPages-1}">마지막</a></li>
                                         </c:otherwise>
                                     </c:choose>
                                 </ul>
@@ -159,6 +157,7 @@
     <script src="../resources/static/js/demo/datatables-demo.js"></script>
 
     <script type="text/javascript" src="../resources/static/js/board/boardMain.js"></script>
+    <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
     <script type="text/javascript" src="../resources/static/js/com-page.js"></script>
 
 

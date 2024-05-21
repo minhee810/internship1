@@ -95,6 +95,8 @@
     <!-- Page level custom scripts -->
     <script src="../resources/static/js/demo/datatables-demo.js"></script>
     <script src="../resources/static/js/board/boardWrite.js"></script>
+    <script src="../resources/static/js/utils/utility.js"></script>
+    <script src="../resources/static/js/utils/valid.js"></script>
 </body>
 
 </html>

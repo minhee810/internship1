@@ -99,4 +99,11 @@
 			WHERE COMMENT_ID = #{commentId}
 	    </select>
 		
+		<update id="commentDeleteAll" parameterType="long">
+		 <![CDATA[
+		 	UPDATE COMMENTS
+		 	SET IS_DELETED = 1
+		 	WHERE BOARD_ID = #{boardId}
+		 ]]>
+		</update>
 </mapper>

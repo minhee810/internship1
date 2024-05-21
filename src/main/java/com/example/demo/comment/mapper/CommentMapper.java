@@ -37,4 +37,7 @@ public interface CommentMapper {
 	
 	// 댓글 작성자 이름 검색
 	public String parentUsername(Long commentId);
+
+	// 게시글 삭제 시 댓글 일괄 삭제
+	public int commentDeleteAll(Long boardId);
 }

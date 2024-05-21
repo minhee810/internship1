@@ -30,5 +30,8 @@ public interface CommentService {
 
 	// 대댓글 작성하기 
 	public int commentAdd(CommentDto commentDto);
+
+	// 댓글 일괄 삭제 처리
+	int commentDeleteAll(Long boardId);
 	
 }
