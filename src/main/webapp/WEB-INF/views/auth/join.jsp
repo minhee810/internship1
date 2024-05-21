@@ -42,7 +42,6 @@
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input name="password" type="password" id="password" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호" data-title="비밀번호" />
-
                                     </div>
                                     <div class="col-sm-6">
                                         <input name="password_confirm" type="password" id="password_confirm" autocomplete="off" class="form-control form-control-user" placeholder="비밀번호 확인" data-title="비밀번호 확인" />
@@ -84,9 +83,8 @@
         </div>
     </div>
 	<%@ include file="../layout/script.jsp" %>
-    <script type="text/javascript" src="../resources/static/js/auth/join.js"></script>
-    <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
-    <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
+    <script type="text/javascript" src="${contextPath}/resources/static/js/auth/join.js"></script>
+    <script type="text/javascript" src="${contextPath}/resources/static/js/utils/valid.js"></script>
   
 </body>
 

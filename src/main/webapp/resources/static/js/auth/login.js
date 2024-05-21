@@ -1,5 +1,15 @@
+let emailEl = $('#email');
+const passwordEl = $('#password');
+
+
 $(document).ready(function() {
 	rememberId();
+	// 이메일 필드 입력 이벤트 핸들러
+	$('#email').on('input', function() {
+		if ($('#rememberId').is(':checked')) {
+			localStorage.email = $('#email').val();
+		}
+	});
 })
 
 // rememberID 기능 
@@ -15,8 +25,14 @@ function rememberId() {
 	}
 	$('#rememberId').click(function() {
 		if ($('#rememberId').is(':checked')) {
-			localStorage.email = $('#email').val();
-			localStorage.checkbox = $('#rememberId').val();
+
+			if ($('#email').val() === '') {
+				alert('이메일을 입력해주세요.');
+				$('#rememberId').prop('checked', false); // 체크박스 해제
+			} else {
+				localStorage.email = $('#email').val();
+				localStorage.checkbox = 'checked'; // 체크 상태 저장
+			}
 		} else {
 			localStorage.email = "";
 			localStorage.checkbox = "";
@@ -39,9 +55,11 @@ $('#loginBtn').click(function() {
 // 로그인
 function login() {
 	const data = JSON.stringify({
-		"email": $('#email').val().trim(),
+		"email": emailEl.val().trim(),
 		"password": $('#password').val().trim(),
 	});
+
+
 	ajaxCall(ajaxType.url.post, "/member/login", data, ajaxType.contentType.json, loginResp, loginError);
 }
 

@@ -6,7 +6,7 @@
   <head>
   	<%@ include file="../layout/head.js" %>
     <title>Tables</title>
-    <!-- Custom fonts for this template -->
+ 
   </head>
 
   <body id="page-top">

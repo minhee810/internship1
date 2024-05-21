@@ -11,30 +11,29 @@ $(document).ready(function() {
 });
 
 function writeBoard(event) {
+
 	event.preventDefault();
+	
+	var title = $('#title');
+	var element = $('#board');
+	var content = $('textarea#content');
+	const fields = [title, content];
 
-	var title = $('#title').val();
-	var content = $('textarea#content').val();
-
-	if (title.trim() === '') {
-		alert('제목을 입력해주세요.');
+	if (!validateFields(fields)) {
 		return false;
 	}
-	if (content.trim() === '') {
-		alert('내용을 입력해주세요.');
-		return false;
-	}
-
-	if (!confirm("저장하시겠습니까?")) {
+	
+	if (!confirm(makeMessage(element, messageEx.save.pre))) {
 		return false;
 	}
 
 	var data = new FormData($('#writeForm')[0]);
+	
 	ajaxCall(ajaxType.url.post, "/board/write", data, false, function(data) {
 		console.log(data);
-		location.href = "/";
 		alert("저장되었습니다.");
 		console.log('SUCCESS : ', data);
+		location.href = "/";
 	}, function(error) {
 		console.log(error.code);
 		let msg = error.msg;
@@ -42,9 +41,6 @@ function writeBoard(event) {
 		alert("저장에 실패하였습니다.", msg);
 	}, false, false, 600000)
 }
-
-
-
 
 // file 목록 수정
 let selectedFiles = [];
@@ -57,9 +53,10 @@ function test(files) {
 	for (let i = 0; i < files.length; i++) {
 		selectedFiles.push(files[i]);
 		const item = document.createElement('div');
+		item.classList.add('file-item');
 		const fileName = document.createTextNode(files[i].name);
 		const deleteButton = document.createElement('button');
-
+		deleteButton.classList.add('delete-button');
 		deleteButton.addEventListener('click', (event) => {
 			item.remove();
 			event.preventDefault();

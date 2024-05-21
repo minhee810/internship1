@@ -10,3 +10,5 @@
 
     <!-- Custom scripts for all pages-->
     <script src="${contextPath}/resources/static/js/sb-admin-2.min.js"></script>
+    <script src="${contextPath}/resources/static/js/utils/message.js"></script>
+    <script src="${contextPath}/resources/static/js/utils/utility.js"></script>

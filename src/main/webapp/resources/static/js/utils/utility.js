@@ -49,7 +49,6 @@ function checkRequiredFields() {
 	$('input').each(function() {
 		var value = $(this).val();
 		var element = $(this);
-		console.log(value);
 
 		if (!isRequired(value)) {
 			emptyEl.push(element);
@@ -59,6 +58,7 @@ function checkRequiredFields() {
 
 	return allFilled ? true : emptyEl;
 }
+
 function exeDaumPostcode(note, zipCode, address, datailAddress) {
 	new daum.Postcode({
 		oncomplete: function(data) {
@@ -142,9 +142,51 @@ function phoneFormat(phone) {
 }
 
 
+// 공통 널값 체크 
+const isRequired = value => value === '' ? false : true;
 
 
+const showError = (input, message) => {
+	const formGroup = input.parentElement;
 
+	formGroup.classList.remove('success');
+	formGroup.classList.add('error');
 
+	const error = formGroup.querySelector('small');
+	error.textContent = message;
+};
+
+// 보류 
+function showModal(label, body, buttonText) {
+	console.log(asdf);
+	let template = document.querySelector('#commonModal');
+	let newModal = document.importNode(template.content, true);
+
+	let modalLabel = newModal.querySelector('#modalLabel');
+	modalLabel.textContent = label;
+
+	var modalBody = newModal.querySelector('#modal-body').innerText;
+	modalBody.textContent = body;
+	console.log(body, label);
+
+	var confirmBtn = newModal.querySelector('#confirmBtn');
+	confirmBtn.textContent = buttonText;
+	document.body.appendChild(newModal);
+}
+
+function validateFields(fields) {
+
+	let isValid = true;
+
+	fields.forEach(field => {
+		if (field.val().trim() === '') {
+			alert(makeMessage(field, messageEx.fail.null));
+			console.log('sdfg');
+			isValid = false;
+			return false;
+		}
+	});
+	return isValid;
+}
 
 

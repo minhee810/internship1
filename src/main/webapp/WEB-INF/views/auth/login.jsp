@@ -54,9 +54,7 @@
         </div>
     </div>
 	<%@ include file="../layout/script.jsp" %>
-    <script type="text/javascript" src="../resources/static/js/auth/login.js"></script>
-    <script type="text/javascript" src="../resources/static/js/utils/valid.js"></script>
-    <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
+    <script type="text/javascript" src="${contextPath}/resources/static/js/auth/login.js"></script>
 </body>
 
 </html>

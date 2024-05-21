@@ -109,4 +109,9 @@ public class UsersController {
 		return "redirect:/";
 
 	}
+	@GetMapping("/myprofile")
+	public String myprofile() {
+		return "/auth/profile";
+	}
+	
 }

@@ -149,16 +149,9 @@
     <!-- Logout Modal-->
     <%@ include file="../layout/logoutModal.jsp" %>
     <%@ include file="../layout/script.jsp" %>
-    <!-- Page level plugins -->
-    <script src="../resources/static/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../resources/static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="../resources/static/js/demo/datatables-demo.js"></script>
-
+    
     <script type="text/javascript" src="../resources/static/js/board/boardMain.js"></script>
-    <script type="text/javascript" src="../resources/static/js/utils/utility.js"></script>
-    <script type="text/javascript" src="../resources/static/js/com-page.js"></script>
+
 
 
 </body>

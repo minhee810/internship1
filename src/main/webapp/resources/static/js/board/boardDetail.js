@@ -3,17 +3,27 @@ $(document).ready(function() {
 	getCommentList();
 	$('#deleteBtn').click(fn_boardDelete);
 	$('#commentSaveBtn').click(commentSubmit);
+	test1
+
 })
 
+function test1() {
+		var contentElement = document.getElementById('content');
+		var content = contentElement.innerText;
+		contentElement.innerHTML = content.replace(/\n/g, '<br>');
+	}
 // 게시글 삭제
 function fn_boardDelete() {
 	let boardId = $('#boardId').text();
-	if (!confirm("게시글을 삭제하시겠습니까?")) {
+	let name = $('#boardId').data('title');
+	let boardIdEl = $('#boardId');
+
+	if (!confirm(makeMessage(boardIdEl, messageEx.delete.pre))) {
 		return false;
 	}
 	ajaxCall(ajaxType.url.post, "/board/delete/" + boardId, {}, ajaxType.contentType.json, function(response) {
 		if (response.code == 1) {
-			alert("게시글이 삭제 완료되었습니다.");
+			alert(makeMessage(boardIdEl, messageEx.delete.post));
 			location.href = "/";
 		}
 	}, function(error) {
@@ -37,6 +47,7 @@ function getCommentList() {
 
 // 댓글 전체 리스트를 화면에 동적으로 그려주는 함수
 function createTable(data) {
+
 	let list = data.data;
 	console.log("list : ", list);
 	let element = document.querySelector('#replyForm ul');
@@ -45,6 +56,7 @@ function createTable(data) {
 		for (var i = 0; i < list.length; i++) {
 			let result = list[i];
 			let dateTime = getFormattedDate(result.createdDate);
+			let fmtCommentresult = result.commentContent.replace(keyword.textarea, '<br>');
 			// template 변수에 li 안의 값을 문자열로 더해준다. (+=) 
 			let template = `<li class="commentData" data-no="${result.commentId}" 
 													data-boardId="${result.boardId}" 
@@ -54,7 +66,8 @@ function createTable(data) {
 													data-name="${result.username}"  
 													data-date="${result.createdDate}" 
 													data-parent="${result.parentId}"
-													data-parentName="${result.parentUsername}">
+													data-parentName="${result.parentUsername}"
+													>
 											
 							<div class="commentDiv" data-depth="${result.depth}" style="padding-left: ${result.depth}rem;">`;
 
@@ -86,10 +99,10 @@ function createTable(data) {
 				// 깊이가 0이 아닌 경우 
 				if (result.depth != 0) {
 					template += `
-					ㄴ <em class="txt-mention"> @${result.parentUsername} </em><div id="commentContent"><p>${result.commentContent}</div></p>
+					ㄴ <em class="txt-mention"> @${result.parentUsername} </em><div id="commentContent"><p>${fmtCommentresult}</div></p>
 				</div>`;
 				} else {
-					template += `<div id="commentContent"><p> ${result.commentContent}</p></div>`;
+					template += `<div id="commentContent"><p> ${fmtCommentresult}</p></div>`;
 				}
 
 			} else if (result.isDeleted == 2) {

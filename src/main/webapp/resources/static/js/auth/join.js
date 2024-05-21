@@ -37,7 +37,7 @@ function duplicateCheck(element) {
 		}
 	}
 	ajaxCall(ajaxType.url.post, '/member/' + fieldId + '/check', data, ajaxType.contentType.form,
-	
+
 		function(result) {
 			if (fieldId == 'username') {
 				if (result == 1) {
@@ -68,6 +68,7 @@ function duplicateCheck(element) {
 }
 // 비밀번호 일치 검사 
 function passwordConfirm() {
+	let passwordEl = $('#password');
 	let password = $('#password').val();
 	let passwordCnf = $('#password_confirm').val();
 
@@ -76,6 +77,7 @@ function passwordConfirm() {
 		pwCheckStatus = true;
 	} else {
 		alert("비밀번호가 일치하지않습니다.");
+		showError(passwordEl, "메롱입니다.")
 		$('#password_confirm').focus();
 		pwCheckStatus = false;
 		return false;
