@@ -37,7 +37,7 @@ public class UsersController {
 		if (session != null) {
 			session.invalidate();
 		}
-		return "auth/join";
+		return "users/join";
 	}
 
 	// 로그인 페이지 이동
@@ -46,7 +46,7 @@ public class UsersController {
 		if (session != null) {
 			session.invalidate();
 		}
-		return "auth/login";
+		return "users/login";
 	}
 
 	// 회원가입
@@ -111,7 +111,7 @@ public class UsersController {
 	}
 	@GetMapping("/myprofile")
 	public String myprofile() {
-		return "/auth/profile";
+		return "/users/profile";
 	}
 	
 }

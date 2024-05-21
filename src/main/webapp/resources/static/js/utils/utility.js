@@ -141,20 +141,8 @@ function phoneFormat(phone) {
 	}
 }
 
-
 // 공통 널값 체크 
 const isRequired = value => value === '' ? false : true;
-
-
-const showError = (input, message) => {
-	const formGroup = input.parentElement;
-
-	formGroup.classList.remove('success');
-	formGroup.classList.add('error');
-
-	const error = formGroup.querySelector('small');
-	error.textContent = message;
-};
 
 // 보류 
 function showModal(label, body, buttonText) {

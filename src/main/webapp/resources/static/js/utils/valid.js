@@ -18,10 +18,8 @@ const keyword = {
 	textarea: /(?:\r\n|\r|\n)/g
 }
 
-
 // 아이디 유효성 검사 
 function usernameRegTest(usernameEl, username) {
-
 	usernameCheck = false;
 
 	if (!isRequired(username)) {
@@ -70,7 +68,6 @@ function pwCheck() {
 	}
 	alert(makeMessage(passwordEl, messageEx.success.avail));
 }
-
 
 // 전화번호 형식 체크
 function fn_phoneCheck() {
