@@ -27,7 +27,7 @@ function writeBoard(event) {
 	if (!confirm(makeMessage(element, messageEx.save.pre))) {
 		return false;
 	}
-
+	
 	var data = new FormData($('#writeForm')[0]);
 	
  	let data1 = $('#writeForm');
