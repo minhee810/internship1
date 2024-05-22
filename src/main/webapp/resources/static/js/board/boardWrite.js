@@ -10,8 +10,6 @@ $(document).ready(function() {
 	$('#insertBtn').click(writeBoard);
 });
 
-
-
 function writeBoard(event) {
 	event.preventDefault();
 
@@ -30,7 +28,8 @@ function writeBoard(event) {
 		return false;
 	}
 
-	var data = new FormData($("#writeForm")[0]);
+	var data = new FormData($('#writeForm')[0]);
+	
  	let data1 = $('#writeForm');
  	
 	console.log("data1 : ", data1);

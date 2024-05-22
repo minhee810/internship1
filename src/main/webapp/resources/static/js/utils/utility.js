@@ -12,9 +12,7 @@ const ajaxType = {
 
 function ajaxCall(type = "GET", url, data = false, successCallback, errorCallback,
 	processData = true, cache = true, timeout = 0) {
-
-	let contentType = "";
-
+	let contentType = false;
 	// object 로 오면 contentype -> form 
 	if (typeof data == "string" || "" || undefined) {
 		contentType = 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -25,8 +23,7 @@ function ajaxCall(type = "GET", url, data = false, successCallback, errorCallbac
 		if (processData == true) {
 			contentType = 'application/json; charset=utf-8';
 		}
-		
-
+	
 	}
 
 	$.ajax({
