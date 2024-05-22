@@ -50,6 +50,7 @@ function createTable(data) {
 			let template = `<li class="commentData" data-no="${result.commentId}" 
 													data-boardId="${result.boardId}"	
 													data-title="댓글"
+													data-depth="${result.depth}"
 													>
 						<div class="commentDiv" data-depth=${result.depth} style="padding-left: ${result.depth}rem;">`;
 			template += `<div class="commentHead">`;
@@ -63,11 +64,11 @@ function createTable(data) {
 				template += `<div class="commentHead2">`;
 
 				if (result.principal == 0) {
-					template += `<a href="#" class="commentReply" onclick="commentCreateView('${result.username}', ${result.commentId}, ${result.writer}, 'reply')">답글</a>`;// check 
+					template += `<a href="#" class="commentReply" onclick="commentCreateView('${result.username}', ${result.commentId},'reply')">답글</a>`;// check 
 
 				} else if (result.principal == 1) {
-					template += `<a onclick ="commentCreateView('${result.username}', ${result.commentId} ,${result.writer}, 'modify')" class="commentModify">수정</a>`; // check 
-					template += `<a class="commentReply" onclick="commentCreateView('${result.username}', ${result.commentId}, ${result.writer}, 'reply')">답글</a>`; // check  
+					template += `<a onclick ="commentCreateView('${result.username}', ${result.commentId}, 'modify')" class="commentModify">수정</a>`; // check 
+					template += `<a class="commentReply" onclick="commentCreateView('${result.username}', ${result.commentId}, 'reply')">답글</a>`; // check  
 					template += `<a onclick ='commentDelete(` + result.commentId + `, ` + result.writer + `)' class="commentRemove">삭제</a>`; // check
 					template += `<a class="commentCancle" style="display:none;">취소</a>`;
 
@@ -126,7 +127,7 @@ function commentSubmit(e) {
 }
 
 // 댓글 작성 화면 생성
-function commentCreateView(username, commentId, writer, req) {
+function commentCreateView(username, commentId, req) {
 
 	var existingAddForm = document.querySelector('.commentForm');
 
@@ -136,6 +137,7 @@ function commentCreateView(username, commentId, writer, req) {
 	var commentDiv = document.querySelector(`li[data-no="${commentId}"] .commentDiv`);
 	var commentHead = document.querySelector(`li[data-no="${commentId}"] .commentHead`);
 	var comment = document.querySelector(`li[data-no="${commentId}"] .comment`);
+
 	// 템플릿 활용하기 위해 가져오기
 	let template = document.querySelector('#modifyAddForm');
 	// 템플릿요소의 콘텐츠를 복사해서 새로운노드로 가져오기 위함 (쉽게말해 비활성화 되어있는 template을 활성화하는 과정)
@@ -181,13 +183,14 @@ function cancelView() {
 
 // 대댓글 저장 기능
 function commentAdd(commentId, str) {
+	console.log("=== commentAdd() ===");
 	let parentId = commentId;
 	let depth = $(`li[data-no="${commentId}"]`).data('depth');
 	let boardId = $(`li[data-no="${commentId}"]`).data('boardid');
 
 	console.log("boardId : ", boardId);
 	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
-	var commentContent = $('textarea#commentAddContent').val().trim();
+	var commentContent = $('textarea#commentContent').val().trim();
 	let data = $('#modifyAddForm').serialize();
 	data += "&parentId=" + parentId;
 	data += "&depth=" + depth;
@@ -210,6 +213,7 @@ function commentAdd(commentId, str) {
 	}
 
 	if (str == 'modify') {
+		console.log("modify data : ", data);
 		ajaxCall("PUT", "/comment", data, modifyResp, handleError);
 	}
 }
@@ -222,21 +226,23 @@ function modifyResp(response) {
 	} else if (response.code == 1) {
 		alert("댓글을 수정했습니다.");
 	}
-	cancelView();
 	getCommentList();
 }
 
-function commentDelete(commentId, writer) {
-	let boardId = $('input[name=boardId]').val();
-	let data = { "boardId": boardId, "writer": writer };
+function commentDelete(commentId) {
+	
+	let boardId = $('input[name="boardId"]').val();
+	let data = {
+		commentId: commentId,
+		boardId: boardId,
+	}
 
 	if (!confirm(makeMessage(commentContentEl, messageEx.delete.pre))) {
 		return false;
 	}
 
-	ajaxCall('put', '/comment/delete/' + commentId, JSON.stringify(data), ajaxType.contentType.json, function(response) {
+	ajaxCall('PUT', '/comment/delete',data, function(response) {
 		let code = response.code;
-
 		if (code == -1) {
 			alert(response.msg);
 			getCommentList();
@@ -247,11 +253,8 @@ function commentDelete(commentId, writer) {
 		} else if (code == -99) {
 			alert(response.msg);
 			getCommentList();
-
 		} else {
 			alert("댓글 삭제 중 예외가 발생했습니다.");
 		}
-	}, function(error) {
-		handleError(error);
-	});
+	}, handleError);
 }

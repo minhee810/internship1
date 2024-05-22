@@ -1,86 +1,90 @@
-let emailEl = $('#email');
+const emailEl = $('#email');
+const passwordEl = $('#password');
 var usernameCheck = false;
+var targetEl = false;
 var emailCheck = false;
 var pwCheckStatus = false;
 
 window.addEventListener('load', () => $('#username').focus());
 
 $(document).ready(function() {
-	$("#username, #phone, #email").keyup((e) => regTest(e));
-	$("#password").change(pwCheck);
+	$("#username, #phone, #email").keyup(function() {
+		replaceChar($(this));
+	});
+
+	$('#email, #password, #phone').change(function() {
+		alertRegTestResult($(this));
+	});
+
 	$('#password_confirm').change(passwordConfirm);
-	$('#phone').change(fn_phoneCheck);
+
 	$("#username").change(function() {
 		duplicateCheck($(this));
 	});
 	$('#emailCheck').click(function() {
 		let emailEl = $('#email');
-		duplicateCheck(emailEl);
+		duplicateCheck(emailEl)
 	});
 });
 
 
-function duplicateCheck(element) {
+function alertRegTestResult(element) {
 	let fieldId = element.attr('id');
-	let value = element.val();
-
-	let data = { [fieldId]: value };
-	if (fieldId == 'email') {
-		if (!emailRegTest(element, value)) {
-			return false;
-		}
-
-	} else if (fieldId == 'username') {
-		if (!usernameRegTest(element, value)) {
-			return false;
-		}
+	// 정규식 확인 후 실패 시 조건 사용자에게 보여주고 return false 해서 멈추기 
+	if (!regExpFields(element)) {
+		showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(element, hintMsg[fieldId]), 1);
+		element.focus();
+		return false;
 	}
-	ajaxCall("POST", "/member/" + fieldId + "/check", data, function(response) {
-		if (fieldId == 'username') {
-			if (response == 1) {
-				$("#id_feedback").html(makeMessage(element, messageEx.dupe.username));
-				$("#id_feedback").attr('color', '#dc3545');
-				usernameCheck = false;
-
-			} else {
-				$("#id_feedback").html(makeMessage(element, messageEx.success.avail));
-				$("#id_feedback").attr('color', '#2fb380');
-				usernameCheck = true;
-			}
-		} else if (fieldId == 'email') {
-
-			if (response == 1) {
-				alert(makeMessage(element, messageEx.dupe.email));
-				element.focus();
-				return false;
-
-			} else if (response == 0) {
-				alert(makeMessage(element, messageEx.success.avail));
-				emailCheck = true;
-				return true;
-			}
-		}
-	}, function(error) { handleError(error) });
 }
 
 
+// 아이디, 이메일 중복 검사 
+function duplicateCheck(element) {
+	let fieldId = element.attr('id');
+	let value = element.val();
+	let url = "/member/" + fieldId + "/" + value + "/check";
+
+	// 정규식 확인 후 실패 시 조건 사용자에게 보여주고 return false 해서 멈추기 
+	if (!regExpFields(element)) {
+		showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(element, hintMsg[fieldId]), 1);
+		element.focus();
+		return false;
+	}
+
+	console.log("정규식 테스트 통과")
+	ajaxCall("GET", url, false,
+
+		function(response) {
+			if (response == 1) {
+				showMessage((fieldId == 'username') ? targetEl : "", makeMessage(element, messageEx.dupe[fieldId]), response);
+				if (fieldId == 'username') usernameCheck = false;
+				if (fieldId == 'email') emailCheck = false;
+				return false;
+			}
+			if (response == 0) {
+				showMessage((fieldId == 'username') ? targetEl : "", makeMessage(element, messageEx.success.avail), response);
+				if (fieldId == 'username') usernameCheck = true;
+				if (fieldId == 'email') emailCheck = true;
+				return true;
+			}
+
+		}, handleError);
+}
+
 // 비밀번호 일치 검사 
 function passwordConfirm() {
-	let passwordEl = $('#password');
 	let password = $('#password').val();
 	let passwordCnf = $('#password_confirm').val();
 
-	if (isMatch(password, passwordCnf)) {
-		alert("비밀번호가 일치합니다.");
-		pwCheckStatus = true;
-	} else {
+	if (!isMatch(password, passwordCnf)) {
 		alert("비밀번호가 일치하지않습니다.");
-		showError(passwordEl, "메롱입니다.")
 		$('#password_confirm').focus();
 		pwCheckStatus = false;
 		return false;
 	}
-	return pwCheckStatus;
+	alert("비밀번호가 일치합니다.");
+	pwCheckStatus = true;
 }
 
 // 정규식 검사 후 alert 띄우기
@@ -92,7 +96,7 @@ function checkRegFields() {
 
 	for (var i = 0; i < checkTarget.length; i++) {
 		var element = $('#' + checkTarget[i]);
-		if (!checkRegExp(checkTarget[i], $('#' + checkTarget[i]).val())) {
+		if (!regExpFields(element)) {
 			failEl.push(element);
 			fieldCheck = false;
 		}
@@ -130,7 +134,6 @@ $('#joinBtn').on('click change', function() {
 	// 이메일 중복 체크 여부 
 	if (emailCheck == false) {
 		alert("이메일 중복 검사를 실시해주세요.");
-		// duplicateCheck(emailEl);
 		return false;
 	}
 

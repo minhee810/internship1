@@ -55,7 +55,7 @@
                                     <!-- file upload -->
                                         <div class="multiple-upload" >
                                             	<!-- test -->
-	                                            <input type="file" name="files" multiple="multiple" onchange="test(this.files)">
+	                                            <input type="file" name="files" multiple="multiple" onchange="createFile(this.files)">
 												<div id="file-list"></div>
                                             </div>
                                         </div>

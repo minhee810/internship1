@@ -48,7 +48,9 @@ public class BoardController {
 	// get 방식으로 페이지 번호를 넘겨준다.
 	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
 	@GetMapping("")
-	public String getBoardList(@PageableDefault(size = 10, page = 0, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+	public String getBoardList(
+			@PageableDefault(size = 10, page = 0, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable,
+			Model model) {
 
 		log.info("===getBoardList 로직실행===");
 
@@ -101,14 +103,16 @@ public class BoardController {
 			if (userId == null) {
 				throw new CustomException(-1, "로그인 정보가 없습니다.");
 			}
+			if (dto.getFiles() != null) {
+				for (MultipartFile file : dto.getFiles()) {
 
-			for (MultipartFile file : dto.getFiles()) {
-
-				// 업로드된 파일의 크기를 확인하고 제한을 초과하는지 검사
-				if (file.getSize() > MAX_FILE_SIZE) {
-					throw new MaxUploadSizeExceededException(MAX_FILE_SIZE);
+					// 업로드된 파일의 크기를 확인하고 제한을 초과하는지 검사
+					if (file.getSize() > MAX_FILE_SIZE) {
+						throw new MaxUploadSizeExceededException(MAX_FILE_SIZE);
+					}
 				}
 			}
+
 			dto.setUserId(userId);
 
 			boardService.insertBoard(dto);

@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public int emailCheck(String email) {
 		int result = userMapper.emailCheck(email);
+		log.info("result = {}", result);
+		log.info("email = {}", email);
 		return result;
 	}
 

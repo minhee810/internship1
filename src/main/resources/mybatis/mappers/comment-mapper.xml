@@ -51,12 +51,12 @@
 		</insert>
 		
 		<!-- 댓글 삭제하기 -->
-		<update id="deleteComment" parameterType="hashMap">
+		<update id="deleteComment" parameterType="long">
 			<![CDATA[
 			 	UPDATE COMMENTS  
 				SET 
 				IS_DELETED = 1
-			WHERE COMMENT_ID = #{commentId} AND WRITER = #{writer}
+			WHERE COMMENT_ID = #{commentId}
 			]]>
 		</update>
 		

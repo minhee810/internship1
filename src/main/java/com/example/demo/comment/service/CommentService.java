@@ -14,7 +14,7 @@ public interface CommentService {
 	public CommentDto saveComment(CommentDto commentVO);
 
 	// 댓글 삭제하기
-	public int deleteComment(Long commentId, Long boardId, Long writer);
+	public int deleteComment(Long commentId, Long boardId);
 
 	// 댓글 수정하기
 	public int updateComment(CommentDto dto);

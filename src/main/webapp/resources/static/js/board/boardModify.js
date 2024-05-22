@@ -3,15 +3,18 @@ $(document).ready(function() {
 })
 
 function fileList() {
-	ajaxCall(ajaxType.url.get, fileUrl, false, false,
+	let boardId = $('#boardId').val();
+	let url = "/board/files/" + boardId
+
+	ajaxCall("GET", url, false,
+
 		function(files) {
 			console.log("file 요청 성공");
 			console.log("files", files);
 			loadFiles(files)
 		},
-		function(error) {
-			handleError(error)
-		});
+
+		handleError);
 }
 
 function loadFiles(files) {

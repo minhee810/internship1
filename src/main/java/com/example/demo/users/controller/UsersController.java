@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,17 +65,21 @@ public class UsersController {
 	}
 
 	/** 아이디 중복 검사 **/
-	@PostMapping("/username/check")
+	@GetMapping("/username/{username}/check")
 	@ResponseBody
-	public int idCheck(String username) {
-
+	public int idCheck(@PathVariable String username) {
+		log.info("username = {}", username);
 		return userSerivce.idCheck(username);
 	}
 
 	/** 이메일 중복 검사 **/
-	@PostMapping("/email/check")
+	@GetMapping("/email/{email}/check")
 	@ResponseBody
-	public int emailCheck(String email) {
+	public int emailCheck(@PathVariable String email) {
+
+		log.info("emailCheck 로직 실행");
+		log.info("email = {}", email);
+		log.info("userSerivce.emailCheck(email) = {}", userSerivce.emailCheck(email));
 		return userSerivce.emailCheck(email);
 	}
 

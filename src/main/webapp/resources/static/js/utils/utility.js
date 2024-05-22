@@ -10,20 +10,26 @@ const ajaxType = {
 	},
 }
 
-function ajaxCall(type = "GET", url, data = false, successCallback, errorCallback,
+function ajaxCall(type, url, data = false, successCallback, errorCallback,
 	processData = true, cache = true, timeout = 0) {
-	let contentType = false;
+
+	let contentType = false; //contentType = 'application/json; charset=utf-8';
+
 	// object 로 오면 contentype -> form 
-	if (typeof data == "string" || "" || undefined) {
+	if (typeof data == "string" || data == false) {
+		console.log("type is string");
 		contentType = 'application/x-www-form-urlencoded; charset=UTF-8'
 
-		// json으로 오면 contentType -> json 	
+		// object로 오면 contentType -> json 	
 	} else if (typeof data == "object") {
-		console.log("object!!!!!!!!!!!!!!")
+		console.log("type is object");
 		if (processData == true) {
+			data = JSON.stringify(data);
 			contentType = 'application/json; charset=utf-8';
+		} else {
+			
 		}
-	
+
 	}
 
 	$.ajax({
@@ -44,36 +50,12 @@ function ajaxCall(type = "GET", url, data = false, successCallback, errorCallbac
 	});
 }
 
-
-//form.serialize() 
-/*function ajaxCall(type, url, data, contentType, successCallback, errorCallback, processData = true, cache = true, timeout = 0) {
-
-
-	$.ajax({
-		type: "POST" == type ? 'application/x-www-form-urlencoded; charset=UTF-8' : false,
-		url: url,
-		data: data,
-		dataType: "json",
-		contentType: contentType, // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
-		processData: processData,
-		cache: cache,
-		timeout: timeout,
-		success: function(response) {
-			successCallback(response);
-		},
-		error: function(error) {
-			errorCallback(error);
-		}
-	});
-}*/
-
 function saveSuccess(response, redirect) {
 	alert("저장을 완료했습니다.");
 	location.href = redirect;
 	console.log("response : ", response);
 
 }
-
 
 function handleSuccess(response) {
 	console.log("response : ", response);
@@ -221,5 +203,7 @@ function validateFields(fields) {
 	});
 	return isValid;
 }
+
+
 
 

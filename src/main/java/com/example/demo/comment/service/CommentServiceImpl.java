@@ -79,9 +79,9 @@ public class CommentServiceImpl implements CommentService {
 
 	@Transactional(rollbackFor = Exception.class) // 쿼리 두개 실행되므로 트랜잭션 처리, 예외 발생시 롤백 실행
 	@Override
-	public int deleteComment(Long commentId, Long boardId, Long writer) {
+	public int deleteComment(Long commentId, Long boardId) {
 		int rowCnt = boardMapper.updateCommentCnt(boardId, -1); // 댓글 수 -1
-		int result = commentMapper.deleteComment(commentId, writer); // 댓글 삭제
+		int result = commentMapper.deleteComment(commentId); // 댓글 삭제
 		log.info("rowCnt = {} ", rowCnt);
 		return rowCnt; // 댓글 수 반환
 	}

@@ -46,9 +46,8 @@ function writeBoard(event) {
 // file 목록 수정
 let selectedFiles = [];
 
-function test(files) {
+function createFile(files) {
 
-	console.log(files);
 	const fileList = document.getElementById('file-list');
 
 	for (let i = 0; i < files.length; i++) {

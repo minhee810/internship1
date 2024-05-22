@@ -62,15 +62,16 @@ public class CommentController {
 	}
 
 	// 댓글 삭제
-	@PutMapping("/comment/delete/{commentId}")
-	public ResponseEntity<?> delete(@PathVariable Long commentId, @RequestBody Map<String, Long> requestParam) {
-		log.info("commentId = {}", commentId);
-		log.info("requestParam = {}", requestParam);
+	@PutMapping("/comment/delete")
+	public ResponseEntity<?> delete(@RequestBody Map<String, String> map) {
+		log.info("====comment delete ====");
+		Long boardId = Long.valueOf(map.get("boardId"));
+		Long commentId = Long.valueOf(map.get("commentId"));
 
-		Long boardId = Long.valueOf(requestParam.get("boardId"));
-		Long writer = Long.valueOf(requestParam.get("writer"));
+		log.info("boardId ={} ", boardId);
+		log.info("commentId ={} ", commentId);
 
-		int result = commentService.deleteComment(commentId, boardId, writer);
+		int result = commentService.deleteComment(commentId, boardId);
 
 		if (result > 0) {
 			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
@@ -96,7 +97,6 @@ public class CommentController {
 		log.info("댓글 수정 로직 실행");
 
 		try {
-
 			int result = commentService.updateComment(dto);
 
 			if (result > 0) {

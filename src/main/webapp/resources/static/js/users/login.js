@@ -13,11 +13,7 @@ $(document).ready(function() {
 
 // rememberID 기능 
 function rememberId() {
-
 	if (localStorage.email !== "") {
-		//$('#rememberId').attr('checked', 'checked');
-	
-	// if (localStorage.checkbox && localStorage.checkbox !== "") {
 		$('#rememberId').attr('checked', 'checked');
 		document.getElementById("email").value = localStorage.email;
 		email = localStorage.email;

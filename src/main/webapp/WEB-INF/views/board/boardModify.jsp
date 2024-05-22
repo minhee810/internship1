@@ -40,13 +40,12 @@
                         <div class="card-body">
                             <!-- Basic Card Example -->
                         	
-						    <script>
-						    	var fileUrl = "<c:url value='/board/files/${detail.boardId}' />";
-							</script>
+						    
                             <form action="${contextPath}/board/modify/${detail.boardId}" method="post" class="h-100" enctype="multipart/form-data">
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
                                         <div class="col-sm-11 float-left">
+                                        	<input type="hidden" id="boardId" name="boardId" value="${detail.boardId}"/>
                                             <input type="text"  id="title" name="title" class="form-control" placeholder="제목" value="${detail.title}" />
                                         </div>
                                         <a href="">
@@ -60,7 +59,7 @@
                                         placeholder="내용" style="resize: none">${detail.content} </textarea>
                                          <!-- file upload -->
 	                                      
-										<input type="file" name="files" multiple="multiple" onchange="test(this.files)">
+										<input type="file" name="files" multiple="multiple" onchange="createFile(this.files)">
 										<div id="file-list"></div>        
                         			</div>
                                 </div>
