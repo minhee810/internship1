@@ -38,8 +38,8 @@ public class CommentController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/comment")
-	public ResponseEntity<?> getCommentList(@RequestParam("boardId") Long boardId, Model model, HttpSession session) {
+	@GetMapping("/comment/{boardId}")
+	public ResponseEntity<?> getCommentList(@PathVariable("boardId") Long boardId, Model model, HttpSession session) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 
 		log.info("userId = {}", userId);
@@ -50,7 +50,7 @@ public class CommentController {
 
 	// 댓글 작성
 	@PostMapping("/comment")
-	public ResponseEntity<?> saveComment(@RequestBody CommentDto dto, HttpSession session, Model model) {
+	public ResponseEntity<?> saveComment(CommentDto dto, HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 		if (userId == null) {
 			throw new CustomException(-1, "로그인하지 않은 사용자의 접근입니다.");

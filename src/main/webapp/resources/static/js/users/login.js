@@ -57,12 +57,9 @@ $('#loginBtn').click(function() {
 
 // 로그인
 function login() {
-	const data = JSON.stringify({
-		"email": emailEl.val().trim(),
-		"password": $('#password').val().trim(),
-	});
+	let data = $('#loginForm').serialize(); 
+	ajaxCall("POST", "/member/login", data, loginResp, loginError);
 
-	ajaxCall(ajaxType.url.post, "/member/login", data, ajaxType.contentType.json, loginResp, loginError);
 }
 
 function loginResp(response) {

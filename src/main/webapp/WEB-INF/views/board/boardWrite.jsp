@@ -12,6 +12,7 @@
 	<%@ include file="../layout/head.jsp" %>
     <title>Tables</title>
     <!-- Custom styles for this page -->
+    <link href="${contextPath}/resources/static/css/upload-file.css" rel="stylesheet" />
     <link href="../resources/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
 </head>
 
@@ -38,7 +39,7 @@
                     <div class="card shadow mb-4 h-75">
                         <div class="card-body">
                             <!-- Basic Card Example -->
-                            <form id="writeForm" name="writeForm" action="${contextPath}/board/write" method="post" class="h-100" enctype="multipart/form-data">
+                            <form id="writeForm" name="writeForm" action="${contextPath}/board/write" class="h-100">
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
                                         <div class="col-sm-11 float-left">

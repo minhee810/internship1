@@ -33,7 +33,6 @@ function usernameRegTest(usernameEl, username) {
 		usernameCheck = false;
 		return false;
 	}
-
 	return true;
 }
 
@@ -45,7 +44,7 @@ function emailRegTest(emailEl, email) {
 		alert(makeMessage(emailEl, messageEx.fail.null));
 		return false;
 
-	} else if (!checkRegExp("email", email)) {
+	} else if (!checkRegExp("email", email) && !commonValidator.checkKor.test(email)) {
 		alert(makeMessage(emailEl, messageEx.fail.valid));
 		emailEl.val(email);
 		emailEl.focus();
@@ -89,8 +88,7 @@ function fn_phoneCheck() {
 // 공통 정규식 체크 
 function checkRegExp(type, str) {
 	const regex = validator[type];
-	//console.log("regex : ", regex);
-	//console.log("test type :", type);
+
 	if (regex) {
 		return regex.test(str);
 	}
@@ -100,9 +98,9 @@ function checkRegExp(type, str) {
 // 이벤트 객체에서 name 속성 추출하는 이벤트 -> replace 함수 호출
 function regTest(e) {
 	let name = e.target.name;
-	console.log("name : ", name);
 	replaceChar(name);
 }
+
 
 // 공통 replace 함수
 function replaceChar(name) {

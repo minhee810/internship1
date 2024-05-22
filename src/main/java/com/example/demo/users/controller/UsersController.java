@@ -83,9 +83,11 @@ public class UsersController {
 	 * 
 	 **/
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpSession session) throws Exception {
-
+	public ResponseEntity<?> login(LoginDto loginDto, HttpSession session) throws Exception {
+		
+		log.info("login ==== ");
 		Long id = (Long) session.getAttribute(SessionConst.USER_ID);
+		
 		if (session.getAttribute(SessionConst.USER_ID) != null) {
 			log.info("id= {}", id);
 			session.removeAttribute(SessionConst.USER_ID);

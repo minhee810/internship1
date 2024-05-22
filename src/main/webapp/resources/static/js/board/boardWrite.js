@@ -10,36 +10,38 @@ $(document).ready(function() {
 	$('#insertBtn').click(writeBoard);
 });
 
-function writeBoard(event) {
 
+
+function writeBoard(event) {
 	event.preventDefault();
-	
+
 	var title = $('#title');
 	var element = $('#board');
 	var content = $('textarea#content');
 	const fields = [title, content];
 
+	console.log(title.val(), content.val());
+
 	if (!validateFields(fields)) {
 		return false;
 	}
-	
+
 	if (!confirm(makeMessage(element, messageEx.save.pre))) {
 		return false;
 	}
 
-	var data = new FormData($('#writeForm')[0]);
-	
-	ajaxCall(ajaxType.url.post, "/board/write", data, false, function(data) {
-		console.log(data);
-		alert("저장되었습니다.");
-		console.log('SUCCESS : ', data);
-		location.href = "/";
-	}, function(error) {
-		console.log(error.code);
-		let msg = error.msg;
-		console.log('ERROR : ', msg);
-		alert("저장에 실패하였습니다.", msg);
-	}, false, false, 600000)
+	var data = new FormData($("#writeForm")[0]);
+ 	let data1 = $('#writeForm');
+ 	
+	console.log("data1 : ", data1);
+	console.log("data : ", data);
+
+	ajaxCall("POST", "/board/write", data,
+		function(response) { saveSuccess(response, "/") },
+		handleError,
+		false,
+		false,
+		600000);
 }
 
 // file 목록 수정

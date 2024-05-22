@@ -57,6 +57,7 @@
                                                 삭제
                                             </button>
                                         </c:when>
+                                   
                                     </c:choose>
                                 </div>
                                 <div class="card-body navbar-nav-scroll" style="white-space: pre-line; height: 290px !important ">
@@ -68,11 +69,25 @@
                                     <label class="fileUpLoadBtn">파일</label>
                                     <div id="fileName" class="fileName">
                                         <!-- file upload -->
-                                        <c:forEach var="files" items="${files}">
+                                       <c:choose>
+                                       <c:when  test="${!empty loginUsername}">
+                                       <c:forEach var="files" items="${files}">
                                                 <div class="custom-file">
                                                     <a href="<c:url value='/fileDownload/${detail.boardId}/${files.saveFileName}/${files.orgFileName}' /> ">${files.orgFileName} 파일 다운로드 (${files.fileSize} kb)</a><br>
                                                 </div>
                                         </c:forEach>
+                                       </c:when>
+                                            <c:otherwise>
+                                          <c:forEach var="files" items="${files}">
+                                                <div class="custom-file">
+                                                    <span>${files.orgFileName} 파일 다운로드 (${files.fileSize} kb)</span><br>
+                                                </div>
+                                        </c:forEach>
+                                        
+                                        </c:otherwise>
+                                       </c:choose>
+                                       
+                                        
                                     </div>
                                 </div>
                               
@@ -80,7 +95,6 @@
  								    <form action="" id="replyForm" name="replyForm">
                                     <ul id="commentDiv" style="max-height: 500px; overflow-y: scroll;overflow-x: hidden;"></ul>
                                     </form> 
-                                    
                                     <template id="modifyAddForm">
                                             <div class="commentForm">
 										        <form action="#" id="modifyAddForm" class="">
@@ -89,12 +103,11 @@
 													<div>
 											         <div>
 														<label id="id" name="id"> 
-												       <!--  <input type="hidden" id="boardId" name="boardId" > -->
 														<div type="text" class="mini3" id="id" name="id">
 														</div>
 														</label>		
 														</div>
-										            	<textarea id="commentContent"  cols="30" row="5" name="commentContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
+										            	<textarea id="commentContent" data-title="댓글" cols="30" row="5" name="commentContent" class="form-control flex" style="width: 90%" placeholder="대댓글 내용을 작성해주세요." maxlength="300"></textarea>
 										           
 										           </div>
 										        </form>
@@ -104,7 +117,7 @@
                                         <c:when test="${!empty loginUsername}">
                                             <form action="" class="flex" id="commentForm" name="commentForm">
                                                 <input type="hidden" name="boardId" value="${detail.boardId}">
-                                                <textarea id="inputComment" cols="30" row="5" name="inputComment" class="form-control flex" style="width: 90%" placeholder="내용" maxlength="300"></textarea>
+                                                <textarea id="commentContent" cols="30" row="5" data-title="댓글 내용" name="commentContent" class="form-control flex" style="width: 90%" placeholder="내용" maxlength="300"></textarea>
                                                 <a class="commentAdd flex" style="width: 9%">
                                                     <button type="button" id="commentSaveBtn" class="btn btn-primary btn ml-1" style="margin-top: 0.75rem;width: 100%">등록</button>
                                                 </a>
@@ -131,7 +144,7 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
+	<%@ include file="../layout/logoutModal.jsp" %>
 	<%@ include file="../layout/script.jsp" %>
     <!-- Page level plugins -->
     <script src="${contextPath}/resources/static/vendor/datatables/jquery.dataTables.min.js"></script>

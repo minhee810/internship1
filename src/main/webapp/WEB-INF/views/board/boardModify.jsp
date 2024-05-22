@@ -10,8 +10,6 @@
 <head>
 	<%@ include file="../layout/head.jsp" %>
     <title>Tables</title>
-    <!-- Custom styles for this page -->
-    
     <link href="${contextPath}/resources/static/css/upload-file.css" rel="stylesheet" />
     <link href="${contextPath}/resources/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
 </head>
@@ -42,9 +40,9 @@
                         <div class="card-body">
                             <!-- Basic Card Example -->
                         	
-    <script>
-    	var fileUrl = "<c:url value='/board/files/${detail.boardId}' />";
-	</script>
+						    <script>
+						    	var fileUrl = "<c:url value='/board/files/${detail.boardId}' />";
+							</script>
                             <form action="${contextPath}/board/modify/${detail.boardId}" method="post" class="h-100" enctype="multipart/form-data">
                                 <div class="card shadow mb-4 h-100">
                                     <div class="card-header py-3">
@@ -61,7 +59,7 @@
                                         <textarea id="content" name="content" cols="30" class="form-control h-100" 
                                         placeholder="내용" style="resize: none">${detail.content} </textarea>
                                          <!-- file upload -->
-	                                            <!-- new code -->
+	                                      
 										<input type="file" name="files" multiple="multiple" onchange="test(this.files)">
 										<div id="file-list"></div>        
                         			</div>

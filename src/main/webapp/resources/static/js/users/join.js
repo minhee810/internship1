@@ -1,4 +1,4 @@
-
+let emailEl = $('#email');
 var usernameCheck = false;
 var emailCheck = false;
 var pwCheckStatus = false;
@@ -6,7 +6,6 @@ var pwCheckStatus = false;
 window.addEventListener('load', () => $('#username').focus());
 
 $(document).ready(function() {
-
 	$("#username, #phone, #email").keyup((e) => regTest(e));
 	$("#password").change(pwCheck);
 	$('#password_confirm').change(passwordConfirm);
@@ -20,12 +19,12 @@ $(document).ready(function() {
 	});
 });
 
+
 function duplicateCheck(element) {
-
 	let fieldId = element.attr('id');
-	let value = $('#' + fieldId).val();
-	let data = { [fieldId]: value };
+	let value = element.val();
 
+	let data = { [fieldId]: value };
 	if (fieldId == 'email') {
 		if (!emailRegTest(element, value)) {
 			return false;
@@ -36,36 +35,35 @@ function duplicateCheck(element) {
 			return false;
 		}
 	}
-	ajaxCall(ajaxType.url.post, '/member/' + fieldId + '/check', data, ajaxType.contentType.form,
+	ajaxCall("POST", "/member/" + fieldId + "/check", data, function(response) {
+		if (fieldId == 'username') {
+			if (response == 1) {
+				$("#id_feedback").html(makeMessage(element, messageEx.dupe.username));
+				$("#id_feedback").attr('color', '#dc3545');
+				usernameCheck = false;
 
-		function(result) {
-			if (fieldId == 'username') {
-				if (result == 1) {
-					$("#id_feedback").html(makeMessage(element, messageEx.dupe.username));
-					$("#id_feedback").attr('color', '#dc3545');
-					usernameCheck = false;
-
-				} else {
-					$("#id_feedback").html(makeMessage(element, messageEx.success.avail));
-					$("#id_feedback").attr('color', '#2fb380');
-					usernameCheck = true;
-				}
-			} else if (fieldId == 'email') {
-
-				if (result == 1) {
-					alert(makeMessage(element, messageEx.dupe.email));
-					element.focus();
-					return false;
-
-				} else if (result == 0) {
-					alert(makeMessage(element, messageEx.success.avail));
-					emailCheck = true;
-					return true;
-				}
+			} else {
+				$("#id_feedback").html(makeMessage(element, messageEx.success.avail));
+				$("#id_feedback").attr('color', '#2fb380');
+				usernameCheck = true;
 			}
-		},
-		function(error) { handleError(error) });
+		} else if (fieldId == 'email') {
+
+			if (response == 1) {
+				alert(makeMessage(element, messageEx.dupe.email));
+				element.focus();
+				return false;
+
+			} else if (response == 0) {
+				alert(makeMessage(element, messageEx.success.avail));
+				emailCheck = true;
+				return true;
+			}
+		}
+	}, function(error) { handleError(error) });
 }
+
+
 // 비밀번호 일치 검사 
 function passwordConfirm() {
 	let passwordEl = $('#password');
@@ -114,6 +112,7 @@ $('#joinBtn').on('click change', function() {
 		requiredCheckResult[0].focus();
 		return false;
 	}
+
 	// 유효성 검사 
 	if (requriedRegResult !== true) {
 		console.log("형식 체크 실패 필드들 : ", requriedRegResult);
@@ -151,12 +150,11 @@ $('#joinBtn').on('click change', function() {
 
 // 회원가입 완료
 function joinMemebership() {
-
-	var formData = $('#joinForm').serialize();
+	var data = $('#joinForm').serialize();
 	if (!confirm("회원가입을 진행하시겠습니까?")) {
 		return false;
 	}
-	ajaxCall(ajaxType.url.post, "/member/join", formData, ajaxType.contentType.form, joinMembershipResp, function(error) { handleError(error) });
+	ajaxCall("POST", "/member/join", data, joinMembershipResp, function(error) { handleError(error) });
 }
 
 function joinMembershipResp(response) {
@@ -170,4 +168,6 @@ function joinMembershipResp(response) {
 		alert("회원가입에 실패하였습니다.");
 	}
 }
+
+
 

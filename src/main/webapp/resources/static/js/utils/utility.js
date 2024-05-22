@@ -10,8 +10,24 @@ const ajaxType = {
 	},
 }
 
-//form.serialize() 
-function ajaxCall(type, url, data, contentType, successCallback, errorCallback, processData = true, cache = true, timeout = 0) {
+function ajaxCall(type = "GET", url, data = false, successCallback, errorCallback,
+	processData = true, cache = true, timeout = 0) {
+
+	let contentType = "";
+
+	// object 로 오면 contentype -> form 
+	if (typeof data == "string" || "" || undefined) {
+		contentType = 'application/x-www-form-urlencoded; charset=UTF-8'
+
+		// json으로 오면 contentType -> json 	
+	} else if (typeof data == "object") {
+		console.log("object!!!!!!!!!!!!!!")
+		if (processData == true) {
+			contentType = 'application/json; charset=utf-8';
+		}
+		
+
+	}
 
 	$.ajax({
 		type: type,
@@ -30,6 +46,37 @@ function ajaxCall(type, url, data, contentType, successCallback, errorCallback, 
 		}
 	});
 }
+
+
+//form.serialize() 
+/*function ajaxCall(type, url, data, contentType, successCallback, errorCallback, processData = true, cache = true, timeout = 0) {
+
+
+	$.ajax({
+		type: "POST" == type ? 'application/x-www-form-urlencoded; charset=UTF-8' : false,
+		url: url,
+		data: data,
+		dataType: "json",
+		contentType: contentType, // 서버로 데이터를 보낼 떄에 어떤 타입으로 보낼 것인지 지정
+		processData: processData,
+		cache: cache,
+		timeout: timeout,
+		success: function(response) {
+			successCallback(response);
+		},
+		error: function(error) {
+			errorCallback(error);
+		}
+	});
+}*/
+
+function saveSuccess(response, redirect) {
+	alert("저장을 완료했습니다.");
+	location.href = redirect;
+	console.log("response : ", response);
+
+}
+
 
 function handleSuccess(response) {
 	console.log("response : ", response);
@@ -162,6 +209,7 @@ function showModal(label, body, buttonText) {
 	document.body.appendChild(newModal);
 }
 
+// 태그가 서로 다른 입력창의 경우 여러 종류의 필드 검사할 수 있도록 필드를 지정해주는 함수 
 function validateFields(fields) {
 
 	let isValid = true;
@@ -169,7 +217,7 @@ function validateFields(fields) {
 	fields.forEach(field => {
 		if (field.val().trim() === '') {
 			alert(makeMessage(field, messageEx.fail.null));
-			console.log('sdfg');
+
 			isValid = false;
 			return false;
 		}
