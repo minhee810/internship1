@@ -24,16 +24,13 @@ function deleteResp(response) {
 	}
 }
 
-// 1. 댓글 조회 get
+// 댓글 조회 get
 function getCommentList() {
 	var boardId = boardIdEl.text();
-	ajaxCall("GET", '/comment/' + boardId, false, getCommentResp, handleError);
+	ajaxCall("GET", '/comment/' + boardId, false, function(response) { createTable(response); }, handleError);
 }
 
-function getCommentResp(response) {
-	console.log("댓글 불러오기 성공", response);
-	createTable(response);
-}
+
 // 댓글 전체 리스트를 화면에 동적으로 그려주는 함수
 function createTable(data) {
 
@@ -108,22 +105,20 @@ function commentSubmit(e) {
 	var commentContent = commentContentEl.val().trim();
 
 	let data = $('#commentForm').serialize();
-	console.log("data : ", data);
 
 	// form data -> serialize = string -> stringify =string 
-	if (commentContent == "") {
+	if (!isRequired(commentContent)) {
 		alert(makeMessage(commentContentEl, messageEx.fail.null));
 		$('textarea#commentContent').focus;
 		return false;
 	}
+
 	ajaxCall("POST", "/comment", data,
 		function(response) {
 			alert(makeMessage(commentContentEl, messageEx.save.post));
-			console.log("SUCCESS : ", response);
 			$('textarea#commentContent').val(""); // 댓글 입력 창 비우기
 			getCommentList();
 		}, handleError);
-
 }
 
 // 댓글 작성 화면 생성
@@ -165,10 +160,45 @@ function commentCreateView(username, commentId, req) {
 		comment.style.display = 'none';
 		commentHead.style.display = 'none';
 	}
-
 }
 
-// 댓글 작성 창 취소 시 
+// 댓글 수정, 대댓글 저장 기능
+function commentAdd(commentId, str) {
+
+	let parentId = commentId;
+	let depth = $(`li[data-no="${commentId}"]`).data('depth');
+	let boardId = $(`li[data-no="${commentId}"]`).data('boardid');
+	let commentContentEl = $('textarea#commentContent');
+
+	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
+	var commentContent = commentContentEl.val().trim();
+	let data = $('#modifyAddForm').serialize();
+	data += "&parentId=" + parentId;
+	data += "&depth=" + depth;
+	data += "&boardId=" + boardId;
+	data += "&commentId=" + commentId;
+
+	if (!isRequired(commentContent)) {
+		alert(makeMessage(commentContentEl, messageEx.fail.null));
+		$('textarea#commentContent').focus;
+		return false;
+	}
+
+	if (str == 'reply') {
+		ajaxCall('POST', '/comment/reply', data,
+			function(response) {
+				alert(makeMessage(commentContentEl, messageEx.save.post));
+				$('textarea#commentContent').val(""); // 댓글 입력 창 비우기
+				getCommentList();
+			}, handleError);
+	}
+	if (str == 'modify') {
+		ajaxCall("PUT", "/comment", data, modifyResp, handleError);
+	}
+}
+
+
+// 댓글 작성 창 취소 
 function cancelView() {
 	// 수정 창 닫기
 	var commentEditForm = document.querySelector('.commentForm');
@@ -181,56 +211,13 @@ function cancelView() {
 }
 
 
-// 대댓글 저장 기능
-function commentAdd(commentId, str) {
-	console.log("=== commentAdd() ===");
-	let parentId = commentId;
-	let depth = $(`li[data-no="${commentId}"]`).data('depth');
-	let boardId = $(`li[data-no="${commentId}"]`).data('boardid');
-
-	console.log("boardId : ", boardId);
-	// input 태그의 name 속성이 boardId 인 것의 값을 가져옴.
-	var commentContent = $('textarea#commentContent').val().trim();
-	let data = $('#modifyAddForm').serialize();
-	data += "&parentId=" + parentId;
-	data += "&depth=" + depth;
-	data += "&boardId=" + boardId;
-	data += "&commentId=" + commentId;
-
-	if (commentContent == "") {
-		alert(makeMessage(commentContentEl, messageEx.fail.null));
-		$('textarea#commentContent').focus;
-		return false;
-	}
-
-	if (str == 'reply') {
-		ajaxCall('POST', '/comment/reply', data, function(response) {
-			console.log("response : ", response);
-			alert('댓글이 작성되었습니다.');
-			$('textarea#commentContent').val(""); // 댓글 입력 창 비우기
-			getCommentList();
-		}, handleError);
-	}
-
-	if (str == 'modify') {
-		console.log("modify data : ", data);
-		ajaxCall("PUT", "/comment", data, modifyResp, handleError);
-	}
-}
-
 function modifyResp(response) {
-	if (response.code == -1) {
-		alert("FAIL : 댓글 작성에 실패하였습니다.");
-	} else if (response.code == -99) {
-		alert("EXCEPTION :댓글 작성 중 예외가 발생했습니다.");
-	} else if (response.code == 1) {
-		alert("댓글을 수정했습니다.");
-	}
+	alert("댓글을 수정했습니다.");
 	getCommentList();
 }
 
 function commentDelete(commentId) {
-	
+
 	let boardId = $('input[name="boardId"]').val();
 	let data = {
 		commentId: commentId,
@@ -241,20 +228,9 @@ function commentDelete(commentId) {
 		return false;
 	}
 
-	ajaxCall('PUT', '/comment/delete',data, function(response) {
-		let code = response.code;
-		if (code == -1) {
+	ajaxCall('PUT', '/comment/delete', data,
+		function(response) {
 			alert(response.msg);
 			getCommentList();
-		} else if (code == 1) {
-			alert(makeMessage(commentContentEl, messageEx.delete.post));
-			console.log("response : ", response);
-			getCommentList();
-		} else if (code == -99) {
-			alert(response.msg);
-			getCommentList();
-		} else {
-			alert("댓글 삭제 중 예외가 발생했습니다.");
-		}
-	}, handleError);
+		}, handleError);
 }

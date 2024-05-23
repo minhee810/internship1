@@ -22,7 +22,7 @@ const messageEx = {
 	}
 }
 
-// validation hint msg
+// 정규식 불일치 시 hint msg
 const hintMsg = {
 	username: '{name}는 최소 3자 이상 및 10자 이내입니다.',
 	password: "{name}는 문자와 특수문자 조합 8 ~ 15 자리 이상이어야 합니다.",
@@ -38,11 +38,9 @@ function makeMessage(element, msg) {
 
 // element 여부에 따라서 메시지 다르게 생성하는 함수 
 function showMessage(element, message, result) {
-
 	if (element == "") {
 		alert(message);
 	}
-
 	if (element) {
 		if (result == 1) {
 			element.html(message);

@@ -1,15 +1,4 @@
-const ajaxType = {
-	url: {
-		post: 'POST',
-		get: 'GET',
-		put: 'PUT'
-	},
-	contentType: {
-		form: 'application/x-www-form-urlencoded; charset=UTF-8',
-		json: 'application/json; charset=utf-8'
-	},
-}
-
+//form data는 무조건json 혹은 오브젝트 형식으로만 전송
 function ajaxCall(type, url, data = false, successCallback, errorCallback,
 	processData = true, cache = true, timeout = 0) {
 
@@ -26,10 +15,7 @@ function ajaxCall(type, url, data = false, successCallback, errorCallback,
 		if (processData == true) {
 			data = JSON.stringify(data);
 			contentType = 'application/json; charset=utf-8';
-		} else {
-			
 		}
-
 	}
 
 	$.ajax({
@@ -42,47 +28,29 @@ function ajaxCall(type, url, data = false, successCallback, errorCallback,
 		cache: cache,
 		timeout: timeout,
 		success: function(response) {
-			successCallback(response);
+			console.log('response : ', response);
+
+			if (typeof successCallback === 'function') {
+				successCallback(response);
+			}
 		},
 		error: function(error) {
-			errorCallback(error);
+			// 서버에서 http status 코드로 응답한 경우 처리
+			alert(error.responseText.msg);
+			console.error('Error Status:', error.status);
+			console.error('Error Text:', error.responseText);
+
+			if (typeof errorCallback === 'function') {
+				errorCallback(error);
+			}
 		}
 	});
 }
 
-function saveSuccess(response, redirect) {
-	alert("저장을 완료했습니다.");
-	location.href = redirect;
-	console.log("response : ", response);
-
-}
-
-function handleSuccess(response) {
-	console.log("response : ", response);
-}
-
+// 기본 발생 오류 
 function handleError(error) {
 	alert("서버 오류가 발생하였습니다.")
 	console.log("error : ", error);
-}
-
-
-// 공백 검사 후 빈칸 alert 띄우기 
-function checkRequiredFields() {
-	var allFilled = true;
-	var emptyEl = [];
-
-	$('input').each(function() {
-		var value = $(this).val();
-		var element = $(this);
-
-		if (!isRequired(value)) {
-			emptyEl.push(element);
-			allFilled = false;
-		}
-	});
-
-	return allFilled ? true : emptyEl;
 }
 
 function exeDaumPostcode(note, zipCode, address, datailAddress) {
@@ -91,8 +59,6 @@ function exeDaumPostcode(note, zipCode, address, datailAddress) {
 
 			var addr = ''; // 주소 변수
 			var extraAddr = ''; // 참고항목 변수
-
-
 			if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
 				addr = data.roadAddress;
 			} else { // 사용자가 지번 주소를 선택했을 경우(J)
@@ -111,7 +77,6 @@ function exeDaumPostcode(note, zipCode, address, datailAddress) {
 					extraAddr = ' (' + extraAddr + ')';
 				}
 				document.getElementById(note).value = extraAddr;
-
 			} else {
 				document.getElementById(note).value = '';
 			}
@@ -154,8 +119,8 @@ function getFormattedDate(org) {
 	);
 }
 
+// 핸드폰 번호 포매팅
 function phoneFormat(phone) {
-	console.log("phone : ", phone);
 	if (phone.length === 10) {
 		console.log(10);
 		return phone = phone.substring(0, 3) + '-' + phone.substring(3, 6) + '-' + phone.substring(6, 10);
@@ -188,22 +153,40 @@ function showModal(label, body, buttonText) {
 	document.body.appendChild(newModal);
 }
 
-// 태그가 서로 다른 입력창의 경우 여러 종류의 필드 검사할 수 있도록 필드를 지정해주는 함수 
-function validateFields(fields) {
 
-	let isValid = true;
+// 함수 별로 필드 전체 체크하면서 하나씩 배열에 저장해서 리턴 
+function checkFields(elements, fn) {
+	var allFilled = true;
+	var failfield = [];
 
-	fields.forEach(field => {
-		if (field.val().trim() === '') {
-			alert(makeMessage(field, messageEx.fail.null));
+	for (var i = 0; i < elements.length; i++) {
+		var element = elements[i];
+		var el = $(element);
 
-			isValid = false;
-			return false;
+		if (fn == "isRequired") {
+			if (!isRequired(el.val())) {
+				failfield.push(el);
+				allFilled = false;
+			}
 		}
-	});
-	return isValid;
+		if (fn == "regExpFields") {
+			if (!regExpFields(el)) {
+				failfield.push(el);
+				allFilled = false;
+			}
+		}
+	}
+	return allFilled ? true : failfield;
 }
 
+// 해당 함수 체크해서 알림 
+function checkAndAlert(elements, fn) {
+	var requiredCheck = checkFields(elements, fn);
 
-
+	if (requiredCheck !== true) {
+		alert(makeMessage(requiredCheck[0], messageEx.fail.null));
+		requiredCheck[0].focus();
+		return false;
+	}
+}
 

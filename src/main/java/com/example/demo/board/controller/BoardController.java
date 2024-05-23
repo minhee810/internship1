@@ -112,13 +112,9 @@ public class BoardController {
 					}
 				}
 			}
-
 			dto.setUserId(userId);
-
 			boardService.insertBoard(dto);
-
 			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", null), HttpStatus.CREATED);
-
 		} catch (MaxUploadSizeExceededException e) {
 
 			return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
@@ -136,7 +132,6 @@ public class BoardController {
 		for (UploadFileVO file : files) {
 			log.info("files = {}", file);
 		}
-
 		model.addAttribute("files", files);
 		return "/board/boardDetail";
 	}
@@ -171,7 +166,6 @@ public class BoardController {
 			return "/board/modify/" + boardId;
 		}
 
-		log.info("[modifyboard] service 호출 전 ");
 		boardService.modifyBoard(boardId, dto, deletedFilesId);
 
 		return "redirect:/board/detail/" + boardId;

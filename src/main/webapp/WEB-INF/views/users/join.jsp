@@ -56,7 +56,7 @@
                                         <input name="address" type="text" id="address" class="form-control form-control-user" placeholder="주소" data-title="주소"/>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="button" onclick="exeDaumPostcode('note', 'zipCode', 'address', 'detailAddress')" class="btn btn-primary btn-user btn-block" value="주소찾기" data-title="주소찾기"/>
+                                        <input type="button" onclick="exeDaumPostcode('note', 'zipCode', 'address', 'detailAddress')" class="btn btn-primary btn-user btn-block" value="주소찾기" data-title="주소찾기"></button>
                                     </div>
                                 </div>
                                 <div class="form-group">

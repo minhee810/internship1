@@ -1,49 +1,36 @@
-function maxlengthCheck(element, maxLength) {
-	var content = element.value();
-	if (content.length > maxLength) {
-		alert("본문 내용은 100,000자 이내여야 합니다.");
-		return false;
-	}
-}
-
 $(document).ready(function() {
 	$('#insertBtn').click(writeBoard);
 });
 
+// 게시글 작성
 function writeBoard(event) {
 	event.preventDefault();
-
-	var title = $('#title');
 	var element = $('#board');
-	var content = $('textarea#content');
-	const fields = [title, content];
-
-	console.log(title.val(), content.val());
-
-	if (!validateFields(fields)) {
+	let elements = $('#title, textarea#content');
+	var requiredCheck = checkFields(elements, "isRequired");
+	if (requiredCheck !== true) {
+		alert(makeMessage(requiredCheck[0], messageEx.fail.null));
+		requiredCheck[0].focus();
 		return false;
 	}
-
 	if (!confirm(makeMessage(element, messageEx.save.pre))) {
 		return false;
 	}
-	
 	var data = new FormData($('#writeForm')[0]);
-	
- 	let data1 = $('#writeForm');
- 	
-	console.log("data1 : ", data1);
-	console.log("data : ", data);
-
 	ajaxCall("POST", "/board/write", data,
-		function(response) { saveSuccess(response, "/") },
+		function(response) {
+			alert(makeMessage(element, messageEx.save.post))
+			location.href = "/"
+		},
 		handleError,
 		false,
 		false,
 		600000);
 }
 
-// file 목록 수정
+
+
+// 파일 목록 화면에 불러오기
 let selectedFiles = [];
 
 function createFile(files) {
@@ -69,6 +56,7 @@ function createFile(files) {
 	}
 }
 
+// 파일 목록에서 삭제 버튼 클릭시 
 function deleteFile(deleteFile) {
 	const inputFile = document.querySelector('input[name="files"]');
 	const dataTransfer = new DataTransfer();

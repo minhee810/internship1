@@ -76,10 +76,8 @@ public class CommentController {
 		if (result > 0) {
 			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 삭제 실패", result), HttpStatus.OK);
-
+			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 삭제 실패", result), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
 	}
 
 	// 업데이트 시 input 창에 기존의 데이터 출력
@@ -104,11 +102,11 @@ public class CommentController {
 				return new ResponseEntity<>(new ResponseDto<>(1, "댓글 수정 성공", result), HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", result), HttpStatus.OK);
+				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", result), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 수정 중 예외가 발생했습니다.", e.getMessage()), HttpStatus.OK);
+			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 수정 중 예외가 발생했습니다.", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}

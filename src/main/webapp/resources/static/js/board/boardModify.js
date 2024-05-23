@@ -2,21 +2,18 @@ $(document).ready(function() {
 	fileList();
 })
 
+// 게시글 수정 시 기존의 게시글 파일 리스트 불러오기 
 function fileList() {
 	let boardId = $('#boardId').val();
 	let url = "/board/files/" + boardId
-
 	ajaxCall("GET", url, false,
-
 		function(files) {
-			console.log("file 요청 성공");
-			console.log("files", files);
 			loadFiles(files)
 		},
-
 		handleError);
 }
 
+// 게시글 수정 시 파일 목록 로드 
 function loadFiles(files) {
 	const fileList = document.getElementById('file-list');
 
@@ -24,8 +21,6 @@ function loadFiles(files) {
 
 		const item = document.createElement('div');
 		item.classList.add('file-item');
-
-
 		const fileName = document.createTextNode(files[i].orgFileName);
 
 		const deleteButton = document.createElement('button');

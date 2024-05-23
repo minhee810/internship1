@@ -1,6 +1,3 @@
-let emailEl = $('#email');
-const passwordEl = $('#password');
-
 $(document).ready(function() {
 	rememberId();
 	// 이메일 필드 입력 이벤트 핸들러
@@ -22,7 +19,7 @@ function rememberId() {
 		$('#rememberId').removeAttr('checked');
 		$('#email').val('');
 	}
-	
+
 	$('#rememberId').click(function() {
 		if ($('#rememberId').is(':checked')) {
 
@@ -31,21 +28,21 @@ function rememberId() {
 				$('#rememberId').prop('checked', false); // 체크박스 해제
 			} else {
 				localStorage.email = $('#email').val();
-				//localStorage.checkbox = 'checked'; // 체크 상태 저장
 			}
 		} else {
 			localStorage.email = "";
-			//localStorage.checkbox = "";
 		}
 	})
 }
 
 // 로그인 기능 
 $('#loginBtn').click(function() {
-	var requiredCheckResult = checkRequiredFields();
-	if (requiredCheckResult !== true) {
-		alert(makeMessage(requiredCheckResult[0], messageEx.fail.null));
-		requiredCheckResult[0].focus();
+	let elements = $('#email, #password');
+	var requiredCheck = checkFields(elements, "isRequired");
+
+	if (requiredCheck !== true) {
+		alert(makeMessage(requiredCheck[0], messageEx.fail.null));
+		requiredCheck[0].focus();
 		return false;
 	}
 	login();
@@ -53,9 +50,8 @@ $('#loginBtn').click(function() {
 
 // 로그인
 function login() {
-	let data = $('#loginForm').serialize(); 
+	let data = $('#loginForm').serialize();
 	ajaxCall("POST", "/member/login", data, loginResp, loginError);
-
 }
 
 function loginResp(response) {

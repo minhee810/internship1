@@ -8,34 +8,59 @@ var pwCheckStatus = false;
 window.addEventListener('load', () => $('#username').focus());
 
 $(document).ready(function() {
+
+	// 글자 replace 
 	$("#username, #phone, #email").keyup(function() {
 		replaceChar($(this));
 	});
 
-	$('#email, #password, #phone').change(function() {
+	// 작성 후 포커스 이벤트에서 정규식 체크 후 alert 함수 
+	$('#password, #phone').change(function() {
 		alertRegTestResult($(this));
 	});
 
+	// 비밀번호 확인 작성 시 비밀번호 비교 
 	$('#password_confirm').change(passwordConfirm);
 
+	// 사용자 이름 작성 시 중복 체크 
 	$("#username").change(function() {
 		duplicateCheck($(this));
 	});
+
+	// 사용자 이메일 중복 체크 버튼 클릭 시 중복 체크 
 	$('#emailCheck').click(function() {
 		let emailEl = $('#email');
 		duplicateCheck(emailEl)
 	});
+
+	// 회원 가입 버큰 클릭 시 정규식 체크 요소 : regEl, input 공백 체크 : elements -> 각각 다른 요소를 전송 
+	$('#joinBtn').on('click', function() {
+		let regEl = $('#phone, #email, #password');
+		let elements = $('#joinForm').find(':input').not(':input[type="button"]');
+		checkAll(regEl, elements);
+	});
 });
 
 
+// 필드 포커스 변경 시 알림
 function alertRegTestResult(element) {
-	let fieldId = element.attr('id');
+	let newEL = $(element);
+
+	let fieldId = newEL.attr('id');
 	// 정규식 확인 후 실패 시 조건 사용자에게 보여주고 return false 해서 멈추기 
-	if (!regExpFields(element)) {
-		showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(element, hintMsg[fieldId]), 1);
+	if (!regExpFields(newEL)) {
+		showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(newEL, hintMsg[fieldId]), 1);
 		element.focus();
 		return false;
 	}
+	if (fieldId != "email") {
+		showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(newEL, messageEx.success.avail), 0);
+	}
+	if (fieldId == 'phone') {
+		let fmtPhone = phoneFormat(newEL.val());
+		$("#phone").val(fmtPhone);
+	}
+	return true;
 }
 
 
@@ -45,25 +70,19 @@ function duplicateCheck(element) {
 	let value = element.val();
 	let url = "/member/" + fieldId + "/" + value + "/check";
 
-	// 정규식 확인 후 실패 시 조건 사용자에게 보여주고 return false 해서 멈추기 
-	if (!regExpFields(element)) {
-		showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(element, hintMsg[fieldId]), 1);
-		element.focus();
+	if (!alertRegTestResult(element)) {
 		return false;
 	}
-
-	console.log("정규식 테스트 통과")
-	ajaxCall("GET", url, false,
-
+	ajaxCall("GET", url, form,
 		function(response) {
 			if (response == 1) {
-				showMessage((fieldId == 'username') ? targetEl : "", makeMessage(element, messageEx.dupe[fieldId]), response);
+				showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(element, messageEx.dupe[fieldId]), response);
 				if (fieldId == 'username') usernameCheck = false;
 				if (fieldId == 'email') emailCheck = false;
 				return false;
 			}
 			if (response == 0) {
-				showMessage((fieldId == 'username') ? targetEl : "", makeMessage(element, messageEx.success.avail), response);
+				showMessage((fieldId == 'username') ? $("#id_feedback") : "", makeMessage(element, messageEx.success.avail), response);
 				if (fieldId == 'username') usernameCheck = true;
 				if (fieldId == 'email') emailCheck = true;
 				return true;
@@ -87,41 +106,14 @@ function passwordConfirm() {
 	pwCheckStatus = true;
 }
 
-// 정규식 검사 후 alert 띄우기
-function checkRegFields() {
-	// 정규식 체크 대상 : 아이디, 이메일, 비밀번호, 휵대전화
-	var checkTarget = ['username', 'email', 'password', 'phone'];
-	var fieldCheck = true;
-	var failEl = []
+// 회원가입 전 각 필드 체크 (유효성 + 공백)
+function checkAll(regEls, elements) {
 
-	for (var i = 0; i < checkTarget.length; i++) {
-		var element = $('#' + checkTarget[i]);
-		if (!regExpFields(element)) {
-			failEl.push(element);
-			fieldCheck = false;
-		}
-	}
-	return fieldCheck ? true : failEl;
-}
-
-// 폼 데이터 전송 전에 전체 필드 유효성 검사
-$('#joinBtn').on('click change', function() {
-	var requiredCheckResult = checkRequiredFields();
-	var requriedRegResult = checkRegFields();
-
-	// 공백 검사 
-	if (requiredCheckResult !== true) {
-		alert(makeMessage(requiredCheckResult[0], messageEx.fail.null));
-		// alert(requiredCheckResult[0] + '을(를) 입력해주세요');
-		requiredCheckResult[0].focus();
+	if (!checkAndAlert(elements, "isRequired")) {
 		return false;
 	}
 
-	// 유효성 검사 
-	if (requriedRegResult !== true) {
-		console.log("형식 체크 실패 필드들 : ", requriedRegResult);
-		alert(makeMessage(requriedRegResult[0], messageEx.fail.valid));
-		requriedRegResult[0].focus();
+	if (!checkAndAlert(regEls, "regExpFields")) {
 		return false;
 	}
 
@@ -142,14 +134,8 @@ $('#joinBtn').on('click change', function() {
 		return false;
 	}
 
-	// 비밀번호 확인 
-	if (!isMatch($("#password").val(), $("#password_confirm").val())) {
-		passwordConfirm();
-		return false;
-	};
-
 	joinMemebership();
-})
+}
 
 // 회원가입 완료
 function joinMemebership() {
@@ -157,20 +143,13 @@ function joinMemebership() {
 	if (!confirm("회원가입을 진행하시겠습니까?")) {
 		return false;
 	}
-	ajaxCall("POST", "/member/join", data, joinMembershipResp, function(error) { handleError(error) });
+	ajaxCall("POST", "/member/join", data,
+		function(response) {
+			alert("회원가입이 완료 되었습니다.");
+			location.href = "/member/login";
+		}, handleError);
 }
 
-function joinMembershipResp(response) {
-	let code = response.code
-	if (code = 1) {
-		console.log("SUCCESS : ", response);
-		alert("회원가입이 완료 되었습니다.");
-		location.href = "/member/login";
-	} else {
-		console.log("ERROR : ", error);
-		alert("회원가입에 실패하였습니다.");
-	}
-}
 
 
 

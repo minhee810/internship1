@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
 		map.put("boardId", boardId);
 		
 		List<CommentsVO> commentList = commentMapper.getCommentList(map);
-		
+
 		log.info(" service : commentList = {}", commentList); 
 		
 		return commentList;
