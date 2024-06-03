@@ -1,5 +1,5 @@
 //form data는 무조건json 혹은 오브젝트 형식으로만 전송
-function ajaxCall(type, url, data = false, successCallback, errorCallback,
+function ajaxCall(type, url, data = false, successCallback, errorCallback = false,
 	processData = true, cache = true, timeout = 0) {
 
 	let contentType = false; //contentType = 'application/json; charset=utf-8';
@@ -48,10 +48,10 @@ function ajaxCall(type, url, data = false, successCallback, errorCallback,
 }
 
 // 기본 발생 오류 
-function handleError(error) {
+/*function handleError(error) {
 	alert("서버 오류가 발생하였습니다.")
 	console.log("error : ", error);
-}
+}*/
 
 function exeDaumPostcode(note, zipCode, address, datailAddress) {
 	new daum.Postcode({

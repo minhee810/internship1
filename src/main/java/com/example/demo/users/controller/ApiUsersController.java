@@ -7,12 +7,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.common.dto.ResponseDto;
 import com.example.demo.users.consts.SessionConst;
@@ -23,31 +23,14 @@ import com.example.demo.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequestMapping("/member")
-@Controller
+
 @Slf4j
 @RequiredArgsConstructor
-public class UsersController {
+@RestController
+@RequestMapping("/api")
+public class ApiUsersController {
 
 	private final UserService userSerivce;
-
-	// 회원가입 페이지 이동
-	@GetMapping("/join")
-	public String joinPage(HttpSession session) {
-		if (session != null) {
-			session.invalidate();
-		}
-		return "users/join";
-	}
-
-	// 로그인 페이지 이동
-	@GetMapping("/login")
-	public String loginPage(HttpSession session) {
-		if (session != null) {
-			session.invalidate();
-		}
-		return "users/login";
-	}
 
 	// 회원가입
 	@PostMapping("/join")
@@ -65,21 +48,30 @@ public class UsersController {
 
 	/** 아이디 중복 검사 **/
 	@GetMapping("/username/{username}/check")
-	@ResponseBody
-	public int idCheck(@PathVariable String username) {
+	public ResponseEntity idCheck(@PathVariable String username) {
 		log.info("username = {}", username);
-		return userSerivce.idCheck(username);
+		
+		int code =  userSerivce.idCheck(username);
+		if(code == 1) {
+			return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용중인 아이디입니다.", code), HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 아이디입니다.",code), HttpStatus.OK);
 	}
 
 	/** 이메일 중복 검사 **/
 	@GetMapping("/email/{email}/check")
-	@ResponseBody
-	public int emailCheck(@PathVariable String email) {
+	public ResponseEntity<?> emailCheck(@PathVariable String email) {
 
 		log.info("emailCheck 로직 실행");
 		log.info("email = {}", email);
 		log.info("userSerivce.emailCheck(email) = {}", userSerivce.emailCheck(email));
-		return userSerivce.emailCheck(email);
+
+		int code = userSerivce.emailCheck(email);
+		
+		if(code == 1) {
+			return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용중인 이메일입니다.", code), HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 이메일입니다.",code), HttpStatus.OK);
 	}
 
 	/**

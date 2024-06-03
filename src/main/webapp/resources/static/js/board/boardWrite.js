@@ -22,7 +22,6 @@ function writeBoard(event) {
 			alert(makeMessage(element, messageEx.save.post))
 			location.href = "/"
 		},
-		handleError,
 		false,
 		false,
 		600000);

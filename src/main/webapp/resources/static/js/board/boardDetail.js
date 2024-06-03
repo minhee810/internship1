@@ -14,7 +14,7 @@ function fn_boardDelete() {
 	if (!confirm(makeMessage(boardIdEl, messageEx.delete.pre))) {
 		return false;
 	}
-	ajaxCall("POST", "/board/delete/" + boardId, false, deleteResp, handleError);
+	ajaxCall("POST", "/board/delete/" + boardId, false, deleteResp);
 }
 
 function deleteResp(response) {
@@ -27,7 +27,7 @@ function deleteResp(response) {
 // 댓글 조회 get
 function getCommentList() {
 	var boardId = boardIdEl.text();
-	ajaxCall("GET", '/comment/' + boardId, false, function(response) { createTable(response); }, handleError);
+	ajaxCall("GET", '/comment/' + boardId, false, function(response) { createTable(response); });
 }
 
 
@@ -118,7 +118,7 @@ function commentSubmit(e) {
 			alert(makeMessage(commentContentEl, messageEx.save.post));
 			$('textarea#commentContent').val(""); // 댓글 입력 창 비우기
 			getCommentList();
-		}, handleError);
+		});
 }
 
 // 댓글 작성 화면 생성
@@ -190,10 +190,10 @@ function commentAdd(commentId, str) {
 				alert(makeMessage(commentContentEl, messageEx.save.post));
 				$('textarea#commentContent').val(""); // 댓글 입력 창 비우기
 				getCommentList();
-			}, handleError);
+			});
 	}
 	if (str == 'modify') {
-		ajaxCall("PUT", "/comment", data, modifyResp, handleError);
+		ajaxCall("PUT", "/comment", data, modifyResp);
 	}
 }
 
@@ -232,5 +232,5 @@ function commentDelete(commentId) {
 		function(response) {
 			alert(response.msg);
 			getCommentList();
-		}, handleError);
+		}, false);
 }

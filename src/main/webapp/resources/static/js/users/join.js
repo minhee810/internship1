@@ -88,7 +88,7 @@ function duplicateCheck(element) {
 				return true;
 			}
 
-		}, handleError);
+		});
 }
 
 // 비밀번호 일치 검사 
@@ -147,7 +147,7 @@ function joinMemebership() {
 		function(response) {
 			alert("회원가입이 완료 되었습니다.");
 			location.href = "/member/login";
-		}, handleError);
+		});
 }
 
 
