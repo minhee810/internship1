@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class ApiUsersController {
 
 	// 회원가입
 	@PostMapping("/join")
-	public ResponseEntity<?> join(JoinDto joinDto) throws UnsupportedEncodingException {
+	public ResponseEntity<?> join(@RequestBody JoinDto joinDto) throws UnsupportedEncodingException {
 
 		log.info("회원가입 로직 실행");
 		log.info("joinDto ={}", joinDto);
@@ -79,10 +80,12 @@ public class ApiUsersController {
 	 * 
 	 **/
 	@PostMapping("/login")
-	public ResponseEntity<?> login(LoginDto loginDto, HttpSession session) throws Exception {
+	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpSession session) throws Exception {
 		
 		log.info("login ==== ");
 		Long id = (Long) session.getAttribute(SessionConst.USER_ID);
+		
+		log.info("loginDto = {}", loginDto);
 		
 		if (session.getAttribute(SessionConst.USER_ID) != null) {
 			log.info("id= {}", id);
@@ -96,8 +99,11 @@ public class ApiUsersController {
 		session.setAttribute(SessionConst.USERNAME, userInfo.get("username"));
 
 		log.info("userInfo = {} ", userInfo.get("username"));
-
-		return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", userInfo), HttpStatus.OK);
+		log.info("userInfo ={}", userInfo);
+		if(userInfo.get("username") == null) {
+			return new ResponseEntity<>(new ResponseDto<>(-1, "아이디 혹은 이메일이 실패하였습니다.", null), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", userInfo), HttpStatus.OK);
 
 	}
 

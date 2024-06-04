@@ -121,7 +121,6 @@ public class UserServiceImpl implements UserService {
 		// 저장되어있는 이메일인지 확인 저장되어있지 않다면 return false;
 		if (savedUser == null) {
 			throw new CustomException(-1, "이메일 혹은 비밀번호가 실패했습니다.");
-
 		}
 
 		String savedUsername = savedUser.getUsername();
