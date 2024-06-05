@@ -4,5 +4,6 @@ public class SessionConst {
 	
 	public static final String USER_ID = "loginUser";
 	public static final String USERNAME = "loginUsername";
+	public static final String USER_EMAIL = "loginUserEmail";
 
 }

@@ -3,16 +3,19 @@ package com.example.demo.users.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.common.dto.ResponseDto;
@@ -80,38 +83,65 @@ public class ApiUsersController {
 	 * 
 	 **/
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpSession session) throws Exception {
+	public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		log.info("login ==== ");
-		Long id = (Long) session.getAttribute(SessionConst.USER_ID);
+		// session 객체 생성 
+		HttpSession session = request.getSession();
 		
-		log.info("loginDto = {}", loginDto);
+		// session 객체에 사용자 아이디 넣기 
+		session.setAttribute(SessionConst.USER_ID, loginDto.getUserId());
+		session.setAttribute(SessionConst.USER_EMAIL, loginDto.getEmail());
 		
-		if (session.getAttribute(SessionConst.USER_ID) != null) {
-			log.info("id= {}", id);
-			session.removeAttribute(SessionConst.USER_ID);
-			session.removeAttribute(SessionConst.USERNAME);
-		}
-
+		// session id 추출
+		String sessionId = session.getId();
+		
+		// 일단 세션에 사용자의 아이디를 넣어서 세션 아이디를 쿠키에 넣어서 발급하기 
 		Map<String, Object> userInfo = userSerivce.login(loginDto);
 
-		session.setAttribute(SessionConst.USER_ID, userInfo.get("userId"));
-		session.setAttribute(SessionConst.USERNAME, userInfo.get("username"));
-
-		log.info("userInfo = {} ", userInfo.get("username"));
-		log.info("userInfo ={}", userInfo);
 		if(userInfo.get("username") == null) {
 			return new ResponseEntity<>(new ResponseDto<>(-1, "아이디 혹은 이메일이 실패하였습니다.", null), HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", userInfo), HttpStatus.OK);
-
+		
+		// 로그인 성공 시 세션 아이디를 쿠키에 저장 
+		Cookie cookie = new Cookie("LS_SESSION_ID", sessionId);
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+		
+		// 응답 시 session id 를 넣은 쿠키 전송
+		response.addCookie(cookie);
+		log.info("response = {}", response.toString());
+		log.info("cookie = {}", cookie.toString());
+		log.info("sessionId = {}", sessionId);
+		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", sessionId), HttpStatus.OK);
 	}
 
+	@GetMapping("/user")
+	public ResponseEntity<?> getUserInfo(HttpServletRequest request) throws Exception{
+		// 쿠키에 세션 정보가 있다면 request 에서 꺼내면 됨. 
+		// 없다면 로그인 요청 시 넣어주고 
+		// 다시 로드하는 거면 request 에서 아이디 뽑아서 쓰자 
+	
+		HttpSession session =  request.getSession(false);
+		
+		if(session == null) {
+			log.info("sessionId 없음");
+			return new ResponseEntity<>(new ResponseDto<>(-1, "세션이 만료 되었습니다.", null),HttpStatus.UNAUTHORIZED);
+		}
+		
+		// 저장되어있는 세션에서 이메일 값 꺼내기 
+		String userEmail = (String) session.getAttribute(SessionConst.USER_EMAIL);
+		log.info("userEmail = {}", userEmail);
+		LoginDto loginDto = userSerivce.getLoginUser(userEmail);
+		log.info("loginUser = {}", loginDto);
+		
+		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", loginDto),HttpStatus.OK);
+
+	}
+	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) throws Exception {
 		session.invalidate();
 		return "redirect:/";
-
 	}
 	@GetMapping("/myprofile")
 	public String myprofile() {
