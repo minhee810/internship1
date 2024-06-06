@@ -8,6 +8,8 @@
    - 로그인
    - 게시글 작성
    - 게시글 조회
+     <img width="1253" alt="image" src="https://github.com/minhee810/internship1/assets/100061907/fdf579ab-21cc-44fd-9a51-0de4c68205d8">
+
    - 게시글 수정
    - 게시글 삭제
    - 댓글 작성, 수정, 삭제 
