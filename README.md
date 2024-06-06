@@ -1,7 +1,7 @@
 # internship1
 인턴십 과제로 진행중인 게시판 프로젝트입니다. 
 
-1. [ 오라클 데이터베이스 활용 -> ERD CLOUD](https://www.erdcloud.com/d/YmcM5yNQJZRRzftZf)
+1. 오라클 데이터베이스 활용 : [ERD CLOUD](https://www.erdcloud.com/d/YmcM5yNQJZRRzftZf)
 
 2. 페이지 이미지
 - 회원가입 페이지
