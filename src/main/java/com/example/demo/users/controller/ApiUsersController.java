@@ -52,7 +52,7 @@ public class ApiUsersController {
 
 	/** 아이디 중복 검사 **/
 	@GetMapping("/username/{username}/check")
-	public ResponseEntity idCheck(@PathVariable String username) {
+	public ResponseEntity<?> idCheck(@PathVariable String username) {
 		log.info("username = {}", username);
 		
 		int code =  userSerivce.idCheck(username);
@@ -93,7 +93,7 @@ public class ApiUsersController {
 		session.setAttribute(SessionConst.USER_EMAIL, loginDto.getEmail());
 		
 		// session id 추출
-		String sessionId = session.getId();
+//		String sessionId = session.getId();
 		
 		// 일단 세션에 사용자의 아이디를 넣어서 세션 아이디를 쿠키에 넣어서 발급하기 
 		Map<String, Object> userInfo = userSerivce.login(loginDto);
@@ -103,16 +103,16 @@ public class ApiUsersController {
 		}
 		
 		// 로그인 성공 시 세션 아이디를 쿠키에 저장 
-		Cookie cookie = new Cookie("LS_SESSION_ID", sessionId);
-		cookie.setHttpOnly(true);
-		cookie.setPath("/");
-		
-		// 응답 시 session id 를 넣은 쿠키 전송
-		response.addCookie(cookie);
-		log.info("response = {}", response.toString());
-		log.info("cookie = {}", cookie.toString());
-		log.info("sessionId = {}", sessionId);
-		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", sessionId), HttpStatus.OK);
+//		Cookie cookie = new Cookie("LS_SESSION_ID", sessionId);
+//		cookie.setHttpOnly(true);
+//		cookie.setPath("/");
+//		
+//		// 응답 시 session id 를 넣은 쿠키 전송
+//		response.addCookie(cookie);
+//		log.info("response = {}", response.toString());
+//		log.info("cookie = {}", cookie.toString());
+//		log.info("sessionId = {}", sessionId);
+		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", userInfo), HttpStatus.OK);
 	}
 
 	@GetMapping("/user")
@@ -139,10 +139,13 @@ public class ApiUsersController {
 	}
 	
 	@GetMapping("/logout")
-	public String logout(HttpSession session) throws Exception {
+	public ResponseEntity<?> logout(HttpSession session) throws Exception {
+		log.info("session = {}", session.getAttribute(SessionConst.USER_ID));
+		log.info("logout 로직 실행");
 		session.invalidate();
-		return "redirect:/";
+		return new ResponseEntity<>(new ResponseDto<>(1, "로그아웃 되었습니다.", null),HttpStatus.OK);
 	}
+	
 	@GetMapping("/myprofile")
 	public String myprofile() {
 		return "/users/profile";
