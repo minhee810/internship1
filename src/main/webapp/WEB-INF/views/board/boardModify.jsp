@@ -13,7 +13,6 @@
     <link href="${contextPath}/resources/static/css/upload-file.css" rel="stylesheet" />
     <link href="${contextPath}/resources/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
 </head>
-
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
