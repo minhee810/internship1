@@ -18,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		.order(1).addPathPatterns("/**")
 		.excludePathPatterns("/", "/?page*",
 				"/users/**", "/member/**", "/css/**", "/*.ico", "/error**", "/resources/**", "/board/detail/**",
-				"/member/join", "/comment/**", "/api/**");
+				"/member/join", "/comment/**", "/api/**", "/fileDownload/**");
 	}
 
 	
@@ -31,4 +31,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true) // 이 부분 추가 -> 인증 정보 교환시 필수 설정
                 .allowedHeaders("*");
     }
+    
+
 }

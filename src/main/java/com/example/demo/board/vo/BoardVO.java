@@ -28,6 +28,9 @@ public class BoardVO {
 	private Long writer;
 	private String username;
 	private MultipartFile[] files;
+	
+	private int startBlockPage; 
+	private int endBlockPage;
 
 	@Builder
 	public BoardVO(String title, String content, LocalDateTime modifidDate, MultipartFile[] files) {

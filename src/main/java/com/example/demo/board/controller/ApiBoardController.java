@@ -1,6 +1,8 @@
 package com.example.demo.board.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,9 +52,9 @@ public class ApiBoardController {
 	// 게시글 목록 조회
 	// get 방식으로 페이지 번호를 넘겨준다.
 	// 받아서 해당 페이지 정보를 넘겨서 해당 페이지 데이터만 뽑아오기
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity<?> getBoardList(
-			@PageableDefault(size = 10, page = 0, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(size = 10, page = 1, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable,
 			Model model) {
 
 		log.info("===getBoardList 로직실행===");
@@ -71,7 +74,7 @@ public class ApiBoardController {
 		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage;
 
 		log.info("page = {}", pageable.toString());
-		log.info("boardList = {}", boardList.toString());
+		log.info("boardList getNumber = {}", boardList.getNumber());
 		log.info("endBlockPage = {}", endBlockPage);
 		log.info("startBlockPage = {}", startBlockPage);
 		log.info("page Size = {}", pageable.getPageSize());
@@ -81,19 +84,33 @@ public class ApiBoardController {
 		model.addAttribute("startBlockPage", startBlockPage);
 		model.addAttribute("endBlockPage", endBlockPage);
 
-		return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록 조회 성공", boardList), HttpStatus.OK);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardList", boardList);
+		map.put("startBlockPage", startBlockPage);
+		map.put("endBlockPage", endBlockPage);
+		return new ResponseEntity<>(new ResponseDto<>(2, "게시글 목록 조회 성공", map), HttpStatus.OK);
 	}
 
 	// 게시글 저장
 	@PostMapping("/write")
-	public ResponseEntity<?> insertBoard(BoardListDto dto, Model model, HttpSession session) throws Exception {
-
+	public ResponseEntity<?> insertBoard(@RequestBody BoardListDto dto, Model model, HttpServletRequest request, HttpSession session) throws Exception {
+		log.info("insertBoard() 로직 실행 ");
+		log.info("request ={}", request);
+		log.info("dto ={}", dto);
+		
 		try {
-			Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
+//			HttpSession session =  request.getSession();
 
+			Long uid = (Long) session.getAttribute(SessionConst.USER_ID);
+			log.info("uid = {}", uid);
+//			Long userId = (Long) session.getAttribute("JSESSIONID");
+			Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
+			
+			log.info("userId = {}", userId);
 			if (userId == null) {
 				throw new CustomException(-1, "로그인 정보가 없습니다.");
 			}
+
 			if (dto.getFiles() != null) {
 				for (MultipartFile file : dto.getFiles()) {
 
@@ -114,17 +131,21 @@ public class ApiBoardController {
 
 	// 게시글 상세보기
 	@GetMapping("/detail/{boardId}")
-	public String getDetail(@PathVariable Long boardId, Model model) {
+	public ResponseEntity<?> getDetail(@PathVariable String boardId, Model model) {
+		Long LBoardId = Long.valueOf(boardId);
 
-		BoardVO detail = boardService.getDetail(boardId);
-		model.addAttribute("detail", detail);
+		log.info("detail 로직 실행");
+		BoardVO detail = boardService.getDetail(LBoardId);
 
-		List<UploadFileVO> files = fileService.findAllFileByBoardId(boardId);
+		List<UploadFileVO> files = fileService.findAllFileByBoardId(LBoardId);
 		for (UploadFileVO file : files) {
 			log.info("files = {}", file);
 		}
-		model.addAttribute("files", files);
-		return "/board/boardDetail";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("detail", detail);
+		map.put("files", files);
+		return new ResponseEntity<>(new ResponseDto<>(2, "게시글 상세보기 성공", map), HttpStatus.OK);
 	}
 
 	// 게시글 수정 페이지 이동

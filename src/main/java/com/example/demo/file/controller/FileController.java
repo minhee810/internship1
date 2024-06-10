@@ -57,6 +57,7 @@ public class FileController {
 	@GetMapping("/fileDownload/{boardId}/{saveFileName}/{orgFileName}")
 	public void fileDownload(@PathVariable String boardId, @PathVariable String saveFileName,
 			@PathVariable String orgFileName, HttpServletResponse response) {
+		log.info("fileDownload 로직 실행");
 
 		try {
 			// 게시글 별로 폴더를 생성하여 파일을 따로 저장해줬으므로 @PathVariable 로 받아온 게시글의 id(폴더 이름), 저장된 파일 이름을
