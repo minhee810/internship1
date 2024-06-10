@@ -94,7 +94,7 @@ public class ApiUsersController {
 		
 		// session id 추출
 //		String sessionId = session.getId();
-		log.info("session = {}", session.getAttribute(SessionConst.USER_ID);
+		log.info("session = {}", session.getAttribute(SessionConst.USER_ID));
 		// 일단 세션에 사용자의 아이디를 넣어서 세션 아이디를 쿠키에 넣어서 발급하기 
 		Map<String, Object> userInfo = userSerivce.login(loginDto);
 

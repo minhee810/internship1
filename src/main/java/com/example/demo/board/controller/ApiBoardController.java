@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +34,7 @@ import com.example.demo.common.exception.CustomException;
 import com.example.demo.file.service.FileService;
 import com.example.demo.file.vo.UploadFileVO;
 import com.example.demo.users.consts.SessionConst;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,26 +94,25 @@ public class ApiBoardController {
 
 	// 게시글 저장
 	@PostMapping("/write")
-	public ResponseEntity<?> insertBoard(@RequestBody BoardListDto dto, Model model, HttpServletRequest request, HttpSession session) throws Exception {
+	public ResponseEntity<?> insertBoard(@RequestPart("dto") BoardListDto dto, @RequestPart("files") MultipartFile[] files, Model model, HttpServletRequest request, HttpSession session) throws Exception {
 		log.info("insertBoard() 로직 실행 ");
 		log.info("request ={}", request);
 		log.info("dto ={}", dto);
 		
+      
 		try {
-//			HttpSession session =  request.getSession();
-
+			  ObjectMapper objectMapper = new ObjectMapper();
+		        BoardListDto boardListDto = objectMapper.readValue(dto, BoardListDto.class);
+		        boardListDto.setFiles(files);
 			Long uid = (Long) session.getAttribute(SessionConst.USER_ID);
 			log.info("uid = {}", uid);
-//			Long userId = (Long) session.getAttribute("JSESSIONID");
 			Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
-			
 			log.info("userId = {}", userId);
 			if (userId == null) {
 				throw new CustomException(-1, "로그인 정보가 없습니다.");
 			}
-
-			if (dto.getFiles() != null) {
-				for (MultipartFile file : dto.getFiles()) {
+			if (files != null) {
+				for (MultipartFile file : files) {
 
 					// 업로드된 파일의 크기를 확인하고 제한을 초과하는지 검사
 					if (file.getSize() > MAX_FILE_SIZE) {
@@ -124,7 +124,6 @@ public class ApiBoardController {
 			boardService.insertBoard(dto);
 			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", null), HttpStatus.CREATED);
 		} catch (MaxUploadSizeExceededException e) {
-
 			return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
 		}
 	}

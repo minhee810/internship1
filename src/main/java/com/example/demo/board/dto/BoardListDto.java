@@ -21,7 +21,7 @@ public class BoardListDto {
 	private Long boardId;
 	private String title;
 	private String content;
-	private MultipartFile file; 
+//	private MultipartFile file; 
 	private LocalDateTime createdDate;
 	private LocalDateTime modifiedDate;
 	
@@ -35,7 +35,7 @@ public class BoardListDto {
 	public BoardListDto(String title, MultipartFile[] files, LocalDateTime createdDate, LocalDateTime modifiedDate, String content, int commentCnt, Long userId) {
 		super();
 		this.title = title;
-		this.files = files;
+//		this.files = files;
 		this.createdDate = createdDate;
 		this.modifiedDate = modifiedDate;
 		this.content = content;
