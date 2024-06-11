@@ -122,7 +122,9 @@ public class ApiBoardController {
 			
 	
 			boardService.insertBoard(dto);
+			log.info("dto = {}", dto);
 			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", dto), HttpStatus.CREATED);
+			
 		} catch (MaxUploadSizeExceededException e) {
 
 			return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
