@@ -69,18 +69,18 @@ public class BoardServiceImpl implements BoardService {
 
 		log.info("serviceImpl dto = {}", dto);
 
-		BoardListDto board = BoardListDto.builder().title(dto.getTitle()).content(dto.getContent())
-				.files(dto.getFiles()).commentCnt(dto.getCommentCnt()).userId(dto.getUserId()) // 로그인한 // 이름 저장
-				.build();
+		// board title, content save 
+		int result = boardMapper.insertBoard(dto);
 
-		// board 정보를 db 에 insert
-		int result = boardMapper.insertBoard(board);
+		log.info("board.getBoardId() = {}", dto.getBoardId());
+		log.info("board dto = {}", dto);
 
-		log.info("board.getBoardId() = {}", board.getBoardId());
+		String boardFolderPath = fileManager.createFolder(path, dto.getBoardId());
 
-		String boardFolderPath = fileManager.createFolder(path, board.getBoardId());
-
-		fileManager.saveFiles(board, boardFolderPath);
+		// file save
+		if(dto.getFiles() != null) {
+			fileManager.saveFiles(dto, boardFolderPath);
+		}
 
 		return result;
 	}

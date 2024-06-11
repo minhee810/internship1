@@ -3,14 +3,12 @@ package com.example.demo.users.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
 public class ApiUsersController {
 
 	private final UserService userSerivce;
@@ -51,7 +48,7 @@ public class ApiUsersController {
 	}
 
 	/** 아이디 중복 검사 **/
-	@GetMapping("/username/{username}/check")
+	@GetMapping("/api/username/{username}/check")
 	public ResponseEntity<?> idCheck(@PathVariable String username) {
 		log.info("username = {}", username);
 		
@@ -63,7 +60,7 @@ public class ApiUsersController {
 	}
 
 	/** 이메일 중복 검사 **/
-	@GetMapping("/email/{email}/check")
+	@GetMapping("/api/email/{email}/check")
 	public ResponseEntity<?> emailCheck(@PathVariable String email) {
 
 		log.info("emailCheck 로직 실행");
@@ -88,15 +85,24 @@ public class ApiUsersController {
 		// session 객체 생성 
 		HttpSession session = request.getSession();
 		
-		// session 객체에 사용자 아이디 넣기 
-		session.setAttribute(SessionConst.USER_ID, loginDto.getUserId());
-		session.setAttribute(SessionConst.USER_EMAIL, loginDto.getEmail());
+		Long id = (Long) session.getAttribute(SessionConst.USER_ID);
+		
+		if (session.getAttribute(SessionConst.USER_ID) != null) {
+			log.info("id= {}", id);
+			session.removeAttribute(SessionConst.USER_ID);
+			session.removeAttribute(SessionConst.USERNAME);
+		}
+
+		Map<String, Object> userInfo = userSerivce.login(loginDto);
+
+		session.setAttribute(SessionConst.USER_ID, userInfo.get("userId"));
+		session.setAttribute(SessionConst.USERNAME, userInfo.get("username"));
+		
 		
 		// session id 추출
 //		String sessionId = session.getId();
 		log.info("session = {}", session.getAttribute(SessionConst.USER_ID));
-		// 일단 세션에 사용자의 아이디를 넣어서 세션 아이디를 쿠키에 넣어서 발급하기 
-		Map<String, Object> userInfo = userSerivce.login(loginDto);
+
 
 		if(userInfo.get("username") == null) {
 			return new ResponseEntity<>(new ResponseDto<>(-1, "아이디 혹은 이메일이 실패하였습니다.", null), HttpStatus.NOT_FOUND);
@@ -115,7 +121,7 @@ public class ApiUsersController {
 		return new ResponseEntity<>(new ResponseDto<>(1, "로그인이 되었습니다.", userInfo), HttpStatus.OK);
 	}
 
-	@GetMapping("/user")
+	@GetMapping("/api/user")
 	public ResponseEntity<?> getUserInfo(HttpServletRequest request) throws Exception{
 		// 쿠키에 세션 정보가 있다면 request 에서 꺼내면 됨. 
 		// 없다면 로그인 요청 시 넣어주고 
@@ -146,7 +152,7 @@ public class ApiUsersController {
 		return new ResponseEntity<>(new ResponseDto<>(1, "로그아웃 되었습니다.", null),HttpStatus.OK);
 	}
 	
-	@GetMapping("/myprofile")
+	@GetMapping("/api/myprofile")
 	public String myprofile() {
 		return "/users/profile";
 	}
