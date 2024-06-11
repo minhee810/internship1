@@ -1,8 +1,6 @@
 package com.example.demo.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,10 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 
 		registry.addInterceptor(new LoginCheckInterceptor())
-		.order(1).addPathPatterns("/**")
-		.excludePathPatterns("/", "/?page*", "/board", "/detail/**",
+		.order(1).addPathPatterns()
+		.excludePathPatterns("/", "/board", "/detail/**", "/api/**",
 				"/users/**", "/member/**", "/css/**", "/*.ico", "/error**", "/resources/**", "/board/detail/**",
-				"/member/join", "/comment/**", "/api/**", "/fileDownload/**");
+				"/member/join", "/comment/**", "/join", "/login", "/logout");
 	}
 
 	

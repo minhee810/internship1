@@ -105,14 +105,14 @@ public class ApiBoardController {
 			dto.setTitle(title);
 			dto.setContent(content);
 			dto.setUserId(userId);
-		
+			dto.setFiles(files);
 			log.info("title = {}", title);
 			log.info("content = {}", content);
 			
 			if (files != null) {
 				for (MultipartFile file : files) {
 					log.info("file = {}", file);
-					dto.setFiles(files);
+					
 					// 업로드된 파일의 크기를 확인하고 제한을 초과하는지 검사
 					if (file.getSize() > MAX_FILE_SIZE) {
 						throw new MaxUploadSizeExceededException(MAX_FILE_SIZE);
@@ -120,10 +120,9 @@ public class ApiBoardController {
 				}
 			}
 			
-	
 			boardService.insertBoard(dto);
 			log.info("dto = {}", dto);
-			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", dto), HttpStatus.CREATED);
+			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", null), HttpStatus.CREATED);
 			
 		} catch (MaxUploadSizeExceededException e) {
 
