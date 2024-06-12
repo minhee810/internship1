@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,8 +89,9 @@ public class ApiBoardController {
 	// 게시글 저장
 	@PostMapping("/api/write")
 	public ResponseEntity<?> insertBoard(@RequestPart("title") String title, @RequestPart("content") String content,
-			@RequestPart(value = "files", required = false) MultipartFile[] files, Model model, HttpSession session) throws Exception {
-		
+			@RequestPart(value = "files", required = false) MultipartFile[] files, HttpSession session)
+			throws Exception {
+
 		log.info("insertBoard() 로직 실행 ");
 
 		try {
@@ -108,22 +107,22 @@ public class ApiBoardController {
 			dto.setFiles(files);
 			log.info("title = {}", title);
 			log.info("content = {}", content);
-			
+
 			if (files != null) {
 				for (MultipartFile file : files) {
 					log.info("file = {}", file);
-					
+
 					// 업로드된 파일의 크기를 확인하고 제한을 초과하는지 검사
 					if (file.getSize() > MAX_FILE_SIZE) {
 						throw new MaxUploadSizeExceededException(MAX_FILE_SIZE);
 					}
 				}
 			}
-			
+
 			boardService.insertBoard(dto);
 			log.info("dto = {}", dto);
 			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", null), HttpStatus.CREATED);
-			
+
 		} catch (MaxUploadSizeExceededException e) {
 
 			return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
@@ -153,7 +152,6 @@ public class ApiBoardController {
 	// 게시글 수정 페이지 이동
 	@GetMapping("/api/modify/{boardId}")
 	public String modifyPage(@PathVariable Long boardId, Model model) {
-
 		BoardVO detail = boardService.getDetail(boardId);
 		model.addAttribute("detail", detail);
 
@@ -170,19 +168,28 @@ public class ApiBoardController {
 
 	// 게시글 수정 기능
 	@PostMapping("/api/modify/{boardId}")
-	public String modifyBoard(@PathVariable Long boardId, @ModelAttribute("dto") BoardListDto dto,
-			@RequestParam(required = false) List<Long> deletedFilesId, HttpServletRequest request, Model model,
-			Errors erros) throws Exception {
-
+	public ResponseEntity<?> modifyBoard(
+			@PathVariable Long boardId, 
+			@RequestPart("title") String title,
+			@RequestPart("content") String content,
+			@RequestPart(value = "files", required = false) MultipartFile[] files,
+			@RequestPart(required = false) List<Long> deletedFilesId, HttpSession session, Errors erros)
+			throws Exception {
 		log.info("=====[modifyBoard]=====");
 
 		if (erros.hasErrors()) {
-			return "/board/modify/" + boardId;
+			return new ResponseEntity<>(new ResponseDto<>(-1, "에러가 발생했슨니다.", null), HttpStatus.BAD_REQUEST);
 		}
+
+		log.info("boardId = {}", boardId);
+		BoardListDto dto = new BoardListDto();
+		dto.setTitle(title);
+		dto.setContent(content);
+		dto.setFiles(files);
 
 		boardService.modifyBoard(boardId, dto, deletedFilesId);
 
-		return "redirect:/board/detail/" + boardId;
+		return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정 완료했습니다.", null), HttpStatus.OK);
 	}
 
 	// 게시글 삭제

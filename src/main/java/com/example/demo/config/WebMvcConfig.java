@@ -15,8 +15,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 
 		registry.addInterceptor(new LoginCheckInterceptor())
-		.order(1).addPathPatterns()
-		.excludePathPatterns("/", "/board", "/detail/**", "/api/**",
+		.order(1).addPathPatterns("/api/**")
+		.excludePathPatterns("/", "/board", "/detail/**", 
 				"/users/**", "/member/**", "/css/**", "/*.ico", "/error**", "/resources/**", "/board/detail/**",
 				"/member/join", "/comment/**", "/join", "/login", "/logout");
 	}
@@ -32,16 +32,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedHeaders("*");
     }
     
-
-//    @Override
-//    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-//        configurer.favorPathExtension(false)
-//        .favorParameter(true)
-//        .parameterName("mediaType")
-//        .ignoreAcceptHeader(true)
-//        .useRegisteredExtensionsOnly(false)
-//        .defaultContentType(MediaType.APPLICATION_JSON)
-//        .mediaType("json", MediaType.APPLICATION_JSON)
-//        .mediaType("multipart", MediaType.MULTIPART_FORM_DATA);
-//    }
 }
