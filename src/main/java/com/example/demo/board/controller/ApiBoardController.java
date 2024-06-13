@@ -121,7 +121,7 @@ public class ApiBoardController {
 
 			boardService.insertBoard(dto);
 			log.info("dto = {}", dto);
-			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성 성공", null), HttpStatus.CREATED);
+			return new ResponseEntity<>(new ResponseDto<>(1, "게시글을 저장했습니다", null), HttpStatus.CREATED);
 
 		} catch (MaxUploadSizeExceededException e) {
 
@@ -165,7 +165,7 @@ public class ApiBoardController {
 		}
 
 		log.info("boardId = {}", boardId);
-		
+
 		if (files != null) {
 			for (MultipartFile file : files) {
 				log.info("file = {}", file);
@@ -173,7 +173,7 @@ public class ApiBoardController {
 		}
 
 		BoardListDto dto = new BoardListDto();
-		
+
 		dto.setTitle(title);
 		dto.setContent(content);
 		dto.setFiles(files);
@@ -207,7 +207,9 @@ public class ApiBoardController {
 
 		log.info("result = {}", result);
 
-		return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제 성공", result), HttpStatus.OK);
-
+		if (result == 1) {
+			return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 삭제되었습니다.", result), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(-1, "게시글 삭제가 실패하였습니다.", result), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
