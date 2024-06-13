@@ -154,7 +154,7 @@ public class ApiBoardController {
 	public ResponseEntity<?> modifyBoard(@PathVariable Long boardId, @RequestPart("title") String title,
 			@RequestPart("content") String content,
 			@RequestPart(value = "files", required = false) MultipartFile[] files,
-			@RequestPart(required = false) List<Long> deletedFilesId, HttpSession session, Errors erros)
+			@RequestParam(required = false) List<Long> deletedFilesId, HttpSession session, Errors erros)
 			throws Exception {
 
 		log.info("=====[modifyBoard]=====");
@@ -171,7 +171,6 @@ public class ApiBoardController {
 				log.info("file = {}", file);
 			}
 		}
-		
 
 		BoardListDto dto = new BoardListDto();
 		
