@@ -115,8 +115,9 @@ public class BoardServiceImpl implements BoardService {
 
 		// 서버에서 해당 파일 삭제 -> 물리 삭제
 		Boolean result = fileService.deleteFile(boardId, deletedFilesId);
-
+		
 		log.info("파일 삭제 결과 : result = {}", result);
+		dto.setBoardId(boardId);
 		// 게시글 정보 데이터베이스에 저장
 		int boardResult = boardMapper.modifyBoard(dto);
 

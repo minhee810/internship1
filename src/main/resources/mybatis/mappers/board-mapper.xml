@@ -62,7 +62,7 @@
 	</select>
 	
 	
-	<update id="modifyBoard" parameterType="boardModifyDto">
+	<update id="modifyBoard" parameterType="boardListDto">
 		<![CDATA[
 			UPDATE BOARD
 			SET 

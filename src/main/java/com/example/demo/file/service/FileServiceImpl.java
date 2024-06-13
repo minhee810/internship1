@@ -48,6 +48,7 @@ public class FileServiceImpl implements FileService {
 			log.info("ids 가 null 입니다. ");
 			return;
 		}
+		
 		fileMapper.deleteAllByIds(ids);
 	}
 

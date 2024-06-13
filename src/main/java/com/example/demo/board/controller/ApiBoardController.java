@@ -149,47 +149,52 @@ public class ApiBoardController {
 		return new ResponseEntity<>(new ResponseDto<>(2, "게시글 상세보기 성공", map), HttpStatus.OK);
 	}
 
-	// 게시글 수정 페이지 이동
-	@GetMapping("/api/modify/{boardId}")
-	public String modifyPage(@PathVariable Long boardId, Model model) {
-		BoardVO detail = boardService.getDetail(boardId);
-		model.addAttribute("detail", detail);
-
-		List<UploadFileVO> files = fileService.findAllFileByBoardId(boardId);
-
-		for (UploadFileVO file : files) {
-			log.info("files = {}", file);
-		}
-
-		model.addAttribute("files", files);
-		log.info("=====[modifyPage() END]=====");
-		return "/board/boardModify";
-	}
-
 	// 게시글 수정 기능
 	@PostMapping("/api/modify/{boardId}")
-	public ResponseEntity<?> modifyBoard(
-			@PathVariable Long boardId, 
-			@RequestPart("title") String title,
+	public ResponseEntity<?> modifyBoard(@PathVariable Long boardId, @RequestPart("title") String title,
 			@RequestPart("content") String content,
 			@RequestPart(value = "files", required = false) MultipartFile[] files,
 			@RequestPart(required = false) List<Long> deletedFilesId, HttpSession session, Errors erros)
 			throws Exception {
+
 		log.info("=====[modifyBoard]=====");
+		log.info("deletedFilesId ={}", deletedFilesId);
 
 		if (erros.hasErrors()) {
 			return new ResponseEntity<>(new ResponseDto<>(-1, "에러가 발생했슨니다.", null), HttpStatus.BAD_REQUEST);
 		}
 
 		log.info("boardId = {}", boardId);
+		
+		if (files != null) {
+			for (MultipartFile file : files) {
+				log.info("file = {}", file);
+			}
+		}
+		
+
 		BoardListDto dto = new BoardListDto();
+		
 		dto.setTitle(title);
 		dto.setContent(content);
 		dto.setFiles(files);
 
-		boardService.modifyBoard(boardId, dto, deletedFilesId);
+		if (files != null) {
+			for (MultipartFile file : files) {
+				log.info("file ={}", file);
 
-		return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정 완료했습니다.", null), HttpStatus.OK);
+			}
+		}
+
+		log.info("### set dto ={} ", dto);
+		int result = boardService.modifyBoard(boardId, dto, deletedFilesId);
+		log.info("result = {}", result);
+
+		if (result == 1) {
+			return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정 완료했습니다.", null), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(-1, "게시글 수정에 실패했습니다.", null), HttpStatus.BAD_REQUEST);
+
 	}
 
 	// 게시글 삭제
