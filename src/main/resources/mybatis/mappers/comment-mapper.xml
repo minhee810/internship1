@@ -71,6 +71,22 @@
 		
 		</update>
 		
+				<!-- 댓글 수정하기 -->
+		<update id="apiUpdateComment" parameterType="commentDto">
+		
+			<selectKey resultType="commentDto" order="AFTER">
+		        SELECT * FROM COMMENTS WHERE commentId = #{commentId}
+		    </selectKey>
+		
+			<![CDATA[
+				UPDATE COMMENTS
+	        	SET COMMENT_CONTENT = #{commentContent}
+	          	, MODIFIED_DATE = sysdate
+	        	WHERE COMMENT_ID = #{commentId}
+			]]>
+		
+		</update>
+		
 		<!-- 댓글 개수 -->
 		<select id="count" parameterType="long" resultType="int">
 	        SELECT count(*) FROM COMMENTS

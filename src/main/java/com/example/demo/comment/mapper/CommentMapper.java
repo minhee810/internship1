@@ -25,8 +25,8 @@ public interface CommentMapper {
 
 	// 댓글 개수
 	public int count(Long boardId);
-	
-	// 댓글 한개 조회 (리턴 받을 용도) 
+
+	// 댓글 한개 조회 (리턴 받을 용도)
 	public CommentDto selectOneComment(Long commentId);
 
 	// 댓글 존재하는지 확
@@ -34,10 +34,13 @@ public interface CommentMapper {
 
 	// 대댓글 저장
 	public int commentAdd(CommentDto commentDto);
-	
+
 	// 댓글 작성자 이름 검색
 	public String parentUsername(Long commentId);
 
 	// 게시글 삭제 시 댓글 일괄 삭제
 	public int commentDeleteAll(Long boardId);
+
+	// apiController 댓글 수정
+	public int apiUpdateComment(CommentDto dto);
 }

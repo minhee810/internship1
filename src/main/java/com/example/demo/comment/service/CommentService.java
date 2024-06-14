@@ -25,13 +25,16 @@ public interface CommentService {
 	// 댓글 하나 조회
 	public CommentDto selectOne(Long commentId);
 
-	// 대댓글 존재하는지 확인 
+	// 대댓글 존재하는지 확인
 	public int hasReplies(Long commentId);
 
-	// 대댓글 작성하기 
+	// 대댓글 작성하기
 	public int commentAdd(CommentDto commentDto);
 
 	// 댓글 일괄 삭제 처리
-	int commentDeleteAll(Long boardId);
-	
+	public int commentDeleteAll(Long boardId);
+
+	// apiController 댓글 수정
+	public CommentDto apiUpdateComment(CommentDto dto);
+
 }

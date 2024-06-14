@@ -7,14 +7,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.comment.dto.CommentDto;
@@ -50,8 +48,10 @@ public class ApiCommentController {
 	}
 
 	// 댓글 작성
-	@PostMapping("/comments")
-	public ResponseEntity<?> saveComment(CommentDto dto, HttpSession session, Model model) {
+	@PostMapping("/api/comments")
+	public ResponseEntity<?> saveComment(@RequestBody CommentDto dto, HttpSession session) {
+		log.info("saveComment() 로직 실행");
+		log.info("dto = {}", dto);
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 		if (userId == null) {
 			throw new CustomException(-1, "로그인하지 않은 사용자의 접근입니다.");
@@ -59,11 +59,16 @@ public class ApiCommentController {
 		dto.setWriter(userId);
 		// 댓글 작성 시 boardService 호출 한 뒤 댓글 개수 +1 업데이트
 		CommentDto saveComment = commentService.saveComment(dto);
-		return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 성공", saveComment), HttpStatus.CREATED);
+		log.info("saveComment = {}", saveComment);
+		if (saveComment != null) {
+			return new ResponseEntity<>(new ResponseDto<>(1, "댓글이 작성되었습니다.", saveComment), HttpStatus.CREATED);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(-1, "댓글작성에 실패하였습니다. ", saveComment), HttpStatus.BAD_REQUEST);
+
 	}
 
 	// 댓글 삭제
-	@PutMapping("/comments/delete")
+	@PutMapping("/api/comments/delete")
 	public ResponseEntity<?> delete(@RequestBody Map<String, String> map) {
 		log.info("====comment delete ====");
 		Long boardId = Long.valueOf(map.get("boardId"));
@@ -75,14 +80,14 @@ public class ApiCommentController {
 		int result = commentService.deleteComment(commentId, boardId);
 
 		if (result > 0) {
-			return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 성공", result), HttpStatus.OK);
+			return new ResponseEntity<>(new ResponseDto<>(1, "댓글이 삭제되었습니다.", result), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 삭제 실패", result), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new ResponseDto<>(-99, "댓글 삭제에 실패했습니다.", result), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	// 업데이트 시 input 창에 기존의 데이터 출력
-	@GetMapping("/comments/update/{boardId}/{commentId}")
+	@GetMapping("/api/comments/update/{boardId}/{commentId}")
 	public String updatePage(Long boardId, Long commentId, Model model) {
 
 		CommentDto comment = commentService.selectOne(boardId);
@@ -91,19 +96,19 @@ public class ApiCommentController {
 	}
 
 	// 업데이트 시 성공한 행의 개수 반환 vs 삭제한 결과 0/1 반환
-	@PutMapping("/comments")
-	public ResponseEntity<?> update(CommentDto dto) {
-		log.info("댓글 수정 로직 실행");
+	@PutMapping("/api/comments")
+	public ResponseEntity<?> update(@RequestBody CommentDto dto) {
+		log.info("api 댓글 수정 로직 실행");
 
 		try {
-			int result = commentService.updateComment(dto);
+			CommentDto savedComment = commentService.apiUpdateComment(dto);
 
-			if (result > 0) {
+			if (savedComment != null) {
 
-				return new ResponseEntity<>(new ResponseDto<>(1, "댓글 수정 성공", result), HttpStatus.OK);
+				return new ResponseEntity<>(new ResponseDto<>(1, "댓글을 수정했습니다.", savedComment), HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<>(new ResponseDto<>(-1, "댓글 수정 실패", result),
+				return new ResponseEntity<>(new ResponseDto<>(-1, "서버에 오류가 발생했습니다. ", savedComment),
 						HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (Exception e) {

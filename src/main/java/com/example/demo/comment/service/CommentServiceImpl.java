@@ -29,21 +29,21 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public List<CommentsVO> getCommentList(Long boardId, Long userId) {
 		Map<String, Long> map = new HashMap<>();
-		
+
 		// userId가 없을 경우 임의의 값을 넣어서 데이터베이스로 보냄. -> 로그인하지 않은 사용자의 상태를 관리하기 위함
-		if(userId == null) {
+		if (userId == null) {
 			userId = (long) 2;
 		}
-		
+
 		log.info("userId = {}", userId);
-		
+
 		map.put("userId", userId);
 		map.put("boardId", boardId);
-		
+
 		List<CommentsVO> commentList = commentMapper.getCommentList(map);
 
-		log.info(" service : commentList = {}", commentList); 
-		
+		log.info(" service : commentList = {}", commentList);
+
 		return commentList;
 	}
 
@@ -54,28 +54,26 @@ public class CommentServiceImpl implements CommentService {
 
 		// 댓글 개수 추가
 		int rowCnt = boardMapper.updateCommentCnt(dto.getBoardId(), 1);
-		
+
 		log.info("rowCnt = {} ", rowCnt);
-		
-	
-		// 일반 댓글 작성 처리 
+
+		// 일반 댓글 작성 처리
 		int depth = 0;
 		Long parentId = (long) 0;
 
-		
-			CommentDto newComment = CommentDto.builder()
-					.boardId(dto.getBoardId())
-					.commentContent(dto.getCommentContent())
-					.parentId(parentId) // 기본 0으로 설정
-					.depth(depth)
-					.writer(dto.getWriter())
-					.build();
-	
-		
-		int result = commentMapper.saveComment(newComment);
-		CommentDto saveComment = commentMapper.selectOneComment(newComment.getCommentId());
+		CommentDto newComment = CommentDto.builder().boardId(dto.getBoardId()).commentContent(dto.getCommentContent())
+				.parentId(parentId) // 기본 0으로 설정
+				.depth(depth).writer(dto.getWriter()).build();
 
-		return saveComment;
+		log.info("dto = {}", dto);
+		int result = commentMapper.saveComment(newComment);
+
+		if (result > 0) {
+			CommentDto saveComment = commentMapper.selectOneComment(newComment.getCommentId());
+			return saveComment;
+		}
+
+		return null;
 	}
 
 	@Transactional(rollbackFor = Exception.class) // 쿼리 두개 실행되므로 트랜잭션 처리, 예외 발생시 롤백 실행
@@ -100,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
 	public int count(Long boardId) {
 		return commentMapper.count(boardId);
 	}
-	
+
 	@Override
 	public CommentDto selectOne(Long commentId) {
 		return commentMapper.selectOneComment(commentId);
@@ -116,35 +114,43 @@ public class CommentServiceImpl implements CommentService {
 	public int commentAdd(CommentDto commentDto) {
 
 		log.info("commentDto.getParentUsername() = {}", commentDto.getParentUsername());
-	
-		
+
 		int rowCnt = boardMapper.updateCommentCnt(commentDto.getBoardId(), 1);
-		// 부모 댓글의 아이디 저장 
+		// 부모 댓글의 아이디 저장
 		commentDto.setParentId(commentDto.getParentId());
-		
-		// 깊이 저장 대댓글 작성 시 해당 댓글의 깊이 +1 
-		// 프론트에서 댓글깊이 전송하기 
+
+		// 깊이 저장 대댓글 작성 시 해당 댓글의 깊이 +1
+		// 프론트에서 댓글깊이 전송하기
 		commentDto.setDepth(commentDto.getDepth() + 1);
-		// 게시글 아이디 저장 
+		// 게시글 아이디 저장
 		commentDto.setBoardId(commentDto.getBoardId());
-		
+
 		// 댓글 작성자 아이디 저장 -> controller 에서 처리
-		
+
 		int result = commentMapper.saveComment(commentDto);
-		
+
 		return result;
 	}
-	
-	
+
 	// 사용자 이름 검색
 	public String parentUsername(Long parentId) {
 		return commentMapper.parentUsername(parentId);
 	}
-	
-	// 게시물 삭제시 댓글 일괄 삭제 
+
+	// 게시물 삭제시 댓글 일괄 삭제
 	@Override
 	public int commentDeleteAll(Long boardId) {
 		return commentMapper.commentDeleteAll(boardId);
+	}
+
+	@Override
+	public CommentDto apiUpdateComment(CommentDto dto) {
+		int result = commentMapper.apiUpdateComment(dto);
+		log.info("result ={}", result);
+
+		CommentDto saveComment = commentMapper.selectOneComment(dto.getCommentId());
+		log.info("saveComment = {}", saveComment);
+		return saveComment;
 	}
 
 }
