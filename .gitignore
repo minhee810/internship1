@@ -35,3 +35,6 @@ build/
 
 # board_file 폴더 무시
 board_file/
+
+# application properties 
+application.properties
