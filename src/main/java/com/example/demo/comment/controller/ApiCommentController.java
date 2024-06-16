@@ -87,7 +87,7 @@ public class ApiCommentController {
 	}
 
 	// 업데이트 시 input 창에 기존의 데이터 출력
-	@GetMapping("/api/comments/update/{boardId}/{commentId}")
+	@GetMapping("/api/comment/update/{boardId}/{commentId}")
 	public String updatePage(Long boardId, Long commentId, Model model) {
 
 		CommentDto comment = commentService.selectOne(boardId);

@@ -70,6 +70,9 @@ public class CommentServiceImpl implements CommentService {
 
 		if (result > 0) {
 			CommentDto saveComment = commentMapper.selectOneComment(newComment.getCommentId());
+			// 댓글의 경우 작성자가 본인이므로 작성 시에는 임의로 principal 값을 1로 설정하여 return 해주기 
+			// front 에서 화면에 표시할 때 필요한 데이터이므로
+			saveComment.setPrincipal(1);
 			return saveComment;
 		}
 
@@ -150,6 +153,7 @@ public class CommentServiceImpl implements CommentService {
 
 		CommentDto saveComment = commentMapper.selectOneComment(dto.getCommentId());
 		log.info("saveComment = {}", saveComment);
+		saveComment.setPrincipal(1);
 		return saveComment;
 	}
 
