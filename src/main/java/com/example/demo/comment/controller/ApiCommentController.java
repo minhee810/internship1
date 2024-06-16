@@ -120,11 +120,15 @@ public class ApiCommentController {
 	}
 
 	// 대댓글 작성
-	@PostMapping("/comments/reply")
+	@PostMapping("/api/comments/reply")
 	public ResponseEntity<?> commentAdd(CommentDto commentDto, HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 		commentDto.setWriter(userId);
-		int result = commentService.commentAdd(commentDto);
-		return new ResponseEntity<>(new ResponseDto<>(1, "대댓글 작성 성공", result), HttpStatus.OK);
+		CommentDto savedComment = commentService.apiCommentAdd(commentDto);
+		
+		if(savedComment == null) {
+			return new ResponseEntity<>(new ResponseDto<>(-1, "대댓글 작성에 실패했습니다.", savedComment), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(new ResponseDto<>(1, "대댓글을 작성했습니다. ", savedComment), HttpStatus.OK);
 	}
 }

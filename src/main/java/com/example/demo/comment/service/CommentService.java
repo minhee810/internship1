@@ -36,5 +36,8 @@ public interface CommentService {
 
 	// apiController 댓글 수정
 	public CommentDto apiUpdateComment(CommentDto dto);
+	
+	public CommentDto apiCommentAdd(CommentDto dto);
 
 }
+

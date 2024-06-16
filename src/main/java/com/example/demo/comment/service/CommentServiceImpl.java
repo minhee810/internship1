@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.board.mapper.BoardMapper;
-import com.example.demo.board.service.BoardServiceImpl;
 import com.example.demo.comment.dto.CommentDto;
 import com.example.demo.comment.mapper.CommentMapper;
 import com.example.demo.comment.vo.CommentsVO;
@@ -132,7 +130,6 @@ public class CommentServiceImpl implements CommentService {
 		// 댓글 작성자 아이디 저장 -> controller 에서 처리
 
 		int result = commentMapper.saveComment(commentDto);
-
 		return result;
 	}
 
@@ -156,6 +153,37 @@ public class CommentServiceImpl implements CommentService {
 		log.info("saveComment = {}", saveComment);
 		saveComment.setPrincipal(1);
 		return saveComment;
+	}
+	
+	// 대댓글 작성
+	@Override
+	public CommentDto apiCommentAdd(CommentDto commentDto) {
+
+		log.info("commentDto.getParentUsername() = {}", commentDto.getParentUsername());
+
+		int rowCnt = boardMapper.updateCommentCnt(commentDto.getBoardId(), 1);
+		// 부모 댓글의 아이디 저장
+		commentDto.setParentId(commentDto.getParentId());
+
+		// 깊이 저장 대댓글 작성 시 해당 댓글의 깊이 +1
+		// 프론트에서 댓글깊이 전송하기
+		commentDto.setDepth(commentDto.getDepth() + 1);
+		// 게시글 아이디 저장
+		commentDto.setBoardId(commentDto.getBoardId());
+
+		// 댓글 작성자 아이디 저장 -> controller 에서 처리
+
+		int result = commentMapper.saveComment(commentDto);
+		
+		if (result > 0) {
+			CommentDto saveComment = commentMapper.selectOneComment(commentDto.getCommentId());
+			// 댓글의 경우 작성자가 본인이므로 작성 시에는 임의로 principal 값을 1로 설정하여 return 해주기 
+			// front 에서 화면에 표시할 때 필요한 데이터이므로
+			commentDto.setPrincipal(1);
+			return saveComment;
+		}
+
+		return null;
 	}
 
 }
