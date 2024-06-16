@@ -85,7 +85,8 @@ public class CommentServiceImpl implements CommentService {
 		int rowCnt = boardMapper.updateCommentCnt(boardId, -1); // 댓글 수 -1
 		int result = commentMapper.deleteComment(commentId); // 댓글 삭제
 		log.info("rowCnt = {} ", rowCnt);
-		return rowCnt; // 댓글 수 반환
+		log.info("result = {} ", result);
+		return result; // 결
 	}
 
 	@Transactional
