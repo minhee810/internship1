@@ -132,6 +132,8 @@ public class UserServiceImpl implements UserService {
 
 		map.put("userId", savedUser.getUserId());
 		map.put("username", savedUsername);
+		map.put("isLogin", true);
+		
 
 		// DB 호출
 		return map;
