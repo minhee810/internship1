@@ -96,7 +96,13 @@
 			
 		<!-- 댓글 한 개 조회 -->
 		<select id="selectOneComment" parameterType="long" resultType="commentDto">
-	        SELECT C.*, U.USERNAME 
+	        SELECT C.*, 
+	        U.USERNAME,     
+		        (select USERNAME 
+		        from users a 
+		        join comments b 
+		        on a.USER_ID= b.WRITER 
+		        where b.comment_id = C.PARENT_ID) AS PARENT_USERNAME
 	        FROM COMMENTS C
 	        JOIN USERS U
 	        ON U.USER_ID = C.WRITER

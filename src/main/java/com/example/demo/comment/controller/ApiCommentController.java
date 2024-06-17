@@ -121,11 +121,13 @@ public class ApiCommentController {
 
 	// 대댓글 작성
 	@PostMapping("/api/comments/reply")
-	public ResponseEntity<?> commentAdd(CommentDto commentDto, HttpSession session, Model model) {
+	public ResponseEntity<?> commentAdd(@RequestBody CommentDto commentDto, HttpSession session) {
+		log.info("commentDto = {}", commentDto);
 		Long userId = (Long) session.getAttribute(SessionConst.USER_ID);
 		commentDto.setWriter(userId);
 		CommentDto savedComment = commentService.apiCommentAdd(commentDto);
 		
+		log.info("savedComment ={}", savedComment);
 		if(savedComment == null) {
 			return new ResponseEntity<>(new ResponseDto<>(-1, "대댓글 작성에 실패했습니다.", savedComment), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
