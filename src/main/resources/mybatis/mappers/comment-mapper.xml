@@ -31,7 +31,7 @@
             JOIN USERS U 
             ON U.USER_ID = C.WRITER
             WHERE C.BOARD_ID  = #{boardId}
-            AND C.IS_DELETED = 0
+        
         ) f
         START WITH PARENT_ID = 0
         CONNECT BY PRIOR COMMENT_ID = PARENT_ID
