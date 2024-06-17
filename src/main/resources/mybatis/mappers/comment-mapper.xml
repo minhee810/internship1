@@ -15,7 +15,7 @@
             BOARD_ID,
             DEPTH,
             PARENT_ID,
-            LPAD(' ', 4 *(LEVEL -1)) || COMMENT_CONTENT COMMENT_CONTENT,
+           	COMMENT_CONTENT COMMENT_CONTENT,
             CREATED_DATE,
             WRITER,
             USERNAME,
