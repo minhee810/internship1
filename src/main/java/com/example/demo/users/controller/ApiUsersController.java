@@ -48,7 +48,7 @@ public class ApiUsersController {
 	}
 
 	/** 아이디 중복 검사 **/
-	@GetMapping("/api/username/{username}/check")
+	@GetMapping("/username/{username}/check")
 	public ResponseEntity<?> idCheck(@PathVariable String username) {
 		log.info("username = {}", username);
 		
@@ -60,7 +60,7 @@ public class ApiUsersController {
 	}
 
 	/** 이메일 중복 검사 **/
-	@GetMapping("/api/email/{email}/check")
+	@GetMapping("/email/{email}/check")
 	public ResponseEntity<?> emailCheck(@PathVariable String email) {
 
 		log.info("emailCheck 로직 실행");
