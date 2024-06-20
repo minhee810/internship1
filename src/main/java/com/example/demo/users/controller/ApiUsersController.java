@@ -54,9 +54,9 @@ public class ApiUsersController {
 		
 		int code =  userSerivce.idCheck(username);
 		if(code == 1) {
-			return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용중인 아이디입니다.", code), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new ResponseDto<>(-2, "이미 사용중인 아이디입니다.", code), HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 아이디입니다.",code), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseDto<>(2, "사용 가능한 아이디입니다.",code), HttpStatus.OK);
 	}
 
 	/** 이메일 중복 검사 **/
