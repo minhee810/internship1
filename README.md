@@ -1,4 +1,4 @@
-# internship1 게시판 프로젝트 (개인)
+# internship1 프로젝트 (개인)
 
  ## 1. 💾 오라클 데이터베이스 활용 : [ERD CLOUD](https://www.erdcloud.com/d/YmcM5yNQJZRRzftZf)
 <img width="700" alt="image" src="https://github.com/minhee810/internship1/assets/100061907/33b74f0a-6c7f-4c08-9785-a148f78e7adb">
