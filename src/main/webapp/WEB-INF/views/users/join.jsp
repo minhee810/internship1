@@ -85,7 +85,6 @@
 	<%@ include file="../layout/script.jsp" %>
     <script type="text/javascript" src="${contextPath}/resources/static/js/users/join.js"></script>
     <script type="text/javascript" src="${contextPath}/resources/static/js/utils/valid.js"></script>
-  
 </body>
 
 </html>

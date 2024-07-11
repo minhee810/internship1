@@ -212,4 +212,6 @@ public class ApiBoardController {
 		}
 		return new ResponseEntity<>(new ResponseDto<>(-1, "게시글 삭제가 실패하였습니다.", result), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	
 }

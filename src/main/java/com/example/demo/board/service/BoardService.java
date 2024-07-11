@@ -20,6 +20,7 @@ public interface BoardService {
 	int deleteBoard(Long boardId);
 
 	int modifyBoard(Long boardId, BoardListDto dto, List<Long> deletedFilesId) throws Exception;
-
+	
+	List<BoardVO> getAllListForJasper();
 
 }

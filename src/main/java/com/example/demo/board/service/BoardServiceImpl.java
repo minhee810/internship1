@@ -160,4 +160,11 @@ public class BoardServiceImpl implements BoardService {
 		return result;
 	}
 
+	@Override
+	public List<BoardVO> getAllListForJasper() {
+		List<BoardVO> content = boardMapper.getAllListForJasper();
+		log.info("forJasper content = {}", content); 
+		return content;
+	}
+
 }
