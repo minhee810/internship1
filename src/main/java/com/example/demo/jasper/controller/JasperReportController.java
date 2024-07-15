@@ -3,6 +3,7 @@ package com.example.demo.jasper.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
@@ -18,8 +19,9 @@ import com.example.demo.board.service.BoardService;
 import com.example.demo.board.vo.BoardVO;
 import com.example.demo.jasper.service.JasperReportService;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JRException;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/reports")
 public class JasperReportController {
@@ -32,8 +34,11 @@ public class JasperReportController {
 
 	@GetMapping("/item-report/{format}")
 	public ResponseEntity<?> downloadUserReport(@PathVariable String format) throws JRException, IOException {
-	
-		List<BoardVO> boardList = boardService.getAllListForJasper();
+		log.info("downloadUserReport 로직 수행");
+		
+		 List<BoardVO> boardList = boardService.getAllListForJasper();
+		
+		 log.info("controller -> boardList ={}", boardList);
 		
 		// JasperReports 를 사용하여 생성된 보고서의 바이트 배열 
 		byte[] reportContent = jasperReportService.getItemReport(boardList, format);
@@ -49,15 +54,5 @@ public class JasperReportController {
 	    		.header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("Test02." + format)
 	    				.build().toString()).body(resource);
 	    
-		/*
-		 * // 데이터 소스로 사용될 JRBeanCollectionDataSource 생성 JRBeanCollectionDataSource
-		 * dataSource = new JRBeanCollectionDataSource(boardList);
-		 * 
-		 * // 보고서 매개변수 설정 Map<String, Object> parameter = new HashMap<>();
-		 * parameter.put("title", "testlist");
-		 * 
-		 * // Fill the report JasperPrint jasperPrint =
-		 * JasperFillManager.fillReport(jasper, parameter, null);
-		 */
 	}
 }

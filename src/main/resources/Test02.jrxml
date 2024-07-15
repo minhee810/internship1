@@ -106,7 +106,7 @@ FROM BOARD]]>
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f860078a-c1c7-4cfd-b902-36792a3b40a8"/>
 				</reportElement>
 				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA[$F{COMMENT_CNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{MODIFIED_DATE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="490" y="0" width="54" height="30" uuid="a593810c-4efc-4711-95cb-b4deabb48d72">

@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jfree.util.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import com.example.demo.board.vo.BoardVO;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -20,7 +22,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
-
+@Slf4j
 @Service
 public class JasperReportServiceImpl implements JasperReportService {
 
@@ -31,21 +33,24 @@ public class JasperReportServiceImpl implements JasperReportService {
 
 		try {
 			jasperReport = (JasperReport) JRLoader.loadObject(ResourceUtils.getFile("Test02.jasper"));
-
-		} catch (FileNotFoundException | JRException e) {
+//			jasperReport.
+		} catch (Exception e) {
+			
 			try {
 				File file = ResourceUtils.getFile("classpath:Test02.jrxml");
 				jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
 				JRSaver.saveObject(jasperReport, "Test02.jasper");
 
-			} catch (FileNotFoundException | JRException ex) {
+			} catch (Exception ex) {
 				throw new RuntimeException(e);
 			}
 		}
-
+		
+		log.info("jasperReport = {}", jasperReport);
+		
 		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(boardList);
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("title", "Item Report");
+		// parameters.put("title", "Item Report");
 
 		JasperPrint jasperPrint = null;
 
@@ -67,8 +72,6 @@ public class JasperReportServiceImpl implements JasperReportService {
 		} catch (JRException  e) {
 			throw new RuntimeException(e);
 		}
-
 		return reportContent;
 	}
-
 }

@@ -91,10 +91,12 @@
 	   		<!-- 메인 페이지 글 목록 조회 -->
 	<select id="getAllListForJasper" resultType="boardVO">
 		<![CDATA[
-		        SELECT TITLE, CONTENT,
-		               CREATED_DATE,
-		               MODIFIED_DATE,
-		               COMMENT_CNT, IS_DELETED
+		        SELECT title, 
+		        	   content,
+		               created_date,
+		               modified_date,
+		               comment_cnt, 
+		               is_deleted
 		        FROM BOARD
 			]]>
 	</select>
