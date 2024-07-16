@@ -14,6 +14,7 @@
 	<typeAliases>
 		<typeAlias type="com.example.demo.users.vo.UsersVO" alias="usersVO"/>
 		<typeAlias type="com.example.demo.board.vo.BoardVO" alias="boardVO"/>
+		<typeAlias type="com.example.demo.board.vo.BoardVO2" alias="boardVO2"/>
 		<typeAlias type="com.example.demo.comment.vo.CommentsVO" alias="commentsVO"/>
 		<typeAlias type="com.example.demo.file.vo.UploadFileVO" alias="fileVO"/>
 		<typeAlias type="com.example.demo.users.dto.JoinDto" alias="joinDto"/>

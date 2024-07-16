@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.demo.board.dto.BoardListDto;
 import com.example.demo.board.vo.BoardVO;
+import com.example.demo.board.vo.BoardVO2;
 
 public interface BoardService {
 
@@ -21,6 +22,6 @@ public interface BoardService {
 
 	int modifyBoard(Long boardId, BoardListDto dto, List<Long> deletedFilesId) throws Exception;
 	
-	List<BoardVO> getAllListForJasper();
+	List<BoardVO2> getAllListForJasper();
 
 }

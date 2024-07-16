@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.demo.board.dto.BoardListDto;
 import com.example.demo.board.dto.RequestList;
 import com.example.demo.board.vo.BoardVO;
+import com.example.demo.board.vo.BoardVO2;
 
 @Mapper
 public interface BoardMapper {
@@ -26,5 +27,5 @@ public interface BoardMapper {
 
 	public int updateCommentCnt(Long boardId, int count); // map으로 받아와야 하나
 	
-	public List<BoardVO> getAllListForJasper();
+	public List<BoardVO2> getAllListForJasper();
 }

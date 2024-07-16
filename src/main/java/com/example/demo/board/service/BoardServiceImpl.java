@@ -15,8 +15,8 @@ import com.example.demo.board.dto.BoardListDto;
 import com.example.demo.board.dto.RequestList;
 import com.example.demo.board.mapper.BoardMapper;
 import com.example.demo.board.vo.BoardVO;
+import com.example.demo.board.vo.BoardVO2;
 import com.example.demo.comment.service.CommentService;
-import com.example.demo.file.mapper.FileMapper;
 import com.example.demo.file.service.FileManager;
 import com.example.demo.file.service.FileService;
 
@@ -161,8 +161,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardVO> getAllListForJasper() {
-		List<BoardVO> content = boardMapper.getAllListForJasper();
+	public List<BoardVO2> getAllListForJasper() {
+		List<BoardVO2> content = boardMapper.getAllListForJasper();
 		log.info("forJasper content = {}", content); 
 		return content;
 	}

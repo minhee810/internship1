@@ -31,6 +31,7 @@ public class BoardVO {
 	
 	private int startBlockPage; 
 	private int endBlockPage;
+	
 
 	@Builder
 	public BoardVO(String title, String content, LocalDateTime modifidDate, MultipartFile[] files) {
