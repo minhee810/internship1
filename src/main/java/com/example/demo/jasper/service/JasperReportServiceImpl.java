@@ -30,14 +30,22 @@ public class JasperReportServiceImpl implements JasperReportService {
 		JasperReport jasperReport = null;
 
 		try {
-
 			File file = ResourceUtils.getFile("classpath:boardList.jrxml");
 			jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
 			JRSaver.saveObject(jasperReport, "boardList.jasper");
+			
+//			File jasperFile = new File("boardList.jasper");
+			
+//			if(!jasperFile.exists()) {
+//				compileJRXML();
+//			}else {
+//				log.info("boardList.jasper 파일이 이미 존재합니다.");
+//			}
 		} catch (JRException e) {
-		    System.out.println("JRXML 파일 컴파일 중 오류가 발생했습니다.");
+		    log.info("JRXML 파일 컴파일 중 오류가 발생했습니다.");
 		    e.printStackTrace();
 		} catch (FileNotFoundException e) {
+			log.info("JRXML 파일을 찾을 수 없습니다");
 			e.printStackTrace();
 		}
 		
@@ -68,4 +76,19 @@ public class JasperReportServiceImpl implements JasperReportService {
 
 		return reportContent;
 	}
+	
+	// jrxml 파일을 컴파일 하기 위한 메서드 
+	private static void compileJRXML() throws FileNotFoundException, JRException {
+		// .jrxml 파일을 클래스 패스에서 가져오기 
+		File jrxmlFile = ResourceUtils.getFile("classpath:boardList.jrxml");
+		
+		// .jrxml 파일을 컴파일 하여 JasperReport 객체를 생성 
+		JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlFile.getAbsolutePath());
+		
+		// 컴파일 JasperReport 객체를 .jasper 파일로 저장 
+		JRSaver.saveObject(jasperReport, "boardList.jasper");
+		
+		log.info("boardList.jasper 파일을 생성했습니다.");
+	}
+	
 }
